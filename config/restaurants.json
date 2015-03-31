@@ -1,0 +1,19 @@
+{
+  "1": {
+    "version": "1",
+    "restaurants": [
+      {
+        "id": "D986362F-85F5-4954-A604-5439B9262A5C",
+        "title": "Out of Gluten",
+        "website": "http://www.outofgluten-milano.it/",
+        "address": "Viale San Michele del Carso, 13, 20144 Milano",
+        "lat": "45.464317", 
+        "long": "9.164428"
+      },
+      {
+        "id": "46BE006D-D64E-47E8-A616-84E98C3C8BAD",
+        "title": "Radice Tonda"
+      }
+    ]
+  }
+}
