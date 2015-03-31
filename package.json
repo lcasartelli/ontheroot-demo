@@ -1,49 +1,62 @@
 {
   "name": "ontheroot-demo",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "app.js",
+  "main": "Gruntfile.js",
   "scripts": {
-    "start": "node --harmony_proxies --harmony --harmony_scoping app.js",
-    "dev": "./node_modules/.bin/nodemon --harmony --harmony_proxies --harmony_scoping app.js -e js,styl",
-    "docker-build": "docker build -t ontheroot-demo .",
-    "docker-start": "docker run --env-file .env-development -it --rm -p 3000:3000 -v $(pwd):/app ontheroot-demo",
+    "dev": "flow server & NODE_ENV=development grunt dev",
+    "prod": "grunt prod",
+    "bundle": "NODE_ENV=production grunt bundle --force",
     "test": "exit 0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:ontheroot/ontheroot-demo.git"
   },
   "author": "Luca Casartelli <luca@ontheroot.it>",
   "license": "Private",
-  "engines": {
-    "node": "0.12.0",
-    "npm": "2.6.1"
+  "private": true,
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-browserify": "*",
+    "grunt-closure-compiler": "0.0.21",
+    "grunt-concurrent": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-stylus": "^0.21.0",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-flow-type-check": "*",
+    "grunt-jsxhint": "^0.5.0",
+    "grunt-manifest": "*",
+    "grunt-processhtml": "*",
+    "grunt-useref": "*",
+    "grunt-ver": "*",
+    "grunt-watchify": "*",
+    "uglifyify": "^3.0.1"
   },
   "dependencies": {
-    "can.js": "^0.2.0",
-    "co": "^4.5.1",
-    "co-fs": "^1.2.0",
-    "co-multipart": "^0.2.0",
-    "co-redis": "^1.1.1",
-    "http-assert": "^1.1.0",
-    "jade": "^1.9.2",
-    "koa": "^0.15.0",
-    "koa-body": "^0.4.0",
-    "koa-common": "^1.2.0",
-    "koa-compose": "^2.3.0",
-    "koa-flash": "^0.1.0",
-    "koa-jade": "^0.3.1",
-    "koa-route": "^2.4.0",
-    "koa-rr": "^0.1.3",
-    "koa-session-redis": "^1.1.0",
-    "kodels-dynamodb": "^0.1.8",
-    "lodash": "^3.5.0",
-    "moment": "^2.9.0",
-    "nib": "^1.1.0",
-    "redis": "^0.12.1",
-    "stylus": "^0.49.3",
-    "thunkify": "^2.1.2",
-    "uuid": "^2.0.1"
+    "assert": "*",
+    "aws-sdk": "^2.1.20",
+    "bluebird": "^2.9.21",
+    "cortexjs": "^0.8.4",
+    "httpplease": "^0.15.2",
+    "lodash": "*",
+    "micropromise": "^0.4.10",
+    "react": "^0.13.1",
+    "react-tools": "^0.13.1",
+    "reactify": "^1.1.0",
+    "sugar": "^1.4.1",
+    "uuid": "^2.0.1",
+    "watchify": "^3.0.0"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "reactify",
+        {
+          "stripTypes": true
+        }
+      ]
+    ]
   }
 }
