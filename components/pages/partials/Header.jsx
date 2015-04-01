@@ -1,7 +1,5 @@
-
 /* @flow */
 /*jshint browser:true, devel:true */
-
 
 'use strict';
 
@@ -10,35 +8,27 @@ var _ = require('lodash');
 
 
 module.exports = React.createClass({
-  displayName: 'Restaurant',
+  displayName: 'Header',
 
-  propTypes: {
-    user: React.PropTypes.object.isRequired,
-    restaurant: React.PropTypes.object.isRequired,
-  },
+  propTypes: {},
 
 
   getInitialState: function getInitialState() : Object {
-    return {
-      name: '',
-      description: '',
-    };
+    return {};
   },
 
 
   componentDidMount: function() : void {
 
   },
-  
+
 
   render: function() : React.PropTypes.element {
     
-    console.log('restaurant', this.props.restaurant);
-
     return (
-      <div>
-        <h2>{ this.props.restaurant.title }</h2>
-      </div>
+      <header>
+        <p>Header :)</p>
+      </header>
     );
   }
 

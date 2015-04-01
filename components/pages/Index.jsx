@@ -1,11 +1,16 @@
 /* @flow */
 /*jshint browser:true, devel:true */
 
-
 'use strict';
 
 var React = require('react/addons');
 var _ = require('lodash');
+
+var Header = require('./partials/Header.jsx');
+var Footer = require('./partials/Footer.jsx');
+var Restaurant = require('../elements/Restaurant.jsx');
+
+var RESTAURANTS = require('../../config/restaurants.json');
 
 
 module.exports = React.createClass({
@@ -13,7 +18,6 @@ module.exports = React.createClass({
 
   propTypes: {
     user: React.PropTypes.object.isRequired,
-    siteId: React.PropTypes.string.isRequired
   },
 
 
@@ -21,25 +25,30 @@ module.exports = React.createClass({
     return {};
   },
 
+
   componentDidMount: function() : void {
 
   },
 
 
   render: function() : React.PropTypes.element {
+    var componentScope = this;
     
-
     return (
       <section id="app">
-        <header></header>
+        
+        <Header />
 
-        <section id="app">
-          <section id="content">
-            <p>Index</p>
-          </section>
+        <section id="content">
+
+          { _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
+            return (<Restaurant user={componentScope.user} restaurant={restaurant} />);
+            }) }
+
         </section>
 
-        <footer></footer>
+        <Footer />
+
       </section>
     );
   }

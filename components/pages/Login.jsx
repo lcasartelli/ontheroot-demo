@@ -13,8 +13,8 @@ module.exports = React.createClass({
 
   propTypes: {
     user: React.PropTypes.object.isRequired,
-    siteId: React.PropTypes.string.isRequired
   },
+
 
   getInitialState: function getInitialState() : Object {
     return {
@@ -81,6 +81,7 @@ module.exports = React.createClass({
       console.log('not logged');
     }
   },
+
 
   render: function() : React.PropTypes.element {
 

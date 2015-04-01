@@ -2,11 +2,12 @@
 
 var React = require('react/addons');
 var _ = require('lodash');
-var Login = require('./components/Login.jsx');
-var Index = require('./components/Index.jsx');
+var Login = require('./components/pages/Login.jsx');
+var Index = require('./components/pages/Index.jsx');
 var Cortex = require('cortexjs');
 var AWS = require('aws-sdk');
 //var Promise = require('bluebird');
+
 
 var syncClient;
 var store = require('./lib/store')();
@@ -43,11 +44,12 @@ cortexUserData.on('update', function userDataUpdated() {
 
 
 function render() {
-  if (cortexUserData.authed.getValue()) {
-    React.render(<Index user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-  } else {
-    React.render(<Login user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-  }
+  // if (cortexUserData.authed.getValue()) {
+  //   React.render(<Index user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
+  // } else {
+  //   React.render(<Login user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
+  // }
+  React.render(<Index user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
 }
 
 // first render
