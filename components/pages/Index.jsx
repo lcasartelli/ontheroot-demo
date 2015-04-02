@@ -35,20 +35,10 @@ module.exports = React.createClass({
     var componentScope = this;
     
     return (
-      <section id="app">
-        
-        <Header />
-
-        <section id="content">
-
-          { _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
-            return (<Restaurant user={componentScope.user} restaurant={restaurant} />);
-            }) }
-
-        </section>
-
-        <Footer />
-
+      <section id="content">
+        { _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
+          return (<Restaurant user={componentScope.user} restaurant={restaurant} />);
+          }) }
       </section>
     );
   }

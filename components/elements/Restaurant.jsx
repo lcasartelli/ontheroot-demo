@@ -30,6 +30,10 @@ module.exports = React.createClass({
 
   },
   
+  goToRestaurant: function () : void {
+
+  },
+
 
   render: function() : React.PropTypes.element {
     
@@ -38,6 +42,7 @@ module.exports = React.createClass({
     return (
       <div>
         <h2>{ this.props.restaurant.title }</h2>
+        <button onClick={this.gotToRestaurant}>Vai al ristorante</button>
       </div>
     );
   }

@@ -1,17 +1,20 @@
 'use strict';
 
-var React = require('react/addons');
 var _ = require('lodash');
-var Login = require('./components/pages/Login.jsx');
-var Index = require('./components/pages/Index.jsx');
-var Cortex = require('cortexjs');
 var AWS = require('aws-sdk');
-//var Promise = require('bluebird');
+var Cortex = require('cortexjs');
+var React = require('react/addons');
+var Router = require('react-router');
 
+//var Promise = require('bluebird');
 
 var syncClient;
 var store = require('./lib/store')();
 var auth = require('./lib/cognito')();
+
+// config routes
+var routes = require("./routes.jsx");
+var router = Router.create({routes: routes});
 
 // Initialize the Amazon Cognito credentials provider
 auth.unAuthUserLogin();
@@ -23,7 +26,7 @@ var cortexUserData = new Cortex({
   siteContent: null
 });
 
-
+/*
 cortexUserData.on('update', function userDataUpdated() {
 
   if (!cortexUserData.authed.getValue() && cortexUserData.accessToken.getValue() !== null) {
@@ -49,8 +52,16 @@ function render() {
   // } else {
   //   React.render(<Login user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
   // }
-  React.render(<Index user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-}
+  React.render(<Index user={cortexUserData} />, document.querySelector('#fullnode'));
+}*/
+
+router.run(function(Handler) {
+  console.log('Handler', Handler);
+  React.render(
+    <Handler user={cortexUserData} />,
+    document.querySelector('#fullnode')
+  );
+});
 
 // first render
-render();
+//render();
