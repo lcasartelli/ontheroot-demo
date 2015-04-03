@@ -7,10 +7,12 @@
 
 var React = require('react/addons');
 var _ = require('lodash');
-
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 module.exports = React.createClass({
-  displayName: 'Restaurant',
+  displayName: 'RestaurantItem',
 
   propTypes: {
     user: React.PropTypes.object.isRequired,
@@ -31,18 +33,18 @@ module.exports = React.createClass({
   },
   
   goToRestaurant: function () : void {
-
+    // go to restaurant dishes list
   },
 
 
   render: function() : React.PropTypes.element {
     
     console.log('restaurant', this.props.restaurant);
-
+    var params = {restaurantSlug: this.props.restaurant.slug};
     return (
       <div>
         <h2>{ this.props.restaurant.title }</h2>
-        <button onClick={this.gotToRestaurant}>Vai al ristorante</button>
+         <Link className='pure-button' to="restaurant" params={params}>Vai al ristorante</Link>
       </div>
     );
   }

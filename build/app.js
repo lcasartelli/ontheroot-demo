@@ -57,7 +57,6 @@ function render() {
 }*/
 
 router.run(function(Handler) {
-  console.log('Handler', Handler);
   React.render(
     React.createElement(Handler, {user: cortexUserData}),
     document.querySelector('#fullnode')
@@ -112,10 +111,12 @@ module.exports = React.createClass({
 
 var React = require('react/addons');
 var _ = require('lodash');
-
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 module.exports = React.createClass({
-  displayName: 'Restaurant',
+  displayName: 'RestaurantItem',
 
   propTypes: {
     user: React.PropTypes.object.isRequired,
@@ -136,18 +137,18 @@ module.exports = React.createClass({
   },
   
   goToRestaurant: function ()        {
-
+    // go to restaurant dishes list
   },
 
 
   render: function()                           {
     
     console.log('restaurant', this.props.restaurant);
-
+    var params = {restaurantSlug: this.props.restaurant.slug};
     return (
       React.createElement("div", null, 
         React.createElement("h2", null,  this.props.restaurant.title), 
-        React.createElement("button", {onClick: this.gotToRestaurant}, "Vai al ristorante")
+         React.createElement(Link, {className: "pure-button", to: "restaurant", params: params}, "Vai al ristorante")
       )
     );
   }
@@ -156,7 +157,7 @@ module.exports = React.createClass({
 
 
 
-},{"lodash":237,"react/addons":277}],4:[function(require,module,exports){
+},{"lodash":237,"react-router":262,"react/addons":277}],4:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -194,10 +195,16 @@ module.exports = React.createClass({
     var componentScope = this;
     
     return (
-      React.createElement("section", {id: "content"}, 
-         _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
-          return (React.createElement(Restaurant, {user: componentScope.user, restaurant: restaurant}));
-          }) 
+      React.createElement("section", {className: "content"}, 
+        React.createElement("div", {className: "pure-g"}, 
+           _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
+            return (
+              React.createElement("div", {className: "pure-u-1-3"}, 
+                React.createElement(Restaurant, {user: componentScope.user, restaurant: restaurant})
+              )
+              );
+            }) 
+        )
       )
     );
   }
@@ -322,17 +329,15 @@ module.exports = React.createClass({
 
 
 },{"lodash":237,"react/addons":277}],6:[function(require,module,exports){
+
 /* @flow */
 /*jshint browser:true, devel:true */
+
 
 'use strict';
 
 var React = require('react/addons');
 var _ = require('lodash');
-
-var Header = require('./partials/Header.jsx');
-var Footer = require('./partials/Footer.jsx');
-var Restaurant = require('../elements/Restaurant.jsx');
 
 var RESTAURANTS = require('../../config/restaurants.json');
 
@@ -344,35 +349,34 @@ module.exports = React.createClass({
     user: React.PropTypes.object.isRequired,
   },
 
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
 
   getInitialState: function getInitialState()          {
-    return {};
+    return {
+      name: '',
+      description: '',
+    };
   },
 
 
   componentDidMount: function()        {
+  },
 
+
+  componentWillMount: function()        {
+    var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
+    this.setState({ restaurant: _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; }) });
   },
 
 
   render: function()                           {
-    var componentScope = this;
 
     return (
-      React.createElement("section", {id: "app"}, 
-
-        React.createElement(Header, null), 
-
-        React.createElement("section", {id: "content"}, 
-
-           _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
-            return (React.createElement(Restaurant, {user: componentScope.user, restaurant: restaurant}));
-            }) 
-
-        ), 
-
-        React.createElement(Footer, null)
-
+      React.createElement("section", {className: "content"}, 
+        React.createElement("h2", null,  this.state.restaurant.title)
       )
     );
   }
@@ -381,7 +385,7 @@ module.exports = React.createClass({
 
 
 
-},{"../../config/restaurants.json":9,"../elements/Restaurant.jsx":3,"./partials/Footer.jsx":7,"./partials/Header.jsx":8,"lodash":237,"react/addons":277}],7:[function(require,module,exports){
+},{"../../config/restaurants.json":9,"lodash":237,"react/addons":277}],7:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -449,8 +453,10 @@ module.exports = React.createClass({
   render: function()                           {
     
     return (
-      React.createElement("header", null, 
-        React.createElement("p", null, "Header :)")
+      React.createElement("nav", {className: "header"}, 
+        React.createElement("div", {className: "logo"}, 
+          React.createElement("img", {src: "./assets/img/logo.png"})
+        )
       )
     );
   }
@@ -466,6 +472,7 @@ module.exports={
     "restaurants": [
       {
         "id": "D986362F-85F5-4954-A604-5439B9262A5C",
+        "slug": "out-of-gluten",
         "title": "Out of Gluten",
         "website": "http://www.outofgluten-milano.it/",
         "address": "Viale San Michele del Carso, 13, 20144 Milano",
@@ -475,35 +482,57 @@ module.exports={
       },
       {
         "id": "46BE006D-D64E-47E8-A616-84E98C3C8BAD",
+        "slug": "radice-tonda",
         "title": "Radice Tonda",
         "menu": {
           "Veggie Burger": {
             "name": "Veggie Burger",
             "description": "farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
           },
           "Roll di Avena e Grano Saraceno con Seitan": {
             "name": "Roll di Avena e Grano Saraceno con Seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico"
+            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
           },
           "Club Sandwich con Seitan": {
             "name": "Club Sandwich con Seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico"
+            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Panzerotto al Forno con Mozzarella di Riso": {
             "name": "Panzerotto al Forno con Mozzarella di Riso",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Insalatona Mista": {
             "name": "Insalatona Mista",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Porzione Maionese Vegana": {
             "name": "Porzione Maionese Vegana",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Porzione Tofu Cheese": {
             "name": "Porzione Tofu Cheese",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
           }
         }
       }
@@ -67102,7 +67131,7 @@ var routes = (
   React.createElement(Route, {handler: App, name: "app"}, 
     React.createElement(Route, {handler: Index, name: "home", path: "/"}), 
     React.createElement(Route, {handler: Login, name: "login", path: "/login"}), 
-    React.createElement(Route, {handler: Restaurant, path: "/restaurant/:name"})
+    React.createElement(Route, {handler: Restaurant, name: "restaurant", path: "/restaurant/:restaurantSlug"})
   )
 );
 

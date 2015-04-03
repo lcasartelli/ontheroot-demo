@@ -14,7 +14,7 @@ var routes = (
   <Route handler={App} name='app'>
     <Route handler={Index} name='home' path='/' />
     <Route handler={Login} name='login' path='/login' />
-    <Route handler={Restaurant} path='/restaurant/:name' />
+    <Route handler={Restaurant} name='restaurant' path='/restaurant/:restaurantSlug' />
   </Route>
 );
 

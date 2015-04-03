@@ -56,7 +56,6 @@ function render() {
 }*/
 
 router.run(function(Handler) {
-  console.log('Handler', Handler);
   React.render(
     <Handler user={cortexUserData} />,
     document.querySelector('#fullnode')

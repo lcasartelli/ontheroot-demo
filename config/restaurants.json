@@ -4,6 +4,7 @@
     "restaurants": [
       {
         "id": "D986362F-85F5-4954-A604-5439B9262A5C",
+        "slug": "out-of-gluten",
         "title": "Out of Gluten",
         "website": "http://www.outofgluten-milano.it/",
         "address": "Viale San Michele del Carso, 13, 20144 Milano",
@@ -13,35 +14,57 @@
       },
       {
         "id": "46BE006D-D64E-47E8-A616-84E98C3C8BAD",
+        "slug": "radice-tonda",
         "title": "Radice Tonda",
         "menu": {
           "Veggie Burger": {
             "name": "Veggie Burger",
             "description": "farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
           },
           "Roll di Avena e Grano Saraceno con Seitan": {
             "name": "Roll di Avena e Grano Saraceno con Seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico"
+            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
           },
           "Club Sandwich con Seitan": {
             "name": "Club Sandwich con Seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico"
+            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Panzerotto al Forno con Mozzarella di Riso": {
             "name": "Panzerotto al Forno con Mozzarella di Riso",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Insalatona Mista": {
             "name": "Insalatona Mista",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Porzione Maionese Vegana": {
             "name": "Porzione Maionese Vegana",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
             },
           "Porzione Tofu Cheese": {
             "name": "Porzione Tofu Cheese",
-            "description": ""
+            "description": "",
+            "gda": "100",
+            "co2": "30",
+            "h20": "600"
           }
         }
       }

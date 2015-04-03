@@ -26,9 +26,11 @@ module.exports = React.createClass({
   render: function() : React.PropTypes.element {
     
     return (
-      <header>
-        <p>Header :)</p>
-      </header>
+      <nav className='header'>
+        <div className='logo'>
+          <img src='./assets/img/logo.png' />
+        </div>
+      </nav>
     );
   }
 
