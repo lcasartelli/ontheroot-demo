@@ -5,6 +5,9 @@
 
 var React = require('react/addons');
 var _ = require('lodash');
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 
 module.exports = React.createClass({
@@ -28,7 +31,9 @@ module.exports = React.createClass({
     return (
       <nav className='header'>
         <div className='logo'>
-          <img src='./assets/img/logo.png' />
+          <Link to="home">
+            <img src='./assets/img/logo.png' />
+          </Link>
         </div>
       </nav>
     );

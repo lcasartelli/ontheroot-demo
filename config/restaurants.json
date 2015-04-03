@@ -19,6 +19,7 @@
         "menu": {
           "Veggie Burger": {
             "name": "Veggie Burger",
+            "slug": "veggie-burger",
             "description": "farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
             "gda": "100",
             "co2": "30",
@@ -26,6 +27,7 @@
           },
           "Roll di Avena e Grano Saraceno con Seitan": {
             "name": "Roll di Avena e Grano Saraceno con Seitan",
+            "slug": "roll-di-avena-e-grano-saraceno-con-seitan",
             "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
             "gda": "100",
             "co2": "30",
@@ -33,6 +35,7 @@
           },
           "Club Sandwich con Seitan": {
             "name": "Club Sandwich con Seitan",
+            "slug": "club-sandwich-con-seitan",
             "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
             "gda": "100",
             "co2": "30",
@@ -40,6 +43,7 @@
             },
           "Panzerotto al Forno con Mozzarella di Riso": {
             "name": "Panzerotto al Forno con Mozzarella di Riso",
+            "slug": "panzerotto-al-forno-con-mozzarella-di-riso",
             "description": "",
             "gda": "100",
             "co2": "30",
@@ -47,6 +51,7 @@
             },
           "Insalatona Mista": {
             "name": "Insalatona Mista",
+            "slug": "insalatona-mista",
             "description": "",
             "gda": "100",
             "co2": "30",
@@ -54,6 +59,7 @@
             },
           "Porzione Maionese Vegana": {
             "name": "Porzione Maionese Vegana",
+            "slug": "porzione-maionese-vegana",
             "description": "",
             "gda": "100",
             "co2": "30",
@@ -61,6 +67,7 @@
             },
           "Porzione Tofu Cheese": {
             "name": "Porzione Tofu Cheese",
+            "slug": "porzione-tofu-cheese",
             "description": "",
             "gda": "100",
             "co2": "30",

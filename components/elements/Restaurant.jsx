@@ -15,30 +15,21 @@ module.exports = React.createClass({
   displayName: 'RestaurantItem',
 
   propTypes: {
-    user: React.PropTypes.object.isRequired,
     restaurant: React.PropTypes.object.isRequired,
   },
 
 
   getInitialState: function getInitialState() : Object {
-    return {
-      name: '',
-      description: '',
-    };
+    return {};
   },
 
 
   componentDidMount: function() : void {
 
   },
-  
-  goToRestaurant: function () : void {
-    // go to restaurant dishes list
-  },
 
 
   render: function() : React.PropTypes.element {
-    
     console.log('restaurant', this.props.restaurant);
     var params = {restaurantSlug: this.props.restaurant.slug};
     return (
