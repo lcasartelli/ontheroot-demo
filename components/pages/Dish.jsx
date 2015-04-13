@@ -9,49 +9,55 @@ var _ = require('lodash');
 var RESTAURANTS = require('../../config/restaurants.json');
 
 
-module.exports = React.createClass({
-  displayName: 'Dish',
+module.exports = function (treeData) {
 
-  propTypes: {},
+  return React.createClass({
+    displayName: 'Dish',
 
-  contextTypes: {
-    router: React.PropTypes.func.isRequired
-  },
+    mixins: [treeData.minxin],
 
+    propTypes: {},
 
-  getInitialState: function getInitialState() : Object {
-    return {
-      restaurant: null,
-      dish: null,
-    };
-  },
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
+    },
 
 
-  componentDidMount: function() : void {
-  },
+    getInitialState: function getInitialState() : Object {
+      return {
+        restaurant: null,
+        dish: null,
+      };
+    },
 
 
-  componentWillMount: function() : void {
-    var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
-    var dishSlug = this.context.router.getCurrentParams().dishSlug;
-    
-    var restaurant = _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; });
-    var dish = _.find(restaurant.menu, function (dish) { return dishSlug === dish.slug; })
-    
-    this.setState({ 
-      restaurant: restaurant,
-      dish: dish,
-    });
-  },
+    componentDidMount: function() : void {
+    },
 
 
-  render: function() : React.PropTypes.element {
-    var componentScope = this;
-    return (
-      <section className="content">
-        <h2>{ this.state.dish.name }</h2>
-      </section>
-    );
-  }
+    componentWillMount: function() : void {
+      var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
+      var dishSlug = this.context.router.getCurrentParams().dishSlug;
 
-});
+      var restaurant = _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; });
+      var dish = _.find(restaurant.menu, function (dish) { return dishSlug === dish.slug; })
+
+      this.setState({
+        restaurant: restaurant,
+        dish: dish,
+      });
+    },
+
+
+    render: function() : React.PropTypes.element {
+      var componentScope = this;
+      return (
+        <section className="content">
+          <h2>{ this.state.dish.name }</h2>
+        </section>
+      );
+    }
+
+  });
+
+};

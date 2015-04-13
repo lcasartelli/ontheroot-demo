@@ -10,33 +10,48 @@ var Route = Router.Route;
 var Link = Router.Link;
 
 
-module.exports = React.createClass({
-  displayName: 'Header',
+module.exports = function (treeData) {
 
-  propTypes: {},
+  return React.createClass({
+    displayName: 'Header',
 
-
-  getInitialState: function getInitialState() : Object {
-    return {};
-  },
+    mixins: [treeData.mixin],
+    cursor: ['user'],
 
 
-  componentDidMount: function() : void {
+    getInitialState: function getInitialState() : Object {
+      return {};
+    },
 
-  },
+    componentDidMount: function() : void {
 
 
-  render: function() : React.PropTypes.element {
+    },
+
+
+    render: function() : React.PropTypes.element {
     
-    return (
-      <nav className='header'>
-        <div className='logo'>
-          <Link to="home">
-            <img src='./assets/img/logo.png' />
-          </Link>
-        </div>
-      </nav>
-    );
-  }
+      var user = this.cursor.get();
+      var userComponent;
 
-});
+      if (user.authed) {
+        userComponent = <p>Utente loggato</p>;
+      } else  {
+        userComponent = <p>Utente non loggato</p>;
+      }
+
+      return (
+        <nav className='header'>
+          <div className='logo'>
+            <Link to="home">
+              <img src='./assets/img/logo.png' />
+            </Link>
+            { userComponent }
+          </div>
+        </nav>
+      );
+    }
+
+  });
+
+};

@@ -11,51 +11,57 @@ var Dish = require('../elements/Dish.jsx');
 var RESTAURANTS = require('../../config/restaurants.json');
 
 
-module.exports = React.createClass({
-  displayName: 'Restaurant',
+module.exports = function (treeData) {
 
-  propTypes: {},
+  return React.createClass({
+    displayName: 'Restaurant',
 
-  contextTypes: {
-    router: React.PropTypes.func.isRequired
-  },
+    mixins: [treeData.minxin],
 
 
-  getInitialState: function getInitialState() : Object {
-    return {
-      restaurant: null,
-    };
-  },
+    propTypes: {},
+
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
+    },
 
 
-  componentDidMount: function() : void {
-  },
+    getInitialState: function getInitialState() : Object {
+      return {
+        restaurant: null,
+      };
+    },
 
 
-  componentWillMount: function() : void {
-    var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
-    this.setState({ restaurant: _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; }) });
-  },
+    componentDidMount: function() : void {
+    },
 
 
-  render: function() : React.PropTypes.element {
-    var componentScope = this;
-    return (
-      <section className="content">
-        <h2>{ this.state.restaurant.title }</h2>
-        <div>
-          { _.map(this.state.restaurant.menu, function (dish) {
-            console.log(name, dish);
-            return (
-              <div className='pure-u-1-3'>
-                <Dish dish={dish} restaurant={componentScope.state.restaurant} />
-              </div>
-              );
-            }) }
-        </div>
+    componentWillMount: function() : void {
+      var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
+      this.setState({ restaurant: _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; }) });
+    },
 
-      </section>
-    );
-  }
 
-});
+    render: function() : React.PropTypes.element {
+      var componentScope = this;
+      return (
+        <section className="content">
+          <h2>{ this.state.restaurant.title }</h2>
+          <div>
+            { _.map(this.state.restaurant.menu, function (dish) {
+              return (
+                <div className='pure-u-1-3' key={dish.slug}>
+                  <Dish dish={dish} restaurant={componentScope.state.restaurant} />
+                </div>
+                );
+              }) }
+          </div>
+
+        </section>
+      );
+    }
+
+  });
+
+};

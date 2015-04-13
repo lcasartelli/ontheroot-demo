@@ -7,29 +7,34 @@ var React = require('react/addons');
 var _ = require('lodash');
 
 
-module.exports = React.createClass({
-  displayName: 'Footer',
+module.exports = function (data) {
 
-  propTypes: {},
+  return React.createClass({
+    displayName: 'Footer',
 
-
-  getInitialState: function getInitialState() : Object {
-    return {};
-  },
+    propTypes: {},
 
 
-  componentDidMount: function() : void {
 
-  },
+    getInitialState: function getInitialState() : Object {
+      return {};
+    },
 
 
-  render: function() : React.PropTypes.element {
-    
-    return (
-      <footer>
-        <p>Made with ♥ in Italy</p>
-      </footer>
-    );
-  }
+    componentDidMount: function() : void {
 
-});
+    },
+
+
+    render: function() : React.PropTypes.element {
+
+      return (
+        <footer>
+          <p>Made with ♥ in Italy</p>
+        </footer>
+      );
+    }
+
+  });
+
+};
