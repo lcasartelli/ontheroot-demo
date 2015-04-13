@@ -30,7 +30,6 @@ module.exports = React.createClass({
 
 
   render: function() : React.PropTypes.element {
-    console.log('restaurant', this.props.restaurant);
     var params = {restaurantSlug: this.props.restaurant.slug};
     return (
       <div>

@@ -1,6 +1,4 @@
 /* @flow */
-/*jshint browser:true, devel:true */
-
 
 'use strict';
 
@@ -8,16 +6,13 @@ var React = require('react/addons');
 var _ = require('lodash');
 
 
-module.exports = function (data) {
+module.exports = function (treeData) {
 
   return React.createClass({
     displayName: 'Login',
 
-    mixin: [data.minxin],
-
-    propTypes: {
-      user: React.PropTypes.object.isRequired,
-    },
+    mixins: [treeData.mixin],
+    cursor: ['user'],
 
 
     getInitialState: function getInitialState() : Object {
@@ -66,7 +61,7 @@ module.exports = function (data) {
       console.log('statusChangeCallback');
       console.log(response);
 
-      this.props.user.accessToken.set({
+      this.cursor.set('accessToken', {
         type: 'fb',
         token: response.authResponse.accessToken,
       });

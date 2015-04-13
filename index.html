@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head manifest="/manifest.appcache">
-  <title>Ontheroot</title>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  
-  <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.6.0/pure-min.css">
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <link href="/assets/img/favicon-ontheroot.png" rel="shortcut icon" type="image/png">
-</head>
-<body>
+  <head manifest="/manifest.appcache">
+    <title>Ontheroot</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href="/assets/img/favicon-ontheroot.png" rel="shortcut icon" type="image/png">
+  </head>
+  <body>
 
-  <section id="fullnode">
-    <div>
-      <div class="login-container">
-        <div class="login-loader"></div>
-        <p>Ontheroot is loading...</p>
+    <section id="fullnode">
+      <div>
+        <div class="login-container">
+          <div class="login-loader"></div>
+          <p>Ontheroot is loading...</p>
+        </div>
       </div>
-    </div>
-  </section>
-  
-  <script src="global.js"></script>
-  <script src="/build/app.js"></script>
-  <script src="/assets/js/vendors/amazon-cognito.min.js"></script>
-  <script src="//localhost:35729/livereload.js"></script>
+    </section>
+    
+    <script type="text/javascript" src="https://js.stripe.com/v2/stripe-debug.js"></script>
+    <script src="global.js"></script>
+    <script src="/build/app.js"></script>
+    <script src="/assets/js/vendors/amazon-cognito.min.js"></script>
+    <script src="//localhost:35729/livereload.js"></script>
 
-</body>
+  </body>
 </html>

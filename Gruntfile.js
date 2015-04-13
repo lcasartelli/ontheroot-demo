@@ -111,6 +111,7 @@ module.exports = function(grunt) {
       dev: {
         options: {
           port: process.env.PORT || 3100,
+          protocol: 'http',
           hostname: '*',
           base: '.',
           middleware: function(connect, options, middlewares) {

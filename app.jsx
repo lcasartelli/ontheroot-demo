@@ -2,65 +2,67 @@
 
 var _ = require('lodash');
 var AWS = require('aws-sdk');
-var Cortex = require('cortexjs');
+var Baobab = require('baobab');
 var React = require('react/addons');
 var Router = require('react-router');
-
 //var Promise = require('bluebird');
+var Route = Router.Route;
+var DefaultRoute = Router.DefaultRoute;
 
-var syncClient;
-var store = require('./lib/store')();
-var auth = require('./lib/cognito')();
-
-// config routes
-var routes = require("./routes.jsx");
-var router = Router.create({routes: routes});
-
-// Initialize the Amazon Cognito credentials provider
-auth.unAuthUserLogin();
-
-var cortexUserData = new Cortex({
-  authed: false,
-  identityId: null,
-  accessToken: null,
-  siteContent: null
+var treeData = new Baobab({
+  user: {
+    authed: false,
+  }
 });
+var usersCursor = treeData.select('user');
 
-/*
-cortexUserData.on('update', function userDataUpdated() {
+// React components
+var App = require('./components/App.jsx')(treeData);
+var Login = require('./components/pages/Login.jsx')(treeData);
+var Index = require('./components/pages/Index.jsx')(treeData);
+var Restaurant = require('./components/pages/Restaurant.jsx')(treeData);
+var Dish = require('./components/pages/Dish.jsx')(treeData);
+var Checkout = require('./components/pages/Checkout.jsx')(treeData);
 
-  if (!cortexUserData.authed.getValue() && cortexUserData.accessToken.getValue() !== null) {
+var store = require('./lib/store')();
+var cognitoAuth = require('./lib/cognito')();
+var syncClient;
 
-    auth.authUserLogin(cortexUserData.accessToken.type.getValue(), cortexUserData.accessToken.token.getValue())
+
+cognitoAuth.unAuthUserLogin();
+cognitoAuth.checkFacebookLogin(usersCursor);
+
+
+usersCursor.on('update', function _updateUser() {
+  var user = usersCursor.get();
+  console.log('update');
+  if (!user.authed && user.accessToken !== null) {
+
+    cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
-
-      cortexUserData.identityId.set(AWS.config.credentials.identityIddentityId);
-      cortexUserData.authed.set(true);
-
-      render();
+      usersCursor.set('identityId', AWS.config.credentials.identityIddentityId);
+      usersCursor.set('authed', true);
     });
-  
-  } else {
-    render();  
+
   }
 });
 
+var routes = (
+  <Route handler={App} name='app'>
+    <Route handler={Index} name='home' path='/' />
+    <Route handler={Login} name='login' path='/login' />
+    <Route handler={Restaurant} name='restaurant' path='/restaurant/:restaurantSlug' />
+    <Route handler={Dish} name='dish' path='/dish/:restaurantSlug/:dishSlug' />
+    <Route handler={Checkout} name='checkout' path='/checkout' />
+  </Route>
+);
 
-function render() {
-  // if (cortexUserData.authed.getValue()) {
-  //   React.render(<Index user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-  // } else {
-  //   React.render(<Login user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-  // }
-  React.render(<Index user={cortexUserData} />, document.querySelector('#fullnode'));
-}*/
+// config routes
+var router = Router.create({routes: routes});
 
 router.run(function(Handler) {
   React.render(
-    <Handler user={cortexUserData} />,
+    <Handler />,
     document.querySelector('#fullnode')
   );
 });
-
-// first render
-//render();

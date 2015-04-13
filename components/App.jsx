@@ -19,8 +19,16 @@ module.exports = function (data) {
     displayName: 'App',
 
     mixins: [data.minxin],
+
     
-    
+    componentDidMount: function() {
+    },
+
+
+    componentWillMount: function() {
+      
+    },
+
 
     render: function () {
       return (

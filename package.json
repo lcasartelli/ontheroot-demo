@@ -39,7 +39,6 @@
     "aws-sdk": "^2.1.20",
     "baobab": "^0.4.4",
     "bluebird": "^2.9.21",
-    "cortexjs": "^0.8.4",
     "httpplease": "^0.15.2",
     "lodash": "*",
     "micropromise": "^0.4.10",

@@ -3,72 +3,73 @@
 
 var _ = require('lodash');
 var AWS = require('aws-sdk');
-var Cortex = require('cortexjs');
+var Baobab = require('baobab');
 var React = require('react/addons');
 var Router = require('react-router');
-
 //var Promise = require('bluebird');
+var Route = Router.Route;
+var DefaultRoute = Router.DefaultRoute;
 
-var syncClient;
-var store = require('./lib/store')();
-var auth = require('./lib/cognito')();
-
-// config routes
-var routes = require("./routes.jsx");
-var router = Router.create({routes: routes});
-
-// Initialize the Amazon Cognito credentials provider
-auth.unAuthUserLogin();
-
-var cortexUserData = new Cortex({
-  authed: false,
-  identityId: null,
-  accessToken: null,
-  siteContent: null
+var treeData = new Baobab({
+  user: {
+    authed: false,
+  }
 });
+var usersCursor = treeData.select('user');
 
-/*
-cortexUserData.on('update', function userDataUpdated() {
+// React components
+var App = require('./components/App.jsx')(treeData);
+var Login = require('./components/pages/Login.jsx')(treeData);
+var Index = require('./components/pages/Index.jsx')(treeData);
+var Restaurant = require('./components/pages/Restaurant.jsx')(treeData);
+var Dish = require('./components/pages/Dish.jsx')(treeData);
+var Checkout = require('./components/pages/Checkout.jsx')(treeData);
 
-  if (!cortexUserData.authed.getValue() && cortexUserData.accessToken.getValue() !== null) {
+var store = require('./lib/store')();
+var cognitoAuth = require('./lib/cognito')();
+var syncClient;
 
-    auth.authUserLogin(cortexUserData.accessToken.type.getValue(), cortexUserData.accessToken.token.getValue())
+
+cognitoAuth.unAuthUserLogin();
+cognitoAuth.checkFacebookLogin(usersCursor);
+
+
+usersCursor.on('update', function _updateUser() {
+  var user = usersCursor.get();
+  console.log('update');
+  if (!user.authed && user.accessToken !== null) {
+
+    cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
-
-      cortexUserData.identityId.set(AWS.config.credentials.identityIddentityId);
-      cortexUserData.authed.set(true);
-
-      render();
+      usersCursor.set('identityId', AWS.config.credentials.identityIddentityId);
+      usersCursor.set('authed', true);
     });
-  
-  } else {
-    render();  
+
   }
 });
 
+var routes = (
+  React.createElement(Route, {handler: App, name: "app"}, 
+    React.createElement(Route, {handler: Index, name: "home", path: "/"}), 
+    React.createElement(Route, {handler: Login, name: "login", path: "/login"}), 
+    React.createElement(Route, {handler: Restaurant, name: "restaurant", path: "/restaurant/:restaurantSlug"}), 
+    React.createElement(Route, {handler: Dish, name: "dish", path: "/dish/:restaurantSlug/:dishSlug"}), 
+    React.createElement(Route, {handler: Checkout, name: "checkout", path: "/checkout"})
+  )
+);
 
-function render() {
-  // if (cortexUserData.authed.getValue()) {
-  //   React.render(<Index user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-  // } else {
-  //   React.render(<Login user={cortexUserData} siteId={null} />, document.querySelector('#fullnode'));  
-  // }
-  React.render(<Index user={cortexUserData} />, document.querySelector('#fullnode'));
-}*/
+// config routes
+var router = Router.create({routes: routes});
 
 router.run(function(Handler) {
   React.render(
-    React.createElement(Handler, {user: cortexUserData}),
+    React.createElement(Handler, null),
     document.querySelector('#fullnode')
   );
 });
 
-// first render
-//render();
 
-
-
-},{"./lib/cognito":12,"./lib/store":13,"./routes.jsx":464,"aws-sdk":18,"cortexjs":84,"lodash":251,"react-router":276,"react/addons":291}],2:[function(require,module,exports){
+},{"./components/App.jsx":2,"./components/pages/Checkout.jsx":5,"./components/pages/Dish.jsx":6,"./components/pages/Index.jsx":7,"./components/pages/Login.jsx":8,"./components/pages/Restaurant.jsx":9,"./lib/cognito":13,"./lib/store":14,"aws-sdk":19,"baobab":74,"lodash":251,"react-router":276,"react/addons":291}],2:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -90,8 +91,16 @@ module.exports = function (data) {
     displayName: 'App',
 
     mixins: [data.minxin],
+
     
-    
+    componentDidMount: function() {
+    },
+
+
+    componentWillMount: function() {
+      
+    },
+
 
     render: function () {
       return (
@@ -106,7 +115,7 @@ module.exports = function (data) {
 };
 
 
-},{"./pages/partials/Footer.jsx":9,"./pages/partials/Header.jsx":10,"react-router":276,"react/addons":291}],3:[function(require,module,exports){
+},{"./pages/partials/Footer.jsx":10,"./pages/partials/Header.jsx":11,"react-router":276,"react/addons":291}],3:[function(require,module,exports){
 
 /* @flow */
 /*jshint browser:true, devel:true */
@@ -186,7 +195,6 @@ module.exports = React.createClass({
 
 
   render: function()                           {
-    console.log('restaurant', this.props.restaurant);
     var params = {restaurantSlug: this.props.restaurant.slug};
     return (
       React.createElement("div", null, 
@@ -201,6 +209,72 @@ module.exports = React.createClass({
 
 
 },{"lodash":251,"react-router":276,"react/addons":291}],5:[function(require,module,exports){
+
+
+
+
+/* @flow */
+/*jshint browser:true, devel:true */
+
+'use strict';
+
+var React = require('react/addons');
+var _ = require('lodash');
+
+
+var RESTAURANTS = require('../../config/restaurants.json');
+
+
+module.exports = function (treeData) {
+  
+  return React.createClass({
+    displayName: 'Checkout',
+
+    propTypes: {},
+
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
+    },
+
+
+    getInitialState: function getInitialState()          {
+      return {
+        restaurant: null,
+      };
+    },
+
+
+    componentDidMount: function()        {
+    },
+
+
+    componentWillMount: function()        {
+     
+    },
+
+
+    render: function()                           {
+      return  (
+        React.createElement("form", {action: "", method: "POST"}, 
+          React.createElement("script", {
+            src: "https://checkout.stripe.com/checkout.js", 
+            className: "stripe-button", 
+            "data-key": "pk_test_J5PfexKfZmdZFhhfFkAA66DG", 
+            "data-amount": "2000", 
+            "data-name": "Demo Site", 
+            "data-description": "2 widgets ($20.00)"
+            }
+          )
+        ));
+    }
+
+  });
+
+};
+
+
+
+},{"../../config/restaurants.json":12,"lodash":251,"react/addons":291}],6:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -266,7 +340,7 @@ module.exports = function (treeData) {
 };
 
 
-},{"../../config/restaurants.json":11,"lodash":251,"react/addons":291}],6:[function(require,module,exports){
+},{"../../config/restaurants.json":12,"lodash":251,"react/addons":291}],7:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -303,7 +377,7 @@ module.exports = function (treeData) {
           React.createElement("div", {className: "pure-g"}, 
              _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
               return (
-                React.createElement("div", {className: "pure-u-1-3"}, 
+                React.createElement("div", {className: "pure-u-1-3", key: restaurant.slug}, 
                   React.createElement(Restaurant, {user: componentScope.user, restaurant: restaurant})
                 )
                 );
@@ -319,10 +393,8 @@ module.exports = function (treeData) {
 
 
 
-},{"../../config/restaurants.json":11,"../elements/Restaurant.jsx":4,"lodash":251,"react/addons":291}],7:[function(require,module,exports){
+},{"../../config/restaurants.json":12,"../elements/Restaurant.jsx":4,"lodash":251,"react/addons":291}],8:[function(require,module,exports){
 /* @flow */
-/*jshint browser:true, devel:true */
-
 
 'use strict';
 
@@ -330,16 +402,13 @@ var React = require('react/addons');
 var _ = require('lodash');
 
 
-module.exports = function (data) {
+module.exports = function (treeData) {
 
   return React.createClass({
     displayName: 'Login',
 
-    mixin: [data.minxin],
-
-    propTypes: {
-      user: React.PropTypes.object.isRequired,
-    },
+    mixins: [treeData.mixin],
+    cursor: ['user'],
 
 
     getInitialState: function getInitialState()          {
@@ -388,7 +457,7 @@ module.exports = function (data) {
       console.log('statusChangeCallback');
       console.log(response);
 
-      this.props.user.accessToken.set({
+      this.cursor.set('accessToken', {
         type: 'fb',
         token: response.authResponse.accessToken,
       });
@@ -439,7 +508,7 @@ module.exports = function (data) {
 };
 
 
-},{"lodash":251,"react/addons":291}],8:[function(require,module,exports){
+},{"lodash":251,"react/addons":291}],9:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -509,7 +578,7 @@ module.exports = function (treeData) {
 };
 
 
-},{"../../config/restaurants.json":11,"../elements/Dish.jsx":3,"lodash":251,"react/addons":291}],9:[function(require,module,exports){
+},{"../../config/restaurants.json":12,"../elements/Dish.jsx":3,"lodash":251,"react/addons":291}],10:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -553,7 +622,7 @@ module.exports = function (data) {
 
 
 
-},{"lodash":251,"react/addons":291}],10:[function(require,module,exports){
+},{"lodash":251,"react/addons":291}],11:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -580,7 +649,6 @@ module.exports = function (treeData) {
     },
 
     componentDidMount: function()        {
-
 
     },
 
@@ -613,7 +681,7 @@ module.exports = function (treeData) {
 };
 
 
-},{"lodash":251,"react-router":276,"react/addons":291}],11:[function(require,module,exports){
+},{"lodash":251,"react-router":276,"react/addons":291}],12:[function(require,module,exports){
 module.exports={
   "1": {
     "version": "1",
@@ -694,7 +762,7 @@ module.exports={
     ]
   }
 }
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 'use strict';
 
@@ -750,16 +818,68 @@ module.exports = function () {
   };
 
 
+  var statusChangeCallback = function statusChangeCallback (response, userCursor) {
+
+    console.log(response);
+
+    userCursor.set('accessToken', {
+      type: 'fb',
+      token: response.authResponse.accessToken,
+    });
+
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+
+      console.log('logged');
+    } else {
+      console.log('not logged');
+    }
+  };
+
+
+  var checkLoginState =  function checkLoginState(userCursor) {
+    FB.getLoginStatus(function (response) {
+      statusChangeCallback(response, userCursor);
+    });
+  };
+
+
+  var checkFacebookLogin = function checkFacebookLogin(userCursor) {
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '274301609428595',
+        xfbml      : true,
+        version    : 'v2.3'
+      });
+
+      checkLoginState(userCursor);
+    };
+
+    (function (d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  };
+
+
 
   return {
     unAuthUserLogin: unAuthUserLogin,
     authUserLogin: authUserLogin,
+    checkFacebookLogin: checkFacebookLogin,
   };
 
 };
 
 
-},{"assert":14,"aws-sdk":18}],13:[function(require,module,exports){
+},{"assert":15,"aws-sdk":19}],14:[function(require,module,exports){
 'use strict';
 
 var AWS = require('aws-sdk');
@@ -826,7 +946,7 @@ module.exports = function () {
 
 
 
-},{"assert":14,"aws-sdk":18}],14:[function(require,module,exports){
+},{"assert":15,"aws-sdk":19}],15:[function(require,module,exports){
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0
 //
 // THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
@@ -1187,7 +1307,7 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":17}],15:[function(require,module,exports){
+},{"util/":18}],16:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1212,14 +1332,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1809,7 +1929,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":16,"_process":228,"inherits":15}],18:[function(require,module,exports){
+},{"./support/isBuffer":17,"_process":228,"inherits":16}],19:[function(require,module,exports){
 // AWS SDK for JavaScript v2.1.20
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // License at https://sdk.amazonaws.com/js/BUNDLE_LICENSE.txt
@@ -1887,7 +2007,7 @@ require('./services/sts');
 
 AWS.apiLoader.services['sts']['2011-06-15'] = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","signatureVersion":"v4","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/","protocol":"query"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}},"http":{}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}},"http":{}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}},"http":{}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}},"http":{}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}},"http":{}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}},"http":{}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}}};
 
-},{"./core":20,"./http/xhr":29,"./services/cognitoidentity":53,"./services/dynamodb":54,"./services/s3":55,"./services/sqs":56,"./services/sts":57,"./xml/browser_parser":67}],19:[function(require,module,exports){
+},{"./core":21,"./http/xhr":30,"./services/cognitoidentity":54,"./services/dynamodb":55,"./services/s3":56,"./services/sqs":57,"./services/sts":58,"./xml/browser_parser":68}],20:[function(require,module,exports){
 var AWS = require('./core');
 require('./credentials');
 require('./credentials/credential_provider_chain');
@@ -2304,7 +2424,7 @@ AWS.Config = AWS.util.inherit({
  */
 AWS.config = new AWS.Config();
 
-},{"./core":20,"./credentials":21,"./credentials/credential_provider_chain":23}],20:[function(require,module,exports){
+},{"./core":21,"./credentials":22,"./credentials/credential_provider_chain":24}],21:[function(require,module,exports){
 /**
  * The main AWS namespace
  */
@@ -2413,7 +2533,7 @@ require('./param_validator');
  */
 AWS.events = new AWS.SequentialExecutor();
 
-},{"./config":19,"./credentials":21,"./credentials/cognito_identity_credentials":22,"./credentials/credential_provider_chain":23,"./credentials/saml_credentials":24,"./credentials/temporary_credentials":25,"./credentials/web_identity_credentials":26,"./event_listeners":27,"./http":28,"./json/builder":30,"./json/parser":31,"./model/api":32,"./model/operation":34,"./model/paginator":35,"./model/resource_waiter":36,"./model/shape":37,"./param_validator":38,"./protocol/json":39,"./protocol/query":40,"./protocol/rest":41,"./protocol/rest_json":42,"./protocol/rest_xml":43,"./request":47,"./resource_waiter":48,"./response":49,"./sequential_executor":51,"./service":52,"./signers/request_signer":59,"./util":66,"./xml/builder":68}],21:[function(require,module,exports){
+},{"./config":20,"./credentials":22,"./credentials/cognito_identity_credentials":23,"./credentials/credential_provider_chain":24,"./credentials/saml_credentials":25,"./credentials/temporary_credentials":26,"./credentials/web_identity_credentials":27,"./event_listeners":28,"./http":29,"./json/builder":31,"./json/parser":32,"./model/api":33,"./model/operation":35,"./model/paginator":36,"./model/resource_waiter":37,"./model/shape":38,"./param_validator":39,"./protocol/json":40,"./protocol/query":41,"./protocol/rest":42,"./protocol/rest_json":43,"./protocol/rest_xml":44,"./request":48,"./resource_waiter":49,"./response":50,"./sequential_executor":52,"./service":53,"./signers/request_signer":60,"./util":67,"./xml/builder":69}],22:[function(require,module,exports){
 var AWS = require('./core');
 
 /**
@@ -2565,7 +2685,7 @@ AWS.Credentials = AWS.util.inherit({
   }
 });
 
-},{"./core":20}],22:[function(require,module,exports){
+},{"./core":21}],23:[function(require,module,exports){
 var AWS = require('../core');
 
 /**
@@ -2870,7 +2990,7 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
   })()
 });
 
-},{"../core":20}],23:[function(require,module,exports){
+},{"../core":21}],24:[function(require,module,exports){
 var AWS = require('../core');
 
 /**
@@ -2985,7 +3105,7 @@ AWS.CredentialProviderChain = AWS.util.inherit(AWS.Credentials, {
  */
 AWS.CredentialProviderChain.defaultProviders = [];
 
-},{"../core":20}],24:[function(require,module,exports){
+},{"../core":21}],25:[function(require,module,exports){
 var AWS = require('../core');
 
 /**
@@ -3075,7 +3195,7 @@ AWS.SAMLCredentials = AWS.util.inherit(AWS.Credentials, {
 
 });
 
-},{"../core":20}],25:[function(require,module,exports){
+},{"../core":21}],26:[function(require,module,exports){
 var AWS = require('../core');
 
 /**
@@ -3188,7 +3308,7 @@ AWS.TemporaryCredentials = AWS.util.inherit(AWS.Credentials, {
 
 });
 
-},{"../core":20}],26:[function(require,module,exports){
+},{"../core":21}],27:[function(require,module,exports){
 var AWS = require('../core');
 
 /**
@@ -3285,7 +3405,7 @@ AWS.WebIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
 });
 
-},{"../core":20}],27:[function(require,module,exports){
+},{"../core":21}],28:[function(require,module,exports){
 var AWS = require('./core');
 var SequentialExecutor = require('./sequential_executor');
 
@@ -3723,7 +3843,7 @@ AWS.EventListeners = {
   })
 };
 
-},{"./core":20,"./protocol/json":39,"./protocol/query":40,"./protocol/rest":41,"./protocol/rest_json":42,"./protocol/rest_xml":43,"./sequential_executor":51,"util":248}],28:[function(require,module,exports){
+},{"./core":21,"./protocol/json":40,"./protocol/query":41,"./protocol/rest":42,"./protocol/rest_json":43,"./protocol/rest_xml":44,"./sequential_executor":52,"util":248}],29:[function(require,module,exports){
 var AWS = require('./core');
 var inherit = AWS.util.inherit;
 
@@ -3929,7 +4049,7 @@ AWS.HttpClient.getInstance = function getInstance() {
   return this.singleton;
 };
 
-},{"./core":20}],29:[function(require,module,exports){
+},{"./core":21}],30:[function(require,module,exports){
 var AWS = require('../core');
 var EventEmitter = require('events').EventEmitter;
 require('../http');
@@ -4053,7 +4173,7 @@ AWS.HttpClient.prototype = AWS.XHRClient.prototype;
  */
 AWS.HttpClient.streamsApiVersion = 1;
 
-},{"../core":20,"../http":28,"events":225}],30:[function(require,module,exports){
+},{"../core":21,"../http":29,"events":225}],31:[function(require,module,exports){
 var util = require('../util');
 
 function JsonBuilder() { }
@@ -4111,7 +4231,7 @@ function translateScalar(value, shape) {
 
 module.exports = JsonBuilder;
 
-},{"../util":66}],31:[function(require,module,exports){
+},{"../util":67}],32:[function(require,module,exports){
 var util = require('../util');
 
 function JsonParser() { }
@@ -4167,7 +4287,7 @@ function translateScalar(value, shape) {
 
 module.exports = JsonParser;
 
-},{"../util":66}],32:[function(require,module,exports){
+},{"../util":67}],33:[function(require,module,exports){
 var Collection = require('./collection');
 var Operation = require('./operation');
 var Shape = require('./shape');
@@ -4232,7 +4352,7 @@ function Api(api, options) {
 
 module.exports = Api;
 
-},{"../util":66,"./collection":33,"./operation":34,"./paginator":35,"./resource_waiter":36,"./shape":37}],33:[function(require,module,exports){
+},{"../util":67,"./collection":34,"./operation":35,"./paginator":36,"./resource_waiter":37,"./shape":38}],34:[function(require,module,exports){
 var memoizedProperty = require('../util').memoizedProperty;
 
 function memoize(name, value, fn, nameTr) {
@@ -4254,7 +4374,7 @@ function Collection(iterable, options, fn, nameTr) {
 
 module.exports = Collection;
 
-},{"../util":66}],34:[function(require,module,exports){
+},{"../util":67}],35:[function(require,module,exports){
 var Shape = require('./shape');
 
 var util = require('../util');
@@ -4308,7 +4428,7 @@ function Operation(name, operation, options) {
 
 module.exports = Operation;
 
-},{"../util":66,"./shape":37}],35:[function(require,module,exports){
+},{"../util":67,"./shape":38}],36:[function(require,module,exports){
 var property = require('../util').property;
 
 function Paginator(name, paginator) {
@@ -4321,7 +4441,7 @@ function Paginator(name, paginator) {
 
 module.exports = Paginator;
 
-},{"../util":66}],36:[function(require,module,exports){
+},{"../util":67}],37:[function(require,module,exports){
 var util = require('../util');
 var property = util.property;
 
@@ -4372,7 +4492,7 @@ function ResourceWaiter(name, waiter, options) {
 
 module.exports = ResourceWaiter;
 
-},{"../util":66}],37:[function(require,module,exports){
+},{"../util":67}],38:[function(require,module,exports){
 var Collection = require('./collection');
 
 var util = require('../util');
@@ -4716,7 +4836,7 @@ Shape.shapes = {
 
 module.exports = Shape;
 
-},{"../util":66,"./collection":33}],38:[function(require,module,exports){
+},{"../util":67,"./collection":34}],39:[function(require,module,exports){
 var AWS = require('./core');
 
 /**
@@ -4893,7 +5013,7 @@ AWS.ParamValidator = AWS.util.inherit({
   }
 });
 
-},{"./core":20}],39:[function(require,module,exports){
+},{"./core":21}],40:[function(require,module,exports){
 var util = require('../util');
 var JsonBuilder = require('../json/builder');
 var JsonParser = require('../json/parser');
@@ -4957,7 +5077,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../json/builder":30,"../json/parser":31,"../util":66}],40:[function(require,module,exports){
+},{"../json/builder":31,"../json/parser":32,"../util":67}],41:[function(require,module,exports){
 var AWS = require('../core');
 var util = require('../util');
 var QueryParamSerializer = require('../query/query_param_serializer');
@@ -5056,7 +5176,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../core":20,"../model/shape":37,"../query/query_param_serializer":44,"../util":66}],41:[function(require,module,exports){
+},{"../core":21,"../model/shape":38,"../query/query_param_serializer":45,"../util":67}],42:[function(require,module,exports){
 var util = require('../util');
 
 function populateMethod(req) {
@@ -5178,7 +5298,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../util":66}],42:[function(require,module,exports){
+},{"../util":67}],43:[function(require,module,exports){
 var util = require('../util');
 var Rest = require('./rest');
 var Json = require('./json');
@@ -5247,7 +5367,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../json/builder":30,"../json/parser":31,"../util":66,"./json":39,"./rest":41}],43:[function(require,module,exports){
+},{"../json/builder":31,"../json/parser":32,"../util":67,"./json":40,"./rest":42}],44:[function(require,module,exports){
 var AWS = require('../core');
 var util = require('../util');
 var Rest = require('./rest');
@@ -5336,7 +5456,7 @@ module.exports = {
   extractData: extractData
 };
 
-},{"../core":20,"../util":66,"./rest":41}],44:[function(require,module,exports){
+},{"../core":21,"../util":67,"./rest":42}],45:[function(require,module,exports){
 var util = require('../util');
 
 function QueryParamSerializer() {
@@ -5419,7 +5539,7 @@ function serializeMember(name, value, rules, fn) {
 
 module.exports = QueryParamSerializer;
 
-},{"../util":66}],45:[function(require,module,exports){
+},{"../util":67}],46:[function(require,module,exports){
 module.exports={
   "rules": {
     "*/*": {
@@ -5482,7 +5602,7 @@ module.exports={
   }
 }
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 var util = require('./util');
 var regionConfig = require('./region_config.json');
 
@@ -5547,7 +5667,7 @@ function configureEndpoint(service) {
 
 module.exports = configureEndpoint;
 
-},{"./region_config.json":45,"./util":66}],47:[function(require,module,exports){
+},{"./region_config.json":46,"./util":67}],48:[function(require,module,exports){
 (function (process){
 var AWS = require('./core');
 var AcceptorStateMachine = require('./state_machine');
@@ -6227,7 +6347,7 @@ AWS.Request = inherit({
 AWS.util.mixin(AWS.Request, AWS.SequentialExecutor);
 
 }).call(this,require('_process'))
-},{"./core":20,"./state_machine":65,"_process":228}],48:[function(require,module,exports){
+},{"./core":21,"./state_machine":66,"_process":228}],49:[function(require,module,exports){
 /**
  * Copyright 2012-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
@@ -6427,7 +6547,7 @@ AWS.ResourceWaiter = inherit({
   }
 });
 
-},{"./core":20}],49:[function(require,module,exports){
+},{"./core":21}],50:[function(require,module,exports){
 var AWS = require('./core');
 var inherit = AWS.util.inherit;
 
@@ -6629,7 +6749,7 @@ AWS.Response = inherit({
 
 });
 
-},{"./core":20}],50:[function(require,module,exports){
+},{"./core":21}],51:[function(require,module,exports){
 var AWS = require('../core');
 var byteLength = AWS.util.string.byteLength;
 
@@ -7165,7 +7285,7 @@ AWS.S3.ManagedUpload = AWS.util.inherit({
 AWS.util.mixin(AWS.S3.ManagedUpload, AWS.SequentialExecutor);
 module.exports = AWS.S3.ManagedUpload;
 
-},{"../core":20}],51:[function(require,module,exports){
+},{"../core":21}],52:[function(require,module,exports){
 var AWS = require('./core');
 
 /**
@@ -7387,7 +7507,7 @@ AWS.SequentialExecutor.prototype.addListener = AWS.SequentialExecutor.prototype.
 
 module.exports = AWS.SequentialExecutor;
 
-},{"./core":20}],52:[function(require,module,exports){
+},{"./core":21}],53:[function(require,module,exports){
 var AWS = require('./core');
 var Api = require('./model/api');
 var regionConfig = require('./region_config');
@@ -7894,7 +8014,7 @@ AWS.util.update(AWS.Service, {
   _serviceMap: {}
 });
 
-},{"./core":20,"./model/api":32,"./region_config":46}],53:[function(require,module,exports){
+},{"./core":21,"./model/api":33,"./region_config":47}],54:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.CognitoIdentity.prototype, {
@@ -7911,7 +8031,7 @@ AWS.util.update(AWS.CognitoIdentity.prototype, {
   }
 });
 
-},{"../core":20}],54:[function(require,module,exports){
+},{"../core":21}],55:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.DynamoDB.prototype, {
@@ -7968,7 +8088,7 @@ AWS.util.update(AWS.DynamoDB.prototype, {
   }
 });
 
-},{"../core":20}],55:[function(require,module,exports){
+},{"../core":21}],56:[function(require,module,exports){
 var AWS = require('../core');
 
 // Pull in managed upload extension
@@ -8454,7 +8574,7 @@ AWS.util.update(AWS.S3.prototype, {
   }
 });
 
-},{"../core":20,"../s3/managed_upload":50}],56:[function(require,module,exports){
+},{"../core":21,"../s3/managed_upload":51}],57:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.SQS.prototype, {
@@ -8587,7 +8707,7 @@ AWS.util.update(AWS.SQS.prototype, {
   }
 });
 
-},{"../core":20}],57:[function(require,module,exports){
+},{"../core":21}],58:[function(require,module,exports){
 var AWS = require('../core');
 
 AWS.util.update(AWS.STS.prototype, {
@@ -8636,7 +8756,7 @@ AWS.util.update(AWS.STS.prototype, {
   }
 });
 
-},{"../core":20}],58:[function(require,module,exports){
+},{"../core":21}],59:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -8745,7 +8865,7 @@ AWS.Signers.Presign = inherit({
 
 module.exports = AWS.Signers.Presign;
 
-},{"../core":20}],59:[function(require,module,exports){
+},{"../core":21}],60:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -8776,7 +8896,7 @@ require('./v4');
 require('./s3');
 require('./presign');
 
-},{"../core":20,"./presign":58,"./s3":60,"./v2":61,"./v3":62,"./v3https":63,"./v4":64}],60:[function(require,module,exports){
+},{"../core":21,"./presign":59,"./s3":61,"./v2":62,"./v3":63,"./v3https":64,"./v4":65}],61:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -8944,7 +9064,7 @@ AWS.Signers.S3 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.S3;
 
-},{"../core":20}],61:[function(require,module,exports){
+},{"../core":21}],62:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -8991,7 +9111,7 @@ AWS.Signers.V2 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V2;
 
-},{"../core":20}],62:[function(require,module,exports){
+},{"../core":21}],63:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -9067,7 +9187,7 @@ AWS.Signers.V3 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V3;
 
-},{"../core":20}],63:[function(require,module,exports){
+},{"../core":21}],64:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -9091,7 +9211,7 @@ AWS.Signers.V3Https = inherit(AWS.Signers.V3, {
 
 module.exports = AWS.Signers.V3Https;
 
-},{"../core":20,"./v3":62}],64:[function(require,module,exports){
+},{"../core":21,"./v3":63}],65:[function(require,module,exports){
 var AWS = require('../core');
 var inherit = AWS.util.inherit;
 
@@ -9292,7 +9412,7 @@ AWS.Signers.V4 = inherit(AWS.Signers.RequestSigner, {
 
 module.exports = AWS.Signers.V4;
 
-},{"../core":20}],65:[function(require,module,exports){
+},{"../core":21}],66:[function(require,module,exports){
 function AcceptorStateMachine(states, state) {
   this.currentState = state || null;
   this.states = states || {};
@@ -9336,7 +9456,7 @@ AcceptorStateMachine.prototype.addState = function addState(name, acceptState, f
 
 module.exports = AcceptorStateMachine;
 
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 (function (process){
 /* eslint guard-for-in:0 */
 
@@ -10083,7 +10203,7 @@ var util = {
 module.exports = util;
 
 }).call(this,require('_process'))
-},{"./core":20,"_process":228,"buffer":86,"crypto":90,"querystring":232,"url":246}],67:[function(require,module,exports){
+},{"./core":21,"_process":228,"buffer":86,"crypto":90,"querystring":232,"url":246}],68:[function(require,module,exports){
 var util = require('../util');
 var Shape = require('../model/shape');
 
@@ -10252,7 +10372,7 @@ function parseUnknown(xml) {
 
 module.exports = DomXmlParser;
 
-},{"../model/shape":37,"../util":66}],68:[function(require,module,exports){
+},{"../model/shape":38,"../util":67}],69:[function(require,module,exports){
 var util = require('../util');
 var builder = require('xmlbuilder');
 
@@ -10340,7 +10460,7 @@ function applyNamespaces(xml, shape) {
 
 module.exports = XmlBuilder;
 
-},{"../util":66,"xmlbuilder":71}],69:[function(require,module,exports){
+},{"../util":67,"xmlbuilder":72}],70:[function(require,module,exports){
 // Generated by CoffeeScript 1.3.3
 (function() {
   var XMLBuilder, XMLFragment;
@@ -10461,7 +10581,7 @@ module.exports = XmlBuilder;
 
 }).call(this);
 
-},{"./XMLFragment":70}],70:[function(require,module,exports){
+},{"./XMLFragment":71}],71:[function(require,module,exports){
 // Generated by CoffeeScript 1.3.3
 (function() {
   var XMLFragment,
@@ -10885,7 +11005,7 @@ module.exports = XmlBuilder;
 
 }).call(this);
 
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 // Generated by CoffeeScript 1.3.3
 (function() {
   var XMLBuilder;
@@ -10902,7 +11022,7 @@ module.exports = XmlBuilder;
 
 }).call(this);
 
-},{"./XMLBuilder":69}],72:[function(require,module,exports){
+},{"./XMLBuilder":70}],73:[function(require,module,exports){
 /**
  * Baobab Default Options
  * =======================
@@ -10941,7 +11061,7 @@ module.exports = {
   validate: null
 };
 
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 /**
  * Baobab Public Interface
  * ========================
@@ -10962,7 +11082,7 @@ Baobab.getIn = helpers.getIn;
 // Exporting
 module.exports = Baobab;
 
-},{"./src/baobab.js":76,"./src/helpers.js":79}],74:[function(require,module,exports){
+},{"./src/baobab.js":77,"./src/helpers.js":80}],75:[function(require,module,exports){
 (function() {
   'use strict';
 
@@ -11505,7 +11625,7 @@ module.exports = Baobab;
     this.Emitter = Emitter;
 }).call(this);
 
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 /**
  * typology.js - A data validation library for Node.js and the browser,
  *
@@ -12106,7 +12226,7 @@ module.exports = Baobab;
     this.types = types;
 })(this);
 
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /**
  * Baobab Data Structure
  * ======================
@@ -12441,7 +12561,7 @@ Baobab.prototype.toJSON = function() {
  */
 module.exports = Baobab;
 
-},{"../defaults.js":72,"./cursor.js":78,"./helpers.js":79,"./merge.js":80,"./mixins.js":81,"./type.js":82,"./update.js":83,"emmett":74,"typology":75}],77:[function(require,module,exports){
+},{"../defaults.js":73,"./cursor.js":79,"./helpers.js":80,"./merge.js":81,"./mixins.js":82,"./type.js":83,"./update.js":84,"emmett":75,"typology":76}],78:[function(require,module,exports){
 /**
  * Baobab Cursor Combination
  * ==========================
@@ -12608,7 +12728,7 @@ Combination.prototype.release = function() {
  */
 module.exports = Combination;
 
-},{"./helpers.js":79,"./type.js":82,"emmett":74}],78:[function(require,module,exports){
+},{"./helpers.js":80,"./type.js":83,"emmett":75}],79:[function(require,module,exports){
 /**
  * Baobab Cursor Abstraction
  * ==========================
@@ -12998,7 +13118,7 @@ type.Cursor = function (value) {
  */
 module.exports = Cursor;
 
-},{"./combination.js":77,"./helpers.js":79,"./mixins.js":81,"./type.js":82,"emmett":74}],79:[function(require,module,exports){
+},{"./combination.js":78,"./helpers.js":80,"./mixins.js":82,"./type.js":83,"emmett":75}],80:[function(require,module,exports){
 (function (global){
 /**
  * Baobab Helpers
@@ -13260,7 +13380,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./type.js":82}],80:[function(require,module,exports){
+},{"./type.js":83}],81:[function(require,module,exports){
 /**
  * Baobab Merge
  * =============
@@ -13374,7 +13494,7 @@ function merge() {
 
 module.exports = merge;
 
-},{"./helpers.js":79,"./type.js":82}],81:[function(require,module,exports){
+},{"./helpers.js":80,"./type.js":83}],82:[function(require,module,exports){
 /**
  * Baobab React Mixins
  * ====================
@@ -13524,7 +13644,7 @@ module.exports = {
   }
 };
 
-},{"./combination.js":77,"./type.js":82}],82:[function(require,module,exports){
+},{"./combination.js":78,"./type.js":83}],83:[function(require,module,exports){
 /**
  * Baobab Type Checking
  * =====================
@@ -13640,7 +13760,7 @@ type.ComplexPath = function (value) {
 
 module.exports = type;
 
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 /**
  * Baobab Update
  * ==============
@@ -13815,1085 +13935,7 @@ function update(target, spec, opts) {
 // Exporting
 module.exports = update;
 
-},{"./helpers.js":79,"./type.js":82}],84:[function(require,module,exports){
-(function (global){
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.cortex = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-"use strict";
-
-var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
-
-var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
-module.exports = (function () {
-  var cortexPubSub = _dereq_("./pubsub"),
-      DataWrapper = _dereq_("./data_wrapper")(cortexPubSub),
-      changeMappings = { N: "new", E: "update", A: "update", D: "delete" };
-
-  var Cortex = (function (DataWrapper) {
-    function Cortex(value, callback) {
-      _classCallCheck(this, Cortex);
-
-      this.__value = value;
-      this.__path = [];
-      this.__updates = [];
-      this.__callbacks = callback ? [callback] : [];
-      this.__loopProcessing = false;
-      this.__subscribe();
-
-      // Set initial changes to empty because we don't want any component rerendering to misinterpret available changes.
-      // For instance, if a new cortex initialization is considered a change from undefined to its current value then a setState call
-      // would trigger shouldComponentUpdate, which would return the changes even though no cortex update actually happens.
-      // The changes would incorrectly persist until an actual cortex rewrap occurs.
-      this.__changes = [];
-      this.__wrap();
-    }
-
-    _inherits(Cortex, DataWrapper);
-
-    _prototypeProperties(Cortex, null, {
-      on: {
-        value: function on(eventName, callback) {
-          if (eventName === "update") {
-            this.__callbacks.push(callback);
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      off: {
-        value: function off(eventName, callback) {
-          if (eventName === "update") {
-            if (callback) {
-              for (var i = 0, ii = this.__callbacks.length; i < ii; i++) {
-                if (callback === this.__callbacks[i]) {
-                  this.__callbacks.splice(i, 1);
-                  break;
-                }
-              }
-            } else {
-              this.__callbacks = [];
-            }
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      update: {
-        value: function update(data) {
-          if (this.__checkUpdate(data.oldValue, data.value, data.path)) {
-            // Schedule value setting, rewrapping, and running callbacks in batch so that multiple updates
-            // in the same event loop only result in a single rewrap and callbacks run.
-            if (!this.__loopProcessing) {
-              this.__loopProcessing = true;
-
-              setTimeout(this.__batchAll.bind(this), 0);
-            }
-
-            return true;
-          } else {
-            return false;
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __batchAll: {
-        value: function __batchAll() {
-          this.__batchSetValue();
-          this.__wrap();
-
-          // Set processing to false so that update from inside a cortex callback
-          // takes place in the next event loop.
-          this.__loopProcessing = false;
-          this.__runCallbacks();
-        },
-        writable: true,
-        configurable: true
-      },
-      __batchSetValue: {
-        value: function __batchSetValue() {
-          for (var i = 0, ii = this.__updates.length; i < ii; i++) {
-            this.__setValue(this.__updates[i].newValue, this.__updates[i].path);
-          }
-
-          this.__updates = [];
-        },
-        writable: true,
-        configurable: true
-      },
-      __runCallbacks: {
-        value: function __runCallbacks() {
-          for (var i = 0, ii = this.__callbacks.length; i < ii; i++) {
-            if (this.__callbacks[i]) this.__callbacks[i](this);
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __subscribe: {
-        value: function __subscribe() {
-          this.__eventId = cortexPubSub.subscribeToCortex((function (topic, data) {
-            this.update(data);
-          }).bind(this), (function (topic, data) {
-            this.__remove(data.path);
-          }).bind(this));
-        },
-        writable: true,
-        configurable: true
-      },
-      __remove: {
-        value: function __remove(path) {
-          if (path.length) {
-            var subPath = path.slice(0, path.length - 1),
-                subValue = this.__subValue(subPath),
-                key = path[path.length - 1],
-                removed = subValue[key],
-                oldValue = this.__clone(subValue);
-
-            if (subValue.constructor === Object) {
-              delete subValue[key];
-            } else if (subValue.constructor === Array) {
-              subValue.splice(key, 1);
-            }
-            this.update({ value: subValue, path: subPath, oldValue: oldValue });
-            return removed;
-          } else {
-            delete this.__wrappers;
-            delete this.__value;
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __setValue: {
-        value: function __setValue(newValue, path) {
-          /*
-            When saving an object to a variable it's pass by reference, but when doing so for a primitive value
-            it's pass by value. We avoid this pass by value problem by only setting subValue when path length is greater
-            than 2 (meaning it can't never be a primitive). When path length is 0 or 1 we set the value directly.
-          */
-          if (path.length > 1) {
-            var subValue = this.__subValue(path.slice(0, path.length - 1));
-
-            subValue[path[path.length - 1]] = newValue;
-          } else if (path.length === 1) {
-            this.__value[path[0]] = newValue;
-          } else {
-            this.__value = newValue;
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __checkUpdate: {
-
-        // Check whether newValue is different, if not then return false to bypass rewrap and running callbacks.
-        // Note that we cannot compare stringified values of old and new data because order of keys cannot be guaranteed.
-
-        value: function __checkUpdate(oldValue, newValue, path) {
-          var diffs;
-
-          if (oldValue) {
-            diffs = this.__diff(oldValue, newValue);
-            this.__computeChanges(diffs, path);
-            return true;
-          } else {
-            var oldValue = this.__subValue(path);
-            diffs = this.__diff(oldValue, newValue);
-
-            if (diffs) {
-              // Add to queue to update in batch later.
-              this.__updates.push({ newValue: newValue, path: path });
-
-              this.__computeChanges(diffs, path);
-              return true;
-            } else {
-              return false;
-            }
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __computeChanges: {
-
-        // changes = [{kind: ('new' || 'update' || 'delete'), path: [...], oldValue: ..., newValue: ...}]
-
-        value: function __computeChanges(diffs, path) {
-          var changeType, diffPath, diff;
-
-          // Reset changes at beginning of event loop. This has to be done after new changes are detected because
-          // we don't want to override previous changes if current update does not result in any new change.
-          if (!this.__loopProcessing) {
-            this.__changes = [];
-          }
-
-          for (var i = 0, ii = diffs.length; i < ii; i++) {
-            diff = diffs[i];
-            // Raw deep diff sample: {"kind":"A","path":[1,"b"],"index":1,"item":{"kind":"N","rhs":1}}
-            // Use the change type closest to the change.
-            changeType = changeMappings[diff.item ? diff.item.kind : diff.kind];
-
-            diffPath = path.slice();
-
-            if (diff.path) {
-              diffPath = diffPath.concat(diff.path);
-            }
-
-            if (diff.index) {
-              diffPath.push(diff.index);
-            }
-
-            this.__changes.push({
-              type: changeType,
-              path: diffPath,
-              oldValue: diff.item ? diff.item.lhs : diff.lhs,
-              newValue: diff.item ? diff.item.rhs : diff.rhs
-            });
-          }
-        },
-        writable: true,
-        configurable: true
-      }
-    });
-
-    return Cortex;
-  })(DataWrapper);
-
-  if (typeof window !== "undefined" && window !== null) {
-    window.Cortex = Cortex;
-  }
-
-  return Cortex;
-})();
-
-},{"./data_wrapper":3,"./pubsub":4}],2:[function(_dereq_,module,exports){
-(function (global){
-/*!
- * deep-diff.
- * Licensed under the MIT License.
- */ 
-/*jshint indent:2, laxcomma:true*/
-;(function (undefined) {
-  "use strict";
-
-  var $scope
-  , conflict, conflictResolution = [];
-  if (typeof global === 'object' && global) {
-    $scope = global;
-  } else if (typeof window !== 'undefined') {
-    $scope = window;
-  } else {
-    $scope = {};
-  }
-  conflict = $scope.DeepDiff;
-  if (conflict) {
-    conflictResolution.push(
-      function () {
-        if ('undefined' !== typeof conflict && $scope.DeepDiff === accumulateDiff) {
-          $scope.DeepDiff = conflict;
-          conflict = undefined;
-        }
-      });
-  }
-
-  // nodejs compatible on server side and in the browser.
-  function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor;
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  }
-
-  function Diff(kind, path) {
-    Object.defineProperty(this, 'kind', { value: kind, enumerable: true });
-    if (path && path.length) {
-      Object.defineProperty(this, 'path', { value: path, enumerable: true });
-    }
-  }
-
-  function DiffEdit(path, origin, value) {
-    DiffEdit.super_.call(this, 'E', path);
-    Object.defineProperty(this, 'lhs', { value: origin, enumerable: true });
-    Object.defineProperty(this, 'rhs', { value: value, enumerable: true });
-  }
-  inherits(DiffEdit, Diff);
-
-  function DiffNew(path, value) {
-    DiffNew.super_.call(this, 'N', path);
-    Object.defineProperty(this, 'rhs', { value: value, enumerable: true });
-  }
-  inherits(DiffNew, Diff);
-
-  function DiffDeleted(path, value) {
-    DiffDeleted.super_.call(this, 'D', path);
-    Object.defineProperty(this, 'lhs', { value: value, enumerable: true });
-  }
-  inherits(DiffDeleted, Diff);
-
-  function DiffArray(path, index, item) {
-    DiffArray.super_.call(this, 'A', path);
-    Object.defineProperty(this, 'index', { value: index, enumerable: true });
-    Object.defineProperty(this, 'item', { value: item, enumerable: true });
-  }
-  inherits(DiffArray, Diff);
-
-  function arrayRemove(arr, from, to) {
-    var rest = arr.slice((to || from) + 1 || arr.length);
-    arr.length = from < 0 ? arr.length + from : from;
-    arr.push.apply(arr, rest);
-    return arr;
-  }
-
-  function deepDiff(lhs, rhs, changes, prefilter, path, key, stack) {
-    path = path || [];
-    var currentPath = path.slice(0);
-    if (typeof key !== 'undefined') {
-      if (prefilter && prefilter(currentPath, key)) { return; }
-      currentPath.push(key);
-    }
-    var ltype = typeof lhs;
-    var rtype = typeof rhs;
-    if (ltype === 'undefined') {
-      if (rtype !== 'undefined') {
-        changes(new DiffNew(currentPath, rhs));
-      }
-    } else if (rtype === 'undefined') {
-      changes(new DiffDeleted(currentPath, lhs));
-    } else if (ltype !== rtype) {
-      changes(new DiffEdit(currentPath, lhs, rhs));
-    } else if (lhs instanceof Date && rhs instanceof Date && ((lhs - rhs) !== 0)) {
-      changes(new DiffEdit(currentPath, lhs, rhs));
-    } else if (ltype === 'object' && lhs !== null && rhs !== null) {
-      stack = stack || [];
-      if (stack.indexOf(lhs) < 0) {
-        stack.push(lhs);
-        if (Array.isArray(lhs)) {
-          var i
-          , len = lhs.length
-          ;
-          for (i = 0; i < lhs.length; i++) {
-            if (i >= rhs.length) {
-              changes(new DiffArray(currentPath, i, new DiffDeleted(undefined, lhs[i])));
-            } else {
-              deepDiff(lhs[i], rhs[i], changes, prefilter, currentPath, i, stack);
-            }
-          }
-          while (i < rhs.length) {
-            changes(new DiffArray(currentPath, i, new DiffNew(undefined, rhs[i++])));
-          }
-        } else {
-          var akeys = Object.keys(lhs);
-          var pkeys = Object.keys(rhs);
-          akeys.forEach(function (k, i) {
-            var other = pkeys.indexOf(k);
-            if (other >= 0) {
-              deepDiff(lhs[k], rhs[k], changes, prefilter, currentPath, k, stack);
-              pkeys = arrayRemove(pkeys, other);
-            } else {
-              deepDiff(lhs[k], undefined, changes, prefilter, currentPath, k, stack);
-            }
-          });
-          pkeys.forEach(function (k) {
-            deepDiff(undefined, rhs[k], changes, prefilter, currentPath, k, stack);
-          });
-        }
-        stack.length = stack.length - 1;
-      }
-    } else if (lhs !== rhs) {
-      if (!(ltype === "number" && isNaN(lhs) && isNaN(rhs))) {
-        changes(new DiffEdit(currentPath, lhs, rhs));
-      }
-    }
-  }
-
-  function accumulateDiff(lhs, rhs, prefilter, accum) {
-    accum = accum || [];
-    deepDiff(lhs, rhs,
-      function (diff) {
-        if (diff) {
-          accum.push(diff);
-        }
-      },
-      prefilter);
-    return (accum.length) ? accum : undefined;
-  }
-
-  function applyArrayChange(arr, index, change) {
-    if (change.path && change.path.length) {
-      var it = arr[index], i, u = change.path.length - 1;
-      for (i = 0; i < u; i++) {
-        it = it[change.path[i]];
-      }
-      switch (change.kind) {
-        case 'A':
-        applyArrayChange(it[change.path[i]], change.index, change.item);
-        break;
-        case 'D':
-        delete it[change.path[i]];
-        break;
-        case 'E':
-        case 'N':
-        it[change.path[i]] = change.rhs;
-        break;
-      }
-    } else {
-      switch(change.kind) {
-        case 'A':
-        applyArrayChange(arr[index], change.index, change.item);
-        break;
-        case 'D':
-        arr = arrayRemove(arr, index);
-        break;
-        case 'E':
-        case 'N':
-        arr[index] = change.rhs;
-        break;
-      }
-    }
-    return arr;
-  }
-
-  function applyChange(target, source, change) {
-    if (target && source && change && change.kind) {
-      var it = target
-      , i = -1
-      , last = change.path.length - 1
-      ;
-      while (++i < last) {
-        if (typeof it[change.path[i]] === 'undefined') {
-          it[change.path[i]] = (typeof change.path[i] === 'number') ? new Array() : {};
-        }
-        it = it[change.path[i]];
-      }
-      switch(change.kind) {
-        case 'A':
-        applyArrayChange(it[change.path[i]], change.index, change.item);
-        break;
-        case 'D':
-        delete it[change.path[i]];
-        break;
-        case 'E':
-        case 'N':
-        it[change.path[i]] = change.rhs;
-        break;
-      }
-    }
-  }
-
-  function revertArrayChange(arr, index, change) {
-    if (change.path && change.path.length) {
-      // the structure of the object at the index has changed...
-      var it = arr[index], i, u = change.path.length - 1;
-      for (i = 0; i < u; i++) {
-        it = it[change.path[i]];
-      }
-      switch(change.kind) {
-        case 'A':
-        revertArrayChange(it[change.path[i]], change.index, change.item);
-        break;
-        case 'D':
-        it[change.path[i]] = change.lhs;
-        break;
-        case 'E':
-        it[change.path[i]] = change.lhs;
-        break;
-        case 'N':
-        delete it[change.path[i]];
-        break;
-      }
-    } else {
-      // the array item is different...
-      switch(change.kind) {
-        case 'A':
-        revertArrayChange(arr[index], change.index, change.item);
-        break;
-        case 'D':
-        arr[index] = change.lhs;
-        break;
-        case 'E':
-        arr[index] = change.lhs;
-        break;
-        case 'N':
-        arr = arrayRemove(arr, index);
-        break;
-      }
-    }
-    return arr;
-  }
-
-  function revertChange(target, source, change) {
-    if (target && source && change && change.kind) {
-      var it = target, i, u;
-      u = change.path.length - 1;
-      for (i = 0; i < u; i++) {
-        if (typeof it[change.path[i]] === 'undefined') {
-          it[change.path[i]] = {};
-        }
-        it = it[change.path[i]];
-      }
-      switch (change.kind) {
-        case 'A':
-          // Array was modified...
-          // it will be an array...
-          revertArrayChange(it[change.path[i]], change.index, change.item);
-          break;
-        case 'D':
-          // Item was deleted...
-          it[change.path[i]] = change.lhs;
-          break;
-        case 'E':
-          // Item was edited...
-          it[change.path[i]] = change.lhs;
-          break;
-        case 'N':
-          // Item is new...
-          delete it[change.path[i]];
-          break;
-      }
-    }
-  }
-
-  function applyDiff(target, source, filter) {
-    if (target && source) {
-      var onChange = function (change) {
-        if (!filter || filter(target, source, change)) {
-          applyChange(target, source, change);
-        }
-      };
-      deepDiff(target, source, onChange);
-    }
-  }
-
-  Object.defineProperties(accumulateDiff, {
-
-    diff: { value: accumulateDiff, enumerable: true },
-    observableDiff: { value: deepDiff, enumerable: true },
-    applyDiff: { value: applyDiff, enumerable: true },
-    applyChange: { value: applyChange, enumerable: true },
-    revertChange: { value: revertChange, enumerable: true },
-    isConflict: { value: function () { return 'undefined' !== typeof conflict; }, enumerable: true },
-    noConflict: {
-      value: function () {
-        if (conflictResolution) {
-          conflictResolution.forEach(function (it) { it(); });
-          conflictResolution = null;
-        }
-        return accumulateDiff;
-      },
-      enumerable: true
-    }
-  });
-
-  if (typeof module !== 'undefined' && module && typeof exports === 'object' && exports && module.exports === exports) {
-    module.exports = accumulateDiff; // nodejs
-  } else {
-    $scope.DeepDiff = accumulateDiff; // other... browser?
-  }
-}());
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(_dereq_,module,exports){
-"use strict";
-
-var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
-module.exports = function (cortexPubSub) {
-  var deepDiff = _dereq_("deep-diff").diff;
-
-  var DataWrapper = (function () {
-    function DataWrapper(data) {
-      _classCallCheck(this, DataWrapper);
-
-      this.__eventId = data.eventId;
-      this.__value = data.value;
-      this.__path = data.path || [];
-      this.__changes = data.changes || [];
-
-      this.__wrap();
-
-      this.val = this.getValue;
-    }
-
-    _prototypeProperties(DataWrapper, null, {
-      set: {
-        value: function set(value, data) {
-          var payload = data || {};
-          payload.value = value;
-          payload.path = this.__path;
-          cortexPubSub.publish("update" + this.__eventId, payload);
-        },
-        writable: true,
-        configurable: true
-      },
-      getValue: {
-        value: function getValue() {
-          return this.__value;
-        },
-        writable: true,
-        configurable: true
-      },
-      getPath: {
-        value: function getPath() {
-          return this.__path;
-        },
-        writable: true,
-        configurable: true
-      },
-      getKey: {
-        value: function getKey() {
-          return this.__path[this.__path.length - 1];
-        },
-        writable: true,
-        configurable: true
-      },
-      getChanges: {
-        value: function getChanges() {
-          return this.__changes;
-        },
-        writable: true,
-        configurable: true
-      },
-      didChange: {
-        value: function didChange(key) {
-          if (!key) {
-            return this.__changes.length > 0;
-          }
-
-          for (var i = 0, ii = this.__changes.length; i < ii; i++) {
-            var change = this.__changes[i];
-            if (change.path[0] === key || this.__hasChange(change, key)) {
-              return true;
-            }
-          }
-          return false;
-        },
-        writable: true,
-        configurable: true
-      },
-      forEach: {
-        value: function forEach(callback) {
-          if (this.__isObject()) {
-            for (var key in this.__wrappers) {
-              callback(key, this.__wrappers[key], this.__wrappers);
-            }
-          } else if (this.__isArray()) {
-            this.__wrappers.forEach(callback);
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      remove: {
-        value: function remove() {
-          cortexPubSub.publish("remove" + this.__eventId, { path: this.__path });
-        },
-        writable: true,
-        configurable: true
-      },
-      __subValue: {
-        value: function __subValue(path) {
-          var subValue = this.__value;
-          for (var i = 0, ii = path.length; i < ii; i++) {
-            subValue = subValue[path[i]];
-          }
-          return subValue;
-        },
-        writable: true,
-        configurable: true
-      },
-      __wrap: {
-
-        // Recursively wrap data if @value is a hash or an array.
-        // Otherwise there's no need to further wrap primitive or other class instances
-
-        value: function __wrap() {
-          this.__cleanup();
-
-          if (this.__isObject()) {
-            this.__wrappers = {};
-            for (var key in this.__value) {
-              this.__wrapChild(key);
-            }
-          } else if (this.__isArray()) {
-            this.__wrappers = [];
-            for (var index = 0, length = this.__value.length; index < length; index++) {
-              this.__wrapChild(index);
-            }
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __wrapChild: {
-        value: function __wrapChild(key) {
-          var path = this.__path.slice();
-          path.push(key);
-          this.__wrappers[key] = new DataWrapper({
-            value: this.__value[key],
-            path: path,
-            eventId: this.__eventId,
-            changes: this.__childChanges(key)
-          });
-          this[key] = this.__wrappers[key];
-        },
-        writable: true,
-        configurable: true
-      },
-      __childChanges: {
-        value: function __childChanges(key) {
-          var childChanges = [],
-              change;
-          for (var i = 0, ii = this.__changes.length; i < ii; i++) {
-            change = this.__changes[i];
-            if (change.path[0] === key) {
-              childChanges.push({
-                type: change.type,
-                path: change.path.slice(1, change.path.length),
-                oldValue: change.oldValue,
-                newValue: change.newValue
-              });
-              break;
-            } else if (this.__hasChange(change, key)) {
-              childChanges.push({
-                type: change.type,
-                path: [],
-                oldValue: change.oldValue ? change.oldValue[key] : undefined,
-                newValue: change.newValue ? change.newValue[key] : undefined
-              });
-              break;
-            }
-          }
-
-          return childChanges;
-        },
-        writable: true,
-        configurable: true
-      },
-      __hasChange: {
-        value: function __hasChange(change, key) {
-          return change.path.length === 0 && (change.oldValue && change.oldValue[key] || change.newValue && change.newValue[key]);
-        },
-        writable: true,
-        configurable: true
-      },
-      __cleanup: {
-        value: function __cleanup() {
-          if (this.__wrappers) {
-            if (this.__isObject()) {
-              for (var key in this.__wrappers) {
-                delete this[key];
-              }
-            } else if (this.__isArray()) {
-              for (var i = 0, ii = this.__wrappers.length; i < ii; i++) {
-                delete this[i];
-              }
-            }
-            delete this.__wrappers;
-          }
-        },
-        writable: true,
-        configurable: true
-      },
-      __isObject: {
-        value: function __isObject() {
-          return this.__value && this.__value.constructor === Object;
-        },
-        writable: true,
-        configurable: true
-      },
-      __isArray: {
-        value: function __isArray() {
-          return this.__value && this.__value.constructor === Array;
-        },
-        writable: true,
-        configurable: true
-      },
-      __diff: {
-        value: function __diff(oldValue, newValue) {
-          return deepDiff(oldValue, newValue);
-        },
-        writable: true,
-        configurable: true
-      },
-      __clone: {
-
-        // source: http://stackoverflow.com/a/728694
-
-        value: function __clone(obj) {
-          var copy;
-
-          // Handle the 3 simple types, and null or undefined
-          if (null == obj || "object" != typeof obj) {
-            return obj;
-          } // Handle Date
-          if (obj instanceof Date) {
-            copy = new Date();
-            copy.setTime(obj.getTime());
-            return copy;
-          }
-
-          // Handle Array
-          if (obj instanceof Array) {
-            copy = [];
-            for (var i = 0, len = obj.length; i < len; i++) {
-              copy[i] = this.__clone(obj[i]);
-            }
-            return copy;
-          }
-
-          // Handle Object
-          if (obj instanceof Object) {
-            copy = {};
-            for (var attr in obj) {
-              if (obj.hasOwnProperty(attr)) copy[attr] = this.__clone(obj[attr]);
-            }
-            return copy;
-          }
-
-          throw new Error("Unable to copy obj! Its type isn't supported.");
-        },
-        writable: true,
-        configurable: true
-      }
-    });
-
-    return DataWrapper;
-  })();
-
-  // Mixin Array and Hash behaviors
-  var ArrayWrapper = _dereq_("./wrappers/array"),
-      HashWrapper = _dereq_("./wrappers/hash");
-
-  var __include = function __include(klass, mixins) {
-    for (var i = 0, ii = mixins.length; i < ii; i++) {
-      for (var methodName in mixins[i]) {
-        klass.prototype[methodName] = mixins[i][methodName];
-      }
-    }
-  };
-
-  __include(DataWrapper, [ArrayWrapper, HashWrapper]);
-
-  return DataWrapper;
-};
-
-},{"./wrappers/array":5,"./wrappers/hash":6,"deep-diff":2}],4:[function(_dereq_,module,exports){
-"use strict";
-
-var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
-module.exports = (function () {
-  var PubSub = (function () {
-    function PubSub() {
-      _classCallCheck(this, PubSub);
-
-      this.uid = -1;
-      this.topics = {};
-    }
-
-    _prototypeProperties(PubSub, null, {
-      subscribe: {
-        value: function subscribe(topic, callback) {
-          if (!this.topics.hasOwnProperty(topic)) {
-            this.topics[topic] = [];
-          }
-          this.topics[topic].push({ callback: callback });
-        },
-        writable: true,
-        configurable: true
-      },
-      publish: {
-        value: function publish(topic, data) {
-          if (!this.topics.hasOwnProperty(topic)) {
-            return false;
-          }
-
-          var subscribers = this.topics[topic];
-
-          for (var i = 0, ii = subscribers.length; i < ii; i++) {
-            subscribers[i].callback(topic, data);
-          }
-
-          return true;
-        },
-        writable: true,
-        configurable: true
-      },
-      subscribeToCortex: {
-        value: function subscribeToCortex(updateCallback, removeCallback) {
-          this.uid += 1;
-          this.subscribe("update" + this.uid, updateCallback);
-          this.subscribe("remove" + this.uid, removeCallback);
-          return this.uid;
-        },
-        writable: true,
-        configurable: true
-      },
-      unsubscribeFromCortex: {
-        value: function unsubscribeFromCortex(topicId) {
-          delete this.topics["update" + topicId];
-          delete this.topics["remove" + topicId];
-        },
-        writable: true,
-        configurable: true
-      }
-    });
-
-    return PubSub;
-  })();
-
-  return new PubSub();
-})();
-
-},{}],5:[function(_dereq_,module,exports){
-"use strict";
-
-var ArrayWrapper = {
-  count: function count() {
-    return this.__value.length;
-  },
-
-  map: function map(callback) {
-    return this.__wrappers.map(callback);
-  },
-
-  filter: function filter(callback, thisArg) {
-    return this.__wrappers.filter(callback, thisArg);
-  },
-
-  find: function find(callback) {
-    for (var index = 0, length = this.__wrappers.length; index < length; index++) {
-      if (callback(this.__wrappers[index], index, this.__wrappers)) {
-        return this.__wrappers[index];
-      }
-    }
-    return null;
-  },
-
-  findIndex: function findIndex(callback) {
-    for (var index = 0, length = this.__wrappers.length; index < length; index++) {
-      if (callback(this.__wrappers[index], index, this.__wrappers)) {
-        return index;
-      }
-    }
-    return -1;
-  },
-
-  push: function push(value) {
-    var oldValue = this.__clone(this.__value),
-        length = this.__value.push(value);
-    this.set(this.__value, { oldValue: oldValue });
-    return length;
-  },
-
-  pop: function pop() {
-    var oldValue = this.__clone(this.__value),
-        last = this.__value.pop();
-    this.set(this.__value, { oldValue: oldValue });
-    return last;
-  },
-
-  unshift: function unshift(value) {
-    var oldValue = this.__clone(this.__value),
-        length = this.__value.unshift(value);
-    this.set(this.__value, { oldValue: oldValue });
-    return length;
-  },
-
-  shift: function shift() {
-    var oldValue = this.__clone(this.__value),
-        last = this.__value.shift();
-    this.set(this.__value, { oldValue: oldValue });
-    return last;
-  },
-
-  insertAt: function insertAt(index) {
-    var oldValue = this.__clone(this.__value),
-        args = Array.prototype.slice.call(arguments, 1);
-
-    Array.prototype.splice.apply(this.__value, [index, 0].concat(args));
-
-    this.set(this.__value, { oldValue: oldValue });
-  },
-
-  removeAt: function removeAt(index) {
-    var howMany = arguments[1] === undefined ? 1 : arguments[1];
-
-    var oldValue = this.__clone(this.__value),
-        removed = this.__value.splice(index, howMany);
-
-    this.set(this.__value, { oldValue: oldValue });
-    return removed;
-  }
-};
-
-module.exports = ArrayWrapper;
-
-},{}],6:[function(_dereq_,module,exports){
-"use strict";
-
-var HashWrapper = {
-  keys: function keys() {
-    return Object.keys(this.__value);
-  },
-
-  values: (function (_values) {
-    var _valuesWrapper = function values() {
-      return _values.apply(this, arguments);
-    };
-
-    _valuesWrapper.toString = function () {
-      return _values.toString();
-    };
-
-    return _valuesWrapper;
-  })(function () {
-    var key,
-        values = [];
-    for (key in this.__value) {
-      values.push(this.__value[key]);
-    }
-    return values;
-  }),
-
-  hasKey: function hasKey(key) {
-    return this.__value[key] != null;
-  },
-
-  destroy: function destroy(key) {
-    var oldValue = this.__clone(this.__value),
-        removed = this.__value[key];
-    delete this.__value[key];
-    this.set(this.__value, { oldValue: oldValue });
-    return removed;
-  },
-
-  add: function add(key, value) {
-    var oldValue = this.__clone(this.__value);
-    this.__value[key] = value;
-    this.set(this.__value, { oldValue: oldValue });
-    return value;
-  }
-};
-
-module.exports = HashWrapper;
-
-},{}]},{},[1])(1)
-});
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],85:[function(require,module,exports){
+},{"./helpers.js":80,"./type.js":83}],85:[function(require,module,exports){
 
 },{}],86:[function(require,module,exports){
 /*!
@@ -29929,8 +28971,8 @@ function isUndefined(arg) {
 }
 
 },{}],226:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],227:[function(require,module,exports){
+arguments[4][16][0].apply(exports,arguments)
+},{"dup":16}],227:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
@@ -33666,10 +32708,10 @@ function isNullOrUndefined(arg) {
 }
 
 },{"punycode":229,"querystring":232}],247:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],248:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
-},{"./support/isBuffer":247,"_process":228,"dup":17,"inherits":226}],249:[function(require,module,exports){
+},{"dup":17}],248:[function(require,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"./support/isBuffer":247,"_process":228,"dup":18,"inherits":226}],249:[function(require,module,exports){
 var indexOf = require('indexof');
 
 var Object_keys = function (obj) {
@@ -70182,40 +69224,4 @@ module.exports = warning;
 },{"./emptyFunction":420}],463:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":321}],464:[function(require,module,exports){
-'use strict';
-
-var React = require('react');
-var Router = require('react-router');
-var Route = Router.Route;
-var DefaultRoute = Router.DefaultRoute;
-
-var Baobab = require('baobab');
-
-var treeData = new Baobab({
-  user: {
-    authed: false,
-  }
-});
-
-var App = require('./components/App.jsx')(treeData);
-var Login = require('./components/pages/Login.jsx')(treeData);
-var Index = require('./components/pages/Index.jsx')(treeData);
-var Restaurant = require('./components/pages/Restaurant.jsx')(treeData);
-var Dish = require('./components/pages/Dish.jsx')(treeData);
-
-
-
-var routes = (
-  React.createElement(Route, {handler: App, name: "app"}, 
-    React.createElement(Route, {handler: Index, name: "home", path: "/"}), 
-    React.createElement(Route, {handler: Login, name: "login", path: "/login"}), 
-    React.createElement(Route, {handler: Restaurant, name: "restaurant", path: "/restaurant/:restaurantSlug"}), 
-    React.createElement(Route, {handler: Dish, name: "dish", path: "/dish/:restaurantSlug/:dishSlug"})
-  )
-);
-
-module.exports = routes;
-
-
-},{"./components/App.jsx":2,"./components/pages/Dish.jsx":5,"./components/pages/Index.jsx":6,"./components/pages/Login.jsx":7,"./components/pages/Restaurant.jsx":8,"baobab":73,"react":463,"react-router":276}]},{},[1,12,13]);
+},{"./lib/React":321}]},{},[1,13,14]);
