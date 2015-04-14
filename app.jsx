@@ -14,7 +14,7 @@ var treeData = new Baobab({
     authed: false,
   }
 });
-var usersCursor = treeData.select('user');
+var userCursor = treeData.select('user');
 
 // React components
 var App = require('./components/App.jsx')(treeData);
@@ -26,22 +26,35 @@ var Checkout = require('./components/pages/Checkout.jsx')(treeData);
 
 var store = require('./lib/store')();
 var cognitoAuth = require('./lib/cognito')();
+var facebookAuth = require('./lib/cognito.facebook')();
 var syncClient;
 
 
 cognitoAuth.unAuthUserLogin();
-cognitoAuth.checkFacebookLogin(usersCursor);
+
+var facebookToken = window.sessionStorage.getItem('facebookToken');
+console.log('facebookToken', facebookToken);
+if (facebookToken) {
+  userCursor.set('accessToken', {
+    type: 'fb',
+    token: facebookToken,
+  });
+} else {
+  facebookAuth.checkLogin(userCursor);
+}
 
 
-usersCursor.on('update', function _updateUser() {
-  var user = usersCursor.get();
-  console.log('update');
+
+
+userCursor.on('update', function _updateUser() {
+  var user = userCursor.get();
+  
   if (!user.authed && user.accessToken !== null) {
 
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
-      usersCursor.set('identityId', AWS.config.credentials.identityIddentityId);
-      usersCursor.set('authed', true);
+      userCursor.set('identityId', AWS.config.credentials.identityId);
+      userCursor.set('authed', true);
     });
 
   }
