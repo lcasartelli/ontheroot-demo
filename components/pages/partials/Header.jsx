@@ -46,6 +46,7 @@ module.exports = function (treeData) {
               <img src='./assets/img/logo.png' />
             </Link>
             { userComponent }
+            <Link to='checkout'><button className='pure-button'>Carrello</button></Link>
           </div>
         </nav>
       );

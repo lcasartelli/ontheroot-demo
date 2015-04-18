@@ -20,6 +20,7 @@ var treeData = new Baobab({
   }
 });
 var userCursor = treeData.select('user');
+var cartCursor = treeData.select('cart', 'items');
 
 // React components
 var App = require('./components/App.jsx')(treeData);
@@ -31,10 +32,16 @@ var Checkout = require('./components/pages/Checkout.jsx')(treeData);
 
 var cognitoAuth = require('./lib/cognito')();
 var facebookAuth = require('./lib/cognito.facebook')();
+var checkout = require('./lib/checkout')(cartCursor);
 var syncClient;
 
 
 cognitoAuth.unAuthUserLogin().then(function () {
+  
+  cartCursor.on('update', function _onCartItemsUpdate() {
+    checkout.autoSyncronizeCart();
+  });
+
   loadApp();
 });
 
@@ -50,8 +57,6 @@ if (facebookToken) {
 }
 
 
-
-
 userCursor.on('update', function _updateUser() {
   var user = userCursor.get();
   
@@ -60,6 +65,7 @@ userCursor.on('update', function _updateUser() {
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
       //userCursor.set('identityId', AWS.config.credentials.identityId);
+      console.log('credentials', AWS.config.credentials);
       userCursor.set('authed', true);
     });
 

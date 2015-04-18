@@ -1,7 +1,3 @@
-
-
-
-
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -10,14 +6,9 @@
 var React = require('react/addons');
 var _ = require('lodash');
 
-
-var checkout = require('../../lib/checkout')();
-
-
-var RESTAURANTS = require('../../config/restaurants.json');
-
-
 module.exports = function (treeData) {
+
+  var checkout = require('../../lib/checkout')(treeData.select('cart'));
   
   return React.createClass({
     displayName: 'Checkout',
@@ -25,7 +16,7 @@ module.exports = function (treeData) {
     mixins: [treeData.mixin],
     cursors: {
       user: ['user'],
-      cart: ['cart'],
+      cart: ['cart', 'items'],
     },
 
 
@@ -42,17 +33,22 @@ module.exports = function (treeData) {
      
     },
 
-    buy: function buy() {
-      checkout.addItem({ slug: 'hello' }, 2);
-    },
-
 
     render: function() : React.PropTypes.element {
 
-      return  (
-        <div>
-          <button onClick={this.buy}>Buy</button>
-        </div>);
+      var orders = this.cursors.cart.get();
+
+      return (
+      <div>
+        <h2>Checkout</h2>
+        <div className='actualOrder'>
+          <ul>
+          {_.map(orders, function (item) {
+            return (<li>{item.name} - {item.qty}</li>);
+          })}
+          </ul>
+        </div>
+      </div>);
     }
 
   });

@@ -6,13 +6,14 @@
 var React = require('react/addons');
 var _ = require('lodash');
 
-var Dish = require('../elements/Dish.jsx');
 
 var RESTAURANTS = require('../../config/restaurants.json');
 
 
 module.exports = function (treeData) {
 
+  var Dish = require('../elements/Dish.jsx')(treeData);
+  
   return React.createClass({
     displayName: 'Restaurant',
 
