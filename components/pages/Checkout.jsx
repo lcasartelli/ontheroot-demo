@@ -11,6 +11,9 @@ var React = require('react/addons');
 var _ = require('lodash');
 
 
+var checkout = require('../../lib/checkout')();
+
+
 var RESTAURANTS = require('../../config/restaurants.json');
 
 
@@ -19,17 +22,15 @@ module.exports = function (treeData) {
   return React.createClass({
     displayName: 'Checkout',
 
-    propTypes: {},
-
-    contextTypes: {
-      router: React.PropTypes.func.isRequired
+    mixins: [treeData.mixin],
+    cursors: {
+      user: ['user'],
+      cart: ['cart'],
     },
 
 
     getInitialState: function getInitialState() : Object {
-      return {
-        restaurant: null,
-      };
+      return {};
     },
 
 
@@ -41,20 +42,17 @@ module.exports = function (treeData) {
      
     },
 
+    buy: function buy() {
+      checkout.addItem({ slug: 'hello' }, 2);
+    },
+
 
     render: function() : React.PropTypes.element {
+
       return  (
-        <form action="" method="POST">
-          <script
-            src="https://checkout.stripe.com/checkout.js" 
-            className="stripe-button"
-            data-key="pk_test_J5PfexKfZmdZFhhfFkAA66DG"
-            data-amount="2000"
-            data-name="Demo Site"
-            data-description="2 widgets ($20.00)"
-            >
-          </script>
-        </form>);
+        <div>
+          <button onClick={this.buy}>Buy</button>
+        </div>);
     }
 
   });

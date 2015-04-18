@@ -11,6 +11,9 @@ var Router = require('react-router');
 var Route = Router.Route;
 var Link = Router.Link;
 
+var checkout = require('../../lib/checkout')();
+
+
 module.exports = React.createClass({
   displayName: 'DishItem',
 
@@ -30,11 +33,17 @@ module.exports = React.createClass({
   },
 
 
+  addToCart: function addToCart() {
+    checkout.addItem({ slug: 'hello' }, 1);
+  },
+
+
   render: function() : React.PropTypes.element {
     var params = {restaurantSlug: this.props.restaurant.slug, dishSlug: this.props.dish.slug};
     return (
       <div className='dishItem'>
         <h3>{ this.props.dish.name }</h3>
+        <button className='pure-button' onClick={this.addToCart}>Aggiungi al carrello</button>
         <Link className='pure-button' to="dish" params={params}>Vai al piatto</Link>
       </div>
     );

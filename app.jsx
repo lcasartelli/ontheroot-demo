@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var AWS = require('aws-sdk');
+//var AWS = require('aws-sdk');
 var Baobab = require('baobab');
 var React = require('react/addons');
 var Router = require('react-router');
@@ -12,6 +12,11 @@ var DefaultRoute = Router.DefaultRoute;
 var treeData = new Baobab({
   user: {
     authed: false,
+  },
+  cart: {
+    items: [],
+    createOn: Date.now(),
+    completed: false    
   }
 });
 var userCursor = treeData.select('user');
@@ -24,13 +29,14 @@ var Restaurant = require('./components/pages/Restaurant.jsx')(treeData);
 var Dish = require('./components/pages/Dish.jsx')(treeData);
 var Checkout = require('./components/pages/Checkout.jsx')(treeData);
 
-var store = require('./lib/store')();
 var cognitoAuth = require('./lib/cognito')();
 var facebookAuth = require('./lib/cognito.facebook')();
 var syncClient;
 
 
-cognitoAuth.unAuthUserLogin();
+cognitoAuth.unAuthUserLogin().then(function () {
+  loadApp();
+});
 
 var facebookToken = window.sessionStorage.getItem('facebookToken');
 console.log('facebookToken', facebookToken);
@@ -53,7 +59,7 @@ userCursor.on('update', function _updateUser() {
 
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
-      userCursor.set('identityId', AWS.config.credentials.identityId);
+      //userCursor.set('identityId', AWS.config.credentials.identityId);
       userCursor.set('authed', true);
     });
 
@@ -73,9 +79,12 @@ var routes = (
 // config routes
 var router = Router.create({routes: routes});
 
-router.run(function(Handler) {
-  React.render(
-    <Handler />,
-    document.querySelector('#fullnode')
-  );
-});
+var  loadApp = function loadApp() {
+
+  router.run(function(Handler) {
+    React.render(
+      <Handler />,
+      document.querySelector('#fullnode')
+    );
+  });
+};

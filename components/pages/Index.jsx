@@ -1,5 +1,4 @@
 /* @flow */
-/*jshint browser:true, devel:true */
 
 'use strict';
 
@@ -9,6 +8,7 @@ var _ = require('lodash');
 var Restaurant = require('../elements/Restaurant.jsx');
 
 var RESTAURANTS = require('../../config/restaurants.json');
+
 
 
 module.exports = function (treeData) {
@@ -21,7 +21,7 @@ module.exports = function (treeData) {
     propTypes: {},
 
 
-    componentDidMount: function() : void {
+    componentDidMount: function(item) : void {
 
     },
 
