@@ -20,7 +20,7 @@ var treeData = new Baobab({
   }
 });
 var userCursor = treeData.select('user');
-var cartCursor = treeData.select('cart', 'items');
+var cartCursor = treeData.select('cart');
 
 // React components
 var App = require('./components/App.jsx')(treeData);
@@ -37,10 +37,17 @@ var syncClient;
 
 
 cognitoAuth.unAuthUserLogin().then(function () {
-  
+
+  checkout.getCurrentOrder().then(function (data) {
+    treeData.set('cart', data);
+  })
+
   cartCursor.on('update', function _onCartItemsUpdate() {
-    checkout.autoSyncronizeCart();
+    checkout.autoSyncronizeCart().then(function () {
+      console.log('sync completed');
+    });
   });
+
 
   loadApp();
 });

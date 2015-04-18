@@ -21,7 +21,7 @@ var treeData = new Baobab({
   }
 });
 var userCursor = treeData.select('user');
-var cartCursor = treeData.select('cart', 'items');
+var cartCursor = treeData.select('cart');
 
 // React components
 var App = require('./components/App.jsx')(treeData);
@@ -38,10 +38,17 @@ var syncClient;
 
 
 cognitoAuth.unAuthUserLogin().then(function () {
-  
+
+  checkout.getCurrentOrder().then(function (data) {
+    treeData.set('cart', data);
+  })
+
   cartCursor.on('update', function _onCartItemsUpdate() {
-    checkout.autoSyncronizeCart();
+    checkout.autoSyncronizeCart().then(function () {
+      console.log('sync completed');
+    });
   });
+
 
   loadApp();
 });
@@ -830,14 +837,11 @@ module.exports = function(cartCursor) {
 
 
   var autoSyncronizeCart = function () {
-    return new Promise(function (fullfill, reject) {
-      console.log('here', 2);
-      cart.on('update', function _updateCart() {
-        console.log('cart change, resync cognito databaset');
-        _syncronizeDataset().then(function () {
-          fullfill();
-        }, reject);
-      });
+    return new Promise(function (fullfill, reject) {  
+      console.log('cart change, resync cognito databaset');
+      _syncronizeDataset().then(function () {
+        fullfill();
+      }, reject);
     });
   };
 
@@ -861,25 +865,38 @@ module.exports = function(cartCursor) {
   var addItem = function (newItem, qty) {
 
     ok(typeof newItem === 'object', 'Missing required, no item provided');
-    ok(!Number.isNaN(qty), 'Missing required, no quantity provided');
+    ok(!_.isNaN(qty), 'Missing required, no quantity provided');
 
     var itemIndex = _.findIndex(cart.get(), function (o) { return o.slug ===  newItem.slug});
 
     if (itemIndex > -1) {
       var oldItem = cart.get()[itemIndex];
-      oldItem.qty = oldItem.qty + qty;
+      oldItem.qty = !_.isNaN(oldItem.qty) ? (oldItem.qty + qty) : qty;
+      cart.set(itemIndex, oldItem);
     } else {
       var item = newItem;
       item.qty = qty;
-      cart.get().push(item);
+      cart.push(item);
     }
 
+  };
+
+
+  var getCurrentOrder = function () {
+    return _loadDataset()
+    .then(function () {
+      return store.getItem(ACTUAL_ORDER_KEY, ordersDataset);
+    })
+    .then(function (order) {
+      return JSON.parse(order);
+    });
   };
 
 
   return {
     addItem: addItem,
     autoSyncronizeCart: autoSyncronizeCart,
+    getCurrentOrder: getCurrentOrder,
   };
 };
 
@@ -1106,6 +1123,7 @@ module.exports = function () {
   var getItem = function (key, dataset) {
     
     ok(key, 'key not provided');
+    ok(dataset, 'dataset not provided');
 
     return new Promise(function (fullfill, reject) {
       
@@ -1127,6 +1145,7 @@ module.exports = function () {
     
     ok(key, 'key not provided');
     ok(value, 'value not provided');
+    ok(dataset, 'dataset not provided');
 
     return new Promise(function (fullfill, reject) {
       
@@ -1168,6 +1187,7 @@ module.exports = function () {
     getItem: getItem,
     setItem: setItem,
     removeItem: removeItem,
+    syncronize: syncronize,
   }; 
 
 };
