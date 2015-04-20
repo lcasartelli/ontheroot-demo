@@ -9,6 +9,8 @@ var Router = require('react-router');
 var Route = Router.Route;
 var Link = Router.Link;
 
+var cognitoAuth = require('../../../lib/cognito')();
+
 
 module.exports = function (treeData) {
 
@@ -28,16 +30,26 @@ module.exports = function (treeData) {
     },
 
 
+    logout: function logout() {
+      console.log('logout...');
+      cognitoAuth.authUserLogout();
+      this.cursor.set('authed', false);
+      this.cursor.set('accessToken', null);
+    },
+
+
     render: function() : React.PropTypes.element {
     
       var user = this.cursor.get();
       var userComponent;
 
+
       if (user.authed) {
-        userComponent = <p>Utente loggato</p>;
+        userComponent = <div><button className='pure-button' onClick={this.logout}>Logout</button></div>;
       } else  {
-        userComponent = <p>Utente non loggato</p>;
+        userComponent = <div><Link to='login'><button className='pure-button'>Login</button></Link></div>;
       }
+
 
       return (
         <nav className='header'>
@@ -47,6 +59,7 @@ module.exports = function (treeData) {
             </Link>
             { userComponent }
             <Link to='checkout'><button className='pure-button'>Carrello</button></Link>
+            
           </div>
         </nav>
       );

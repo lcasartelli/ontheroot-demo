@@ -12,13 +12,13 @@ module.exports = function (treeData) {
     displayName: 'Login',
 
     mixins: [treeData.mixin],
-    cursor: ['user'],
+    cursors: {
+      user: ['user'],
+    },
 
 
     getInitialState: function getInitialState() : Object {
-      return {
-        logged: false
-      };
+      return {};
     },
 
 
@@ -38,7 +38,7 @@ module.exports = function (treeData) {
           version    : 'v2.3'
         });
 
-        this.checkLoginState();
+        //this.checkLoginState();
 
       }.bind(this);
 
@@ -57,25 +57,18 @@ module.exports = function (treeData) {
     },
 
 
-    statusChangeCallback: function statusChangeCallback (response) {
-      console.log('statusChangeCallback');
-      console.log(response);
+    statusChangeCallback: function statusChangeCallback(response) {
 
-      this.cursor.set('accessToken', {
-        type: 'fb',
-        token: response.authResponse.accessToken,
-      });
+      console.log('statusChangeCallback', response);
 
-      // The response object is returned with a status field that lets the
-      // app know the current login status of the person.
-      // Full docs on the response object can be found in the documentation
-      // for FB.getLoginStatus().
       if (response.status === 'connected') {
         // Logged into your app and Facebook.
-
         console.log('logged');
+        this.cursors.user.set('accessToken', {
+          type: 'fb',
+          token: response.authResponse.accessToken,
+        });
 
-        this.setState({ logged: true });
       } else {
         console.log('not logged');
       }
@@ -86,23 +79,17 @@ module.exports = function (treeData) {
 
       var loginButton;
 
-      if (!this.state.logged) {
-        loginButton = <button onClick={this.doLoginFB}>Login</button>;
+      var user = this.cursors.user.get();
+
+      if (!user.authed) {
+        loginButton = <button className='pure-button' onClick={this.doLoginFB}>Login</button>;
       } else {
         loginButton = <div></div>;
       }
 
       return (
-        <section id="app">
-          <header></header>
-
-          <section id="app">
-            <section id="content">
-            { loginButton }
-            </section>
-          </section>
-
-          <footer></footer>
+        <section className="content">
+          { loginButton }
         </section>
       );
     }

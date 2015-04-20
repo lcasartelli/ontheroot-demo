@@ -53,14 +53,15 @@ cognitoAuth.unAuthUserLogin().then(function () {
 });
 
 var facebookToken = window.sessionStorage.getItem('facebookToken');
-console.log('facebookToken', facebookToken);
+
 if (facebookToken) {
+  console.log('facebookToken', facebookToken);
   userCursor.set('accessToken', {
     type: 'fb',
     token: facebookToken,
   });
 } else {
-  facebookAuth.checkLogin(userCursor);
+  //facebookAuth.checkLogin(userCursor);
 }
 
 
