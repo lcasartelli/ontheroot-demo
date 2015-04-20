@@ -13,11 +13,7 @@ var treeData = new Baobab({
   user: {
     authed: false,
   },
-  cart: {
-    items: [],
-    createOn: Date.now(),
-    completed: false    
-  }
+  cart: []
 });
 var userCursor = treeData.select('user');
 var cartCursor = treeData.select('cart');
@@ -32,15 +28,19 @@ var Checkout = require('./components/pages/Checkout.jsx')(treeData);
 
 var cognitoAuth = require('./lib/cognito')();
 var facebookAuth = require('./lib/cognito.facebook')();
-var checkout = require('./lib/checkout')(cartCursor);
+var checkout = require('./lib/checkout')(treeData);
 var syncClient;
 
 
 cognitoAuth.unAuthUserLogin().then(function () {
 
   checkout.getCurrentOrder().then(function (data) {
-    treeData.set('cart', data);
-  })
+    if (!data) {
+      data = [];
+    }
+    cartCursor.edit(data);
+    console.log('update', treeData);
+  });
 
   cartCursor.on('update', function _onCartItemsUpdate() {
     checkout.autoSyncronizeCart().then(function () {

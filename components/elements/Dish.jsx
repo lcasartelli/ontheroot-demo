@@ -13,7 +13,7 @@ var Link = Router.Link;
 
 module.exports = function (treeData) {
 
-  var checkout = require('../../lib/checkout')(treeData.select('cart', 'items'));
+  var checkout = require('../../lib/checkout')(treeData);
 
   return React.createClass({
     displayName: 'DishItem',
