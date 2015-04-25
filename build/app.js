@@ -208,6 +208,8 @@ module.exports = function (treeData) {
 
           React.createElement("div", {id: "cart-dropdown"}, 
             _.map(cartItems, function (item) {
+              // i don't believe in this shit
+              item.price = item.price.replace(',', '.');
               var price = Number.parseInt(item.qty, 10) * Number.parseFloat(item.price, 10);
 
               return (
