@@ -127,7 +127,7 @@ module.exports = function (treeData) {
           </div>
           <div className="food-actions">
             <div id="order-form" className="pure-form">
-              <input type="hidden" name="foodID" value="1"/><label>7,50<small>&euro;</small></label><label>&times;</label>
+              <input type="hidden" name="foodID" value="1"/><label>{this.props.dish.price}<small>&euro;</small></label><label>&times;</label>
               <div className="qty">
                 <input id="quantity" type="number" name="quantity" min="1" max="10" valueLink={this.linkState('quantity')} />
                 <div className="qty-actions">

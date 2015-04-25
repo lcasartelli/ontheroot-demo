@@ -37,11 +37,16 @@ module.exports = function (treeData) {
     render: function() : React.PropTypes.element {
       
       var cartItems = this.cursors.cart.get();
+
+      var cartCounter = <span></span>;
+      if (cartItems.length > 0) {
+        cartCounter = <strong className="badge">{cartItems.length}</strong>;
+      }
       
       return (
         <a className="header-button cart-button" onClick={this.openCartDropdown}>
           <i className="fa fa-shopping-cart">
-            <strong className="badge">5</strong>
+            {cartCounter}
           </i>
           <span>Carrello</span>
 
