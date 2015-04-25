@@ -59,7 +59,7 @@ module.exports = function (treeData) {
               return (
                 <div className="cart-item">
                   <strong>{item.name}</strong>
-                  <span>{item.qty} porzioni : € {price}</span>
+                  <span>{item.qty}&nbsp;porzioni:&nbsp;{price}&nbsp;€</span>
                   <button className="pure-button pure-danger"><span>Remove</span></button>
                 </div>)})
             }
