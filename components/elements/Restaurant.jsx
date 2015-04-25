@@ -31,11 +31,22 @@ module.exports = React.createClass({
 
   render: function() : React.PropTypes.element {
     var params = {restaurantSlug: this.props.restaurant.slug};
+    //<h2>{ this.props.restaurant.title }</h2>
+
+    var className = [ 'restaurant-image' ];
+    if (true) {
+      className.push('nowopen');
+    }
+
+    var backgroundImg = 'outofgluten.jpg';
+
     return (
-      <div>
-        <h2>{ this.props.restaurant.title }</h2>
-         <Link className='pure-button' to="restaurant" params={params}>Vai al ristorante</Link>
-      </div>
+      <Link to="restaurant" params={params}>
+        <div data-href="restaurant.html" data-filter="indian,japanese" className="restaurant-grid">
+          <div className={className.join(' ')} style={{"background-image": "url('./assets/img/" + backgroundImg + "')"}}></div>
+          <h4>{ this.props.restaurant.title }</h4>
+        </div>
+      </Link>
     );
   }
 
