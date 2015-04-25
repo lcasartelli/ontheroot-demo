@@ -13,7 +13,7 @@ var cognitoAuth = require('../../../lib/cognito')();
 
 module.exports = function (treeData) {
 
-  var CartDropDown = require('../../elements/CartDropDown.jsx')(treeData);
+  var CartHandler = require('../../elements/CartHandler.jsx')(treeData);
 
   return React.createClass({
     displayName: 'Header',
@@ -30,10 +30,6 @@ module.exports = function (treeData) {
     },
 
     componentDidMount: function() : void {
-
-      document.querySelector('.cart-button').onclick = function () {
-        document.getElementById('cart-dropdown').classList.toggle('show');this.classList.toggle('active');
-      };
     },
 
 
@@ -42,6 +38,12 @@ module.exports = function (treeData) {
       cognitoAuth.authUserLogout();
       this.cursors.user.set('authed', false);
       this.cursors.user.set('accessToken', null);
+    },
+
+
+    openCartDropdown: function openCartDropdown() {
+      React.findDOMNode(this.refs.cartDropdown).classList.toggle('show');
+      React.findDOMNode(this).querySelector('.cart-button').classList.toggle('active');
     },
 
 
@@ -72,14 +74,8 @@ module.exports = function (treeData) {
               <Link to="home" activeClassName='activeNull' className="header-button"><img src="assets/img/otr-logo.png" className="logo"/></Link>
             </div>
             <div className="pull-right">
-               <a className="header-button cart-button">
-                  <i className="fa fa-shopping-cart">
-                    <strong className="badge">5</strong>
-                  </i>
-                  <span>Carrello</span>
-                  <CartDropDown />
-               </a>
-            {userComponent}
+              <CartHandler />
+              {userComponent}
             </div>
           </div>
         </header>

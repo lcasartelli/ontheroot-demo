@@ -167,7 +167,7 @@ var _ = require('lodash');
 module.exports = function (treeData) {
 
   return React.createClass({
-    displayName: 'CartDropdown',
+    displayName: 'CartHandler',
 
     mixins: [treeData.mixin],
     cursors: {
@@ -176,14 +176,17 @@ module.exports = function (treeData) {
     },
 
 
-
     getInitialState: function getInitialState()          {
       return {};
     },
 
 
-    componentDidMount: function()        {
-
+    componentDidMount: function()        {},
+    
+    
+    openCartDropdown: function openCartDropdown() {
+      React.findDOMNode(this).querySelector('#cart-dropdown').classList.toggle('show');
+      React.findDOMNode(this).classList.toggle('active');
     },
 
 
@@ -192,17 +195,29 @@ module.exports = function (treeData) {
       var cartItems = this.cursors.cart.get();
       
       return (
-        React.createElement("div", {id: "cart-dropdown"}, 
-          _.map(cartItems, function (item) {
-            var price = Number.parseInt(item.qty, 10) * Number.parseFloat(item.price, 10);
-          
-            return (
+        React.createElement("a", {className: "header-button cart-button", onClick: this.openCartDropdown}, 
+          React.createElement("i", {className: "fa fa-shopping-cart"}, 
+            React.createElement("strong", {className: "badge"}, "5")
+          ), 
+          React.createElement("span", null, "Carrello"), 
+
+          React.createElement("div", {id: "cart-dropdown"}, 
+            _.map(cartItems, function (item) {
+              var price = Number.parseInt(item.qty, 10) * Number.parseFloat(item.price, 10);
+
+              return (
+                React.createElement("div", {className: "cart-item"}, 
+                  React.createElement("strong", null, item.name), 
+                  React.createElement("span", null, item.qty, " porzioni : € ", price), 
+                  React.createElement("button", {className: "pure-button pure-danger"}, React.createElement("span", null, "Remove"))
+                ))}), 
+            
             React.createElement("div", {className: "cart-item"}, 
-              React.createElement("strong", null, item.name), 
-              React.createElement("span", null, item.qty, " porzioni : € ", price), 
-              React.createElement("button", {className: "pure-button pure-danger"}, React.createElement("span", null, "Remove"))
-            ))})
-          
+              React.createElement("button", {id: "show-cart", className: "pure-button"}, 
+                React.createElement("span", null, "Go to cart")
+              )
+            )
+          )
         )
       );
     }
@@ -1255,7 +1270,7 @@ var cognitoAuth = require('../../../lib/cognito')();
 
 module.exports = function (treeData) {
 
-  var CartDropDown = require('../../elements/CartDropDown.jsx')(treeData);
+  var CartHandler = require('../../elements/CartHandler.jsx')(treeData);
 
   return React.createClass({
     displayName: 'Header',
@@ -1272,10 +1287,6 @@ module.exports = function (treeData) {
     },
 
     componentDidMount: function()        {
-
-      document.querySelector('.cart-button').onclick = function () {
-        document.getElementById('cart-dropdown').classList.toggle('show');this.classList.toggle('active');
-      };
     },
 
 
@@ -1284,6 +1295,12 @@ module.exports = function (treeData) {
       cognitoAuth.authUserLogout();
       this.cursors.user.set('authed', false);
       this.cursors.user.set('accessToken', null);
+    },
+
+
+    openCartDropdown: function openCartDropdown() {
+      React.findDOMNode(this.refs.cartDropdown).classList.toggle('show');
+      React.findDOMNode(this).querySelector('.cart-button').classList.toggle('active');
     },
 
 
@@ -1314,14 +1331,8 @@ module.exports = function (treeData) {
               React.createElement(Link, {to: "home", activeClassName: "activeNull", className: "header-button"}, React.createElement("img", {src: "assets/img/otr-logo.png", className: "logo"}))
             ), 
             React.createElement("div", {className: "pull-right"}, 
-               React.createElement("a", {className: "header-button cart-button"}, 
-                  React.createElement("i", {className: "fa fa-shopping-cart"}, 
-                    React.createElement("strong", {className: "badge"}, "5")
-                  ), 
-                  React.createElement("span", null, "Carrello"), 
-                  React.createElement(CartDropDown, null)
-               ), 
-            userComponent
+              React.createElement(CartHandler, null), 
+              userComponent
             )
           )
         )
@@ -1333,7 +1344,7 @@ module.exports = function (treeData) {
 };
 
 
-},{"../../../lib/cognito":23,"../../elements/CartDropDown.jsx":3,"lodash":44,"react-router":69,"react/addons":84}],17:[function(require,module,exports){
+},{"../../../lib/cognito":23,"../../elements/CartHandler.jsx":3,"lodash":44,"react-router":69,"react/addons":84}],17:[function(require,module,exports){
 /* @flow */
 
 'use strict';
