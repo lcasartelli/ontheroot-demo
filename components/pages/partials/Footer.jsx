@@ -1,5 +1,4 @@
 /* @flow */
-/*jshint browser:true, devel:true */
 
 'use strict';
 
@@ -30,7 +29,14 @@ module.exports = function (data) {
 
       return (
         <footer>
-          <p>Made with ♥ in Italy</p>
+          <div className="footer-inner">
+            <div className="pull-left">
+              <img src="assets/img/otr-logo-footer.png" className="logo"/>
+            </div>
+            <div className="pull-right">
+              <p>&copy; 2015 <strong>ontheroot </strong>- Turnip greens yarrow ricebean rutabaga<a href="">hello@ontheroot.it</a><a href="">Privacy</a></p>
+            </div>
+          </div>
         </footer>
       );
     }
