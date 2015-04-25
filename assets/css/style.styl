@@ -1,14 +1,755 @@
+@import ('nib')
+@import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
 
-.content
-  padding 40px 40px 40px 40px
+_accent = #a89f84
+_lighten = lighten(_accent, 80%)
+_green = #87d860
+_red = #ec3737
+_orange = #f9ab30
+
+.sans-font
+  font-family 'Open Sans', sans-serif
+
+.pure-g [class *='pure-u'],
+.pure-g-r [class*="pure-u"]
+  @extends .sans-font
+
+html,
+body
+  width 100%
+  height 100%
+  @extends .sans-font
+  color darken(_accent, 50%)
+
+.pure-form
+  input[type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='date'], input[type='month'], input[type='time'], input[type='datetime'], input[type='datetime-local'], input[type='week'], input[type='number'], input[type='search'], input[type='tel'], input[type='color'], select, textarea
+    @extends .sans-font
+  button
+    @extends .sans-font
+
+.pure-button
+  @extends .sans-font
+  background _accent
+  color #FFF
+  font-weight 600
+  text-transform uppercase
+  transition all 0.5s ease
+  padding 15px 30px
+  &:hover
+    background darken(@background, 20%)
+  &.pure-success
+    background _green
+    &:hover
+      background darken(@background, 20%)
+  &.pure-danger
+    background _red
+    &:hover
+      background darken(@background, 20%)
+
+  i, span
+    display inline-block
+    vertical-align middle
+
+  span
+    font-size 13px
+
+  i + span
+    margin-left 10px
+
+a.link
+  text-decoration none
+  color _accent
+  box-shadow inset 0 -2px 0 rgba(_accent, 0.2)
+  transition color 0.3s ease, box-shadow 0.3s ease
+  display inline-block
+  &:hover
+    color _green
+    box-shadow inset 0 -2px 0 rgba(_green, 0.3)
 
 
-.header
-  padding 30px
-  .logo
-    text-align center
+[data-href]
+  cursor pointer
+
+h1, h2, h3,
+h4, h5, h6
+  font-weight 400
+
+h1
+  color _green
+
+b,
+strong
+  font-weight 600
+
+hr
+  border none
+  border-top 1px solid _lighten
+  margin 30px 0
+
+.noselect
+  -webkit-touch-callout none
+  -webkit-user-select none
+  -moz-user-select none
+  -ms-user-select none
+  user-select none
+
+
+_spacer = 5, 10, 20, 40, 60, 80, 100, 150
+
+for _val in _spacer
+  .spacer-{ _val }
+    height ( _val * 1px )
+
+.text-left
+  text-align left
+.text-center
+  text-align center
+.text-right
+  text-align right
+
+
+.page
+  width 100%
+  height auto
+
+.container
+  max-width 1000px
+  margin 0 auto
+  padding 0 20px
+
+header
+  background rgba(_accent, 0.9)
+  position fixed
+  z-index 10
+  top 0
+  left 0
+  right 0
+  color #FFF
+  font-size 13px
+  clearfix()
+
+  .header-inner
+    height 80px
+    padding 0 20px
+
+  .pull-left
+    float left
+  .pull-right
+    float right
+
+  .pull-left,
+  .pull-right
+    & > *
+      display inline-block
+      vertical-align middle
+
+  a.pure-button
+    padding 10px 20px
+
+  a.header-button
+    padding 20px
+    height 40px
+    line-height 38px
+    margin-right 20px
+    cursor pointer
+    position relative
+    color #fff
+    span,
+    img,
+    i
+      display inline-block
+      vertical-align middle
+    i
+      font-size 20px
+      position relative
+      color #FFF
+
+      strong.badge
+        @extends .sans-font
+        position absolute
+        background darken(_accent, 30%)
+        color #FFF
+        font-size 12px
+        font-weight 600
+        display block
+        min-width 10px
+        height 20px
+        line-height 22px
+        text-align center
+        padding 0 5px
+        border-radius 10px
+        top -15px
+        right -15px
+
+    span
+      line-height 1.2em
     img
-      width 60px
+      width 40px
+      height @width
+      border-radius (@width / 2)
+      &.logo
+        width 50px
+        height 50px
+        margin-top -5px
 
-.dishItem
-  padding 10px
+    img + span,
+    i + span
+      margin-left 20px
+
+    &:hover,
+    &.active
+      background _green
+      .badge
+        background darken(_green, 30%)
+
+#cart-dropdown
+  background #FFF
+  box-shadow 0 0 3px rgba(#000, 0.2)
+  border-radius 3px
+  position absolute
+  top 100%
+  margin-top -10px
+  left 50%
+  transform translate(-50%, 0)
+  color #333
+  width 320px
+  z-index 5
+  display none
+  max-height 320px
+  overflow-y auto
+  &.show
+    display block
+  .cart-item
+    padding 10px 15px
+    line-height 20px
+    cursor default
+    position relative
+    border-bottom 1px solid #EEE
+    &:last-child
+      border-bottom none
+    &:hover
+      .pure-button
+        display block
+    strong
+      display block
+      color _orange
+    .pure-button
+      display none
+      position absolute
+      right 15px
+      font-size 12px
+      top 50%
+      transform translate(0, -50%)
+      padding 3px 10px 5px 10px
+      &#show-cart
+        display block !important
+        position static
+        right auto
+        top auto
+        transform none
+        margin 5px 0
+        width 100%
+        padding 8px 10px 10px 10px
+        font-size 13px
+        background _green
+        &:hover
+          background darken(@background, 20%)
+
+.header-image
+  background-image url("../img/header-index.jpg")
+  background-position center
+  background-size cover
+  background-repeat no-repeat
+  position relative
+  text-align center
+  color #FFF
+  &:before
+    position absolute
+    display block
+    content ''
+    z-index 1
+    top 0
+    left 0
+    right 0
+    bottom 0
+    background rgba(#494949, 0.2)
+  .text-center
+    position relative
+    z-index 2
+  h1
+    color #FFF
+    font-size 50px
+    font-weight 600
+    text-transform uppercase
+    margin 5px 0
+  h3
+    font-weight 300
+    font-size 24px
+    margin 5px 0
+
+  &.glutenfree
+    background-image: url('../img/headers/glutenfree.jpg')
+
+
+footer
+  background _lighten
+  color #333
+  img.logo
+    height 25px
+    width auto
+    display block
+  .pull-left
+    float left
+  .pull-right
+    float right
+
+  .footer-inner
+    padding 20px
+    clearfix()
+    p
+      margin 0
+      color darken(_accent, 10%)
+      font-size 14px
+      strong
+        font-weight 600
+      a
+        display inline-block
+        margin 0 10px
+        font-weight 600
+        color darken(_accent, 40%)
+        text-decoration none
+        &:hover
+          text-decoration underline
+
+.food-type
+  margin 20px
+  height 280px
+  background-color _green
+  background-size cover
+  background-repeat no-repeat
+  background-position center
+  position relative
+  cursor pointer
+  overflow hidden
+  &:before
+    position absolute
+    content ''
+    display block
+    z-index 1
+    top 0
+    left 0
+    right 0
+    bottom 0
+    background rgba(#2d2d2d, 0.3)
+    transition background 0.5s ease
+  &:hover
+    &:before
+      background rgba(_green, 0.8)
+  &.comingsoon
+    &:before
+      position absolute
+      content ''
+      display block
+      z-index 3
+      top 0
+      left 0
+      right 0
+      bottom 0
+      background rgba(#FFF, 0.5)
+    &:after
+      position absolute
+      z-index 4
+      content 'Coming Soon'
+      display block
+      background _orange
+      color #FFF
+      text-transform uppercase
+      font-size 13px
+      font-weight 600
+      width 200px
+      text-align center
+      transform rotate(45deg)
+      padding 5px
+      top 40px
+      right -50px
+
+  &.glutenfree
+    background-image: url('../img/index-categories/gluten.jpg')
+  &.vegan
+    background-image: url('../img/index-categories/vegan.jpg')
+  &.vegetarian
+    background-image: url('../img/index-categories/vegetarian.jpg')
+
+
+  .food-type-inner
+    position absolute
+    z-index 2
+    top 50%
+    left 20px
+    right 20px
+    transform translate(0, -50%)
+    text-align center
+    color #FFF
+    h1,
+    p
+      color #FFF
+      margin 5px 0
+
+input#restaurants-filter
+  padding 20px 0
+  display block
+  width 60%
+  max-width 100%
+  box-shadow none
+  border-radius 10px
+  border 3px solid #f0f0f0
+  text-align center
+  margin 0 auto
+  color _accent
+  &:focus
+    border-color rgba(_accent, 0.5)
+
+.restaurant-grid
+  margin 20px
+  font-size 14px
+  .restaurant-image
+    width 100%
+    height 140px
+    background-position center
+    background-size cover
+    background-repeat no-repeat
+    position relative
+    overflow hidden
+    &:after
+      position absolute
+      display block
+      content ''
+      top 0
+      left 0
+      right 0
+      bottom 0
+      z-index 2
+      background rgba(_green, 0)
+      transition background 0.5s ease
+    &.nowopen
+      &:before
+        position absolute
+        z-index 4
+        content 'Open'
+        display block
+        background _green
+        color #FFF
+        text-transform uppercase
+        font-size 13px
+        font-weight 600
+        width 200px
+        text-align center
+        transform rotate(45deg)
+        padding 5px
+        top 15px
+        right -75px
+  h4
+    font-size 16px
+    font-weight 600
+    color _accent
+    margin 5px 0
+    transition color 0.5s ease
+  p
+    margin 5px 0
+    strong
+      color _accent
+      font-weight 600
+      transition color 0.5s ease
+  &:hover
+    .restaurant-image
+      &:after
+        background rgba(_green, 0.6)
+    h4
+      color _green
+
+.food-modal-grid
+  cursor pointer
+
+#food-modal-overlay
+  position fixed
+  top 0
+  left 0
+  right 0
+  bottom 0
+  background rgba(#333, 0.7)
+  z-index 10
+  display none
+  &.show
+    display block
+  .food-modal-inner
+    position absolute
+    top 0
+    left 50%
+    width 640px
+    max-width 100%
+    max-height 100%
+    overflow-y auto
+    background #FFF
+    transform translate(-50%, 0)
+    .food-modal-image
+      height 250px
+      width 100%
+      background-size cover
+      background-position center
+      background-repeat no-repeat
+      background-color _accent
+      position relative
+      #close-modal
+        position absolute
+        right 20px
+        top 20px
+        font-size 20px
+        line-height 20px
+        display inline-block
+        color #FFF
+        cursor pointer
+        transition color 0.5s ease
+        &:hover
+          color _orange
+    .food-modal-padding
+      padding 30px
+    h2
+      margin 0
+
+
+  h4
+    font-size 14px
+    font-weight 600
+    text-transform uppercase
+    margin 30px 0 5px 0
+
+  p
+    font-size 13px
+    line-height 20px
+    margin 5px 0
+
+  .food-actions
+    padding-top 30px
+    margin-top 30px
+    border-top 1px solid _lighten
+    text-align right
+    .pure-form
+      & > *
+        display inline-block
+        vertical-align middle
+        margin 0 0 0 20px
+
+      label
+        font-size 20px
+        font-weight 300
+        small
+          padding-left 5px
+          font-size 14px
+          font-weight 600
+          color lighten(_accent, 20%)
+
+      .qty
+        input
+          display inline-block
+          vertical-align middle
+          width 50px
+          padding 10px
+          background none !important
+        .qty-actions
+          display inline-block
+          vertical-align middle
+        a
+          display block
+          width auto
+          height 20px
+          color _accent
+          transition color 0.5s ease
+          font-size 14px
+          padding 0 10px
+          line-height 20px
+          cursor pointer
+          &:hover
+            color _green
+
+
+    button
+      padding 12px
+
+
+  .nutritional-value,
+  .donut-value
+    font-size 18px
+    margin-bottom 5px
+    color darken(_accent, 20%)
+    small
+      color lighten(_accent, 30%)
+      font-size 12px
+      padding-left 5px
+
+  .nutritional-bar
+    position relative
+    margin-bottom 15px
+    label
+      position absolute
+      left 0
+      top -5px
+      line-height 18px
+      font-size 12px
+      margin 0
+      color _accent
+    .nutritional-progress
+      height 8px
+      border-radius 4px
+      background #ece7d7
+      margin-left 100px
+      overflow hidden
+      span
+        display block
+        height 8px
+        border-radius 4px
+        background _accent
+        animation nutritional 2s ease-out
+
+  .donut-label
+    font-size 12px
+    color lighten(_accent, 30%)
+    margin-bottom 5px
+  .donut-container
+    width 80px
+    height 40px
+    overflow hidden
+    display inline-block
+    canvas.donut
+      transform rotate(-90deg)
+
+
+@keyframes nutritional
+  0%
+    max-width 0
+  100%
+    max-width 100%
+
+
+//  -- profile page --
+.profile-padding
+  padding-left 20px
+  padding-right 20px
+#profile-form,
+#delivery-form
+  label,
+  input
+    display block
+    width 100%
+    &[readonly]
+      border none
+      background none
+      box-shadow none
+  button[type="submit"]
+    margin 0 auto
+.profile-pic
+  border 5px solid rgba(_accent, 0.3)
+  margin 0 auto
+  _wh = 100px
+  width _wh - 5
+  height _wh - 5
+  border-radius (_wh / 2)
+  overflow hidden
+  img
+    max-width 100%
+    height auto
+
+
+//  -- cart page --
+.shopping-form
+  max-width 550px
+  margin 0 auto
+  position relative
+  & > h2
+    position relative
+    &:before
+      color _accent
+      text-align center
+      line-height 23px
+      font-size 14px
+      position absolute
+      content '1'
+      left -60px
+      width 24px
+      height 24px
+      border-radius 24px
+      border 2px solid _accent
+      overflow hidden
+  &.disabled
+    &:before
+      content: ''
+      top 0
+      left 0
+      z-index 3
+      background rgba(#fff, 0.6)
+      width 100%
+      height 100%
+      position absolute
+    & > h2
+      &:before
+        opacity 0.4
+
+
+#totalCart
+  &.fixed
+    top 50%
+    transform translateY(-50%)
+    right 0
+    padding 20px
+    background rgba(_accent, 0.9)
+    color #fff
+    position fixed
+    z-index 10
+    &:before
+      content 'Spesa totale: '
+
+#shopping-cart
+  max-width 100%
+  margin 0 auto
+  padding 0
+  list-style-type none
+  list-style-position outside
+  li
+    clearfix()
+    font-size 14px
+    margin-bottom 20px
+    &.header
+      font-size 16px
+    span
+      display inline-block
+      vertical-align middle
+      &.item
+        width 300px
+      &.price
+        width 100px
+      &.quantity
+        width 100px
+
+
+@media screen and (max-width: 568px)
+  header
+    a.header-button
+      margin-right 5px
+      i + span
+        display none
+      img + span
+        display none
+
+  .shopping-form
+    max-width 100%
+  #shopping-cart
+    li
+      span
+        &.item
+          width 50%
+        &.price,
+        &.quantity
+          width 24.8888888%
+          text-align right
+          input
+            display block
+            margin 0 autos
