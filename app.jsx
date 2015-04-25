@@ -22,6 +22,7 @@ var cartCursor = treeData.select('cart');
 var App = require('./components/App.jsx')(treeData);
 var Login = require('./components/pages/Login.jsx')(treeData);
 var Index = require('./components/pages/Index.jsx')(treeData);
+var Restaurants = require('./components/pages/Restaurants.jsx')(treeData);
 var Restaurant = require('./components/pages/Restaurant.jsx')(treeData);
 var Dish = require('./components/pages/Dish.jsx')(treeData);
 var Checkout = require('./components/pages/Checkout.jsx')(treeData);
@@ -83,6 +84,7 @@ userCursor.on('update', function _updateUser() {
 var routes = (
   <Route handler={App} name='app'>
     <Route handler={Index} name='home' path='/' />
+    <Route handler={Restaurants} name='restaurants' path='/restaurants' />
     <Route handler={Login} name='login' path='/login' />
     <Route handler={Restaurant} name='restaurant' path='/restaurant/:restaurantSlug' />
     <Route handler={Dish} name='dish' path='/dish/:restaurantSlug/:dishSlug' />
