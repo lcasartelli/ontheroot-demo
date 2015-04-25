@@ -5,13 +5,15 @@
 var React = require('react/addons');
 var _ = require('lodash');
 
-var Restaurant = require('../elements/Restaurant.jsx');
-
 var RESTAURANTS = require('../../config/restaurants.json');
 
 
 
 module.exports = function (treeData) {
+
+  var IndexHeader = require('./partials/IndexHeader.jsx')(treeData);
+  var Category = require('../elements/Category.jsx')(treeData);
+
 
   return React.createClass({
     displayName: 'Index',
@@ -30,17 +32,33 @@ module.exports = function (treeData) {
       var componentScope = this;
 
       return (
-        <section className="content">
-          <div className='pure-g'>
-            { _.map(RESTAURANTS["1"].restaurants, function (restaurant) {
-              return (
-                <div className='pure-u-1-3' key={restaurant.slug}>
-                  <Restaurant user={componentScope.user} restaurant={restaurant} />
+      <div>
+        <IndexHeader />
+        <div className="page">
+           <div className="container">
+              <div className="spacer-40"></div>
+              <div className="text-center">
+                 <h1>Nori grape silver beet </h1>
+                 <p>Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut.</p>
+              </div>
+              <div className="spacer-10"></div>
+              <hr />
+              <div className="spacer-20"></div>
+              <div className="pure-g">
+                <div className="pure-u-1 pure-u-md-1-3">
+                  <Category className={"glutenfree"} title={"Gluten Free"} restaurant={6} />
                 </div>
-                );
-              }) }
-          </div>
-        </section>
+                <div className="pure-u-1 pure-u-md-1-3">
+                  <Category className={"vegan"} comingsoon={true} title={"Vegano"} />
+                </div>
+                <div className="pure-u-1 pure-u-md-1-3">
+                  <Category className={"vegetarian"} comingsoon={true} title={"Vegetariano"} />
+                </div>
+              </div>
+              <div className="spacer-100"></div>
+           </div>
+        </div>
+      </div>
       );
     }
 
