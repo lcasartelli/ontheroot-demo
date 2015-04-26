@@ -32,8 +32,8 @@ module.exports = function (data) {
           <div className="text-center">
             <div className="spacer-150"></div>
             <div className="spacer-80"></div>
-            <h1>Alternative food</h1>
-            <h3>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion.</h3>
+            <img src='./assets/img/ontheroot-white.png' style={{ width: "300px" }}/>
+            <h3>Order your favourite food, the 1st delivery is on us!</h3>
             <div className="spacer-150"></div>
             <div className="spacer-20"></div>
           </div>
