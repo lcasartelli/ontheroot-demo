@@ -40,7 +40,7 @@ module.exports = function (data) {
         className.push('comingsoon');
         restaurantsCountComponent = <p></p>;
       } else {
-        restaurantsCountComponent = <p><strong>7 restaurants</strong></p>;
+        restaurantsCountComponent = <p><strong>{this.props.restaurants}&nbsp;restaurants</strong></p>;
       }
       
       var mainComponent = (        

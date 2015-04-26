@@ -71,6 +71,13 @@ module.exports = function (treeData) {
       
       var headerImage = this.props.dish.image;
       
+
+      var descriptionComponent;
+
+      if (this.props.dish.description && this.props.dish.description.length > 0) {
+        descriptionComponent = <div><h4 id="descrizione">Descrizione</h4><p>{this.props.dish.description}</p></div>;
+      }
+
       return (
       <div id="food-modal-overlay" className="show">
       <div className="food-modal-inner">
@@ -82,28 +89,27 @@ module.exports = function (treeData) {
         <div className="food-modal-padding">
           <h2>{this.props.dish.name}</h2>
           <div className="food-description">
-            <h4 id="descrizione">Descrizione</h4>
-            <p>{this.props.dish.description}</p>
-            <h4 id="quantit-">Quantità</h4>
-            <p>300g - porzione per <strong>2 persone</strong></p>
+            { descriptionComponent }
+            <h4 id="quantit-">Quantity</h4>
+            <p>300g - portion for <strong>1 person</strong></p>
           </div>
           <div className="food-info">
             <div className="pure-g">
               <div className="pure-u-1 pure-u-sm-10-24">
-                <h4>Valori nutrizionali</h4>
+                <h4>Nutritional Values</h4>
                 <div className="spacer-5"></div>
-                <div className="nutritional-value">{this.props.dish.kcal}<small>kcal</small></div>
+                <div className="nutritional-value">{this.props.dish.kcal}<small>Calories</small></div>
                 <div className="spacer-10"></div>
                 <div className="nutritional-bar">
-                  <label>Proteine</label>
+                  <label>Protein</label>
                   <div className="nutritional-progress"><span style={{"width": this.props.dish.proteine }}></span></div>
                 </div>
                 <div className="nutritional-bar">
-                  <label>Grassi</label>
+                  <label>Fat</label>
                   <div className="nutritional-progress"><span style={{"width": this.props.dish.grassi }}></span></div>
                 </div>
                 <div className="nutritional-bar">
-                  <label>Carboidrati</label>
+                  <label>Carbohydrate</label>
                   <div className="nutritional-progress"><span style={{"width": this.props.dish.carboidrati }}></span></div>
                 </div>
               </div>

@@ -34,7 +34,7 @@ module.exports = React.createClass({
     //<h2>{ this.props.restaurant.title }</h2>
 
     var className = [ 'restaurant-image' ];
-    if (true) {
+    if (this.props.restaurant.open) {
       className.push('nowopen');
     }
 

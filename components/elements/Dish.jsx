@@ -47,7 +47,7 @@ module.exports = function (treeData) {
           <div style={{"background-image": "url('./assets/img/dish/" + this.props.dish.image + "');"}} className="restaurant-image"></div>
           <h4>{ this.props.dish.name }</h4>
           <p>{ this.props.dish.description }</p>
-          <p><strong>a partire da € 10.00</strong></p>
+          <p><strong>€ {this.props.dish.price}</strong></p>
         </div>);
     }
 
