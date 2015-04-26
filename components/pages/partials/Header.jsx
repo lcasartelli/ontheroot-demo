@@ -72,6 +72,7 @@ module.exports = function (treeData) {
          <div className="header-inner">
             <div className="pull-left">
               <Link to="home" activeClassName='activeNull' className="header-button"><img src="assets/img/otr-logo.png" className="logo"/></Link>
+              <p style={{ "font-size": "120%" }}>City: <strong style={{ "padding-left": "10px" }}>Milan</strong><i style={{ "padding-left": "10px" }} className="fa fa-caret-down"></i></p>
             </div>
             <div className="pull-right">
               <CartHandler />
