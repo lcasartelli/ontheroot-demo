@@ -34,7 +34,7 @@ module.exports = function (data) {
               <img src="assets/img/otr-logo-footer.png" className="logo"/>
             </div>
             <div className="pull-right">
-              <p>&copy; 2015 <strong>ontheroot </strong>- Turnip greens yarrow ricebean rutabaga<a href="">hello@ontheroot.it</a><a href="">Privacy</a></p>
+              <p>Copyright &copy; 2015 <strong>Ontheroot </strong>- All rights reserved. <a href="">hello@ontheroot.it</a><a href="">Privacy</a></p>
             </div>
           </div>
         </footer>
