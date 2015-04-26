@@ -440,7 +440,7 @@ module.exports = function (treeData) {
       var descriptionComponent;
 
       if (this.props.dish.description && this.props.dish.description.length > 0) {
-        descriptionComponent = React.createElement("div", null, React.createElement("h4", {id: "descrizione"}, "Descrizione"), React.createElement("p", null, this.props.dish.description));
+        descriptionComponent = React.createElement("div", null, React.createElement("h4", {id: "descrizione"}, "Description"), React.createElement("p", null, this.props.dish.description));
       }
 
       return (
@@ -1025,6 +1025,7 @@ module.exports = function (treeData) {
         React.createElement("div", {className: "page"}, 
           React.createElement("div", {className: "container"}, 
             React.createElement("div", {className: "spacer-40"}), 
+            React.createElement("div", {className: "spacer-80"}), 
             React.createElement("div", {className: "text-center"}, 
               React.createElement("h1", null, "Il tuo profilo")
             ), 
@@ -1037,7 +1038,7 @@ module.exports = function (treeData) {
                     React.createElement("div", {className: "pure-u-3-4"}, 
                       React.createElement("h3", null, "Le tue informazioni")
                     ), 
-                    React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "edit-profile", style: "padding: 2px 5px;", className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Modifica"))), 
+                    React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "edit-profile", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Modifica"))), 
                     React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "nome", placeholder: "Nome", required: true, readonly: true})), 
                     React.createElement("div", {className: "spacer-10"}), 
                     React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "cognome", placeholder: "Cognome", required: true, readonly: true})), 
@@ -1046,7 +1047,7 @@ module.exports = function (treeData) {
                     React.createElement("div", {className: "spacer-10"}), 
                     React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "telefono", placeholder: "Recapito telefonico", required: true, readonly: true})), 
                     React.createElement("div", {className: "spacer-40"}), 
-                    React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", style: "display:none", className: "pure-button pure-success"}, React.createElement("span", null, "Salva profilo")))
+                    React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", style: {"display": "none"}, className: "pure-button pure-success"}, React.createElement("span", null, "Salva profilo")))
                   )
                 )
               ), 
@@ -1056,7 +1057,7 @@ module.exports = function (treeData) {
                     React.createElement("div", {className: "pure-u-3-4"}, 
                       React.createElement("h3", null, "I tuoi indirizzi di spedizione")
                     ), 
-                    React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "new-address", style: "padding: 2px 5px;", className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Nuovo")))
+                    React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "new-address", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Nuovo")))
                   ), 
                   React.createElement("ol", null, 
                     React.createElement("li", {className: "single-address"}, 
@@ -1066,7 +1067,7 @@ module.exports = function (treeData) {
                     )
                   ), 
                   React.createElement("div", {className: "spacer-40"}), 
-                  React.createElement("form", {id: "delivery-form", style: "display:none;", className: "pure-form"}, 
+                  React.createElement("form", {id: "delivery-form", style: {"display": "none"}, className: "pure-form"}, 
                     React.createElement("div", {className: "pure-control-group"}, React.createElement("label", null, "Etichetta"), React.createElement("input", {type: "text", name: "etichetta", placeholder: "Etichetta"})), 
                     React.createElement("div", {className: "pure-g"}, 
                       React.createElement("div", {className: "pure-u-19-24"}, 
@@ -1444,7 +1445,7 @@ module.exports = function (treeData) {
 
       if (user.authed) {
         userComponent =
-          React.createElement(Link, {to: "profile", className: "header-button"}, 
+          React.createElement(Link, {to: "profile", activeClassName: "activeNull", className: "header-button"}, 
             React.createElement("img", {src: "http://api.adorable.io/avatars/285/abott@adorable.png"}), 
             React.createElement("span", null, 
             React.createElement("strong", null, "Abott Doe"), 

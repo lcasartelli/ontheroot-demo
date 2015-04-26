@@ -173,6 +173,7 @@
             "description": "",
             "kcal": "160",
             "co2": "30",
+            "prozione": "200",
             "h2o": "600",
             "global": "0,6",
             "grassi": "30%",

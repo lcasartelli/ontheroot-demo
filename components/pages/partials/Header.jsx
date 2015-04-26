@@ -55,7 +55,7 @@ module.exports = function (treeData) {
 
       if (user.authed) {
         userComponent =
-          <Link to='profile' className="header-button">
+          <Link to='profile' activeClassName='activeNull' className="header-button">
             <img src="http://api.adorable.io/avatars/285/abott@adorable.png" />
             <span>
             <strong>Abott Doe</strong>

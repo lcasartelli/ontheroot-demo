@@ -37,6 +37,7 @@ module.exports = function (treeData) {
         <div className="page">
           <div className="container">
             <div className="spacer-40"></div>
+            <div className="spacer-80"></div>
             <div className="text-center">
               <h1>Il tuo profilo</h1>
             </div>
@@ -49,7 +50,7 @@ module.exports = function (treeData) {
                     <div className="pure-u-3-4">
                       <h3>Le tue informazioni</h3>
                     </div>
-                    <div className="pure-u-1-4"><button id="edit-profile" style="padding: 2px 5px;" className="pure-button pure-success"><i className="fa fa-plus"></i><span>Modifica</span></button></div>
+                    <div className="pure-u-1-4"><button id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success"><i className="fa fa-plus"></i><span>Modifica</span></button></div>
                     <div className="pure-control-group"><input type="text" name="nome" placeholder="Nome" required readonly/></div>
                     <div className="spacer-10"></div>
                     <div className="pure-control-group"><input type="text" name="cognome" placeholder="Cognome" required readonly/></div>
@@ -58,7 +59,7 @@ module.exports = function (treeData) {
                     <div className="spacer-10"></div>
                     <div className="pure-control-group"><input type="text" name="telefono" placeholder="Recapito telefonico" required readonly/></div>
                     <div className="spacer-40"></div>
-                    <div className="text-center"><button type="submit" style="display:none" className="pure-button pure-success"><span>Salva profilo</span></button></div>
+                    <div className="text-center"><button type="submit" style={{"display": "none"}} className="pure-button pure-success"><span>Salva profilo</span></button></div>
                   </form>
                 </div>
               </div>
@@ -68,7 +69,7 @@ module.exports = function (treeData) {
                     <div className="pure-u-3-4">
                       <h3>I tuoi indirizzi di spedizione</h3>
                     </div>
-                    <div className="pure-u-1-4"><button id="new-address" style="padding: 2px 5px;" className="pure-button pure-success"><i className="fa fa-plus"></i><span>Nuovo</span></button></div>
+                    <div className="pure-u-1-4"><button id="new-address" style={{"padding": "2px 5px;"}} className="pure-button pure-success"><i className="fa fa-plus"></i><span>Nuovo</span></button></div>
                   </div>
                   <ol>
                     <li className="single-address">
@@ -78,7 +79,7 @@ module.exports = function (treeData) {
                     </li>
                   </ol>
                   <div className="spacer-40"></div>
-                  <form id="delivery-form" style="display:none;" className="pure-form">
+                  <form id="delivery-form" style={{"display": "none"}} className="pure-form">
                     <div className="pure-control-group"><label>Etichetta</label><input type="text" name="etichetta" placeholder="Etichetta"/></div>
                     <div className="pure-g">
                       <div className="pure-u-19-24">

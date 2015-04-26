@@ -75,7 +75,7 @@ module.exports = function (treeData) {
       var descriptionComponent;
 
       if (this.props.dish.description && this.props.dish.description.length > 0) {
-        descriptionComponent = <div><h4 id="descrizione">Descrizione</h4><p>{this.props.dish.description}</p></div>;
+        descriptionComponent = <div><h4 id="descrizione">Description</h4><p>{this.props.dish.description}</p></div>;
       }
 
       return (
