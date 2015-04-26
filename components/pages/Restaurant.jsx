@@ -41,27 +41,12 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function() : void {
-      this.initMap();
     },
 
 
     componentWillMount: function() : void {
       var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
       this.setState({ restaurant: _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; }) });
-    },
-
-
-    initMap: function initMap() {
-      var _gmapLink = document.getElementById('gmap-link');
-      var _gmapImg = document.getElementById('map-img');
-      var _addressEl = _gmapLink.parentNode.querySelector('span.address');
-      if (_addressEl) {
-        var _uriAdd = encodeURIComponent(_addressEl.textContent);
-        _gmapLink.setAttribute('href', 'https://maps.google.com?daddr=' + _uriAdd);
-        _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
-      } else {
-        _gmapLink.style.display = 'none';
-      }
     },
 
 
@@ -123,8 +108,6 @@ module.exports = function (treeData) {
                     <div className="spacer-20"></div>
                     <h3>
                       <span className="address">{componentScope.state.restaurant.address}</span>
-                      <br/>
-                      <a id="gmap-link" href="" className="link"><small>indicazioni stradali</small></a>
                       <br/>
                       <br/>
                       <a href={"mailto:" + componentScope.state.restaurant.email} className="link">{componentScope.state.restaurant.email}</a>

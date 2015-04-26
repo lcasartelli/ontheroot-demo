@@ -31,6 +31,8 @@ var Profile = require('./components/pages/Profile.jsx')(treeData);
 var cognitoAuth = require('./lib/cognito')();
 var facebookAuth = require('./lib/cognito.facebook')();
 var checkout = require('./lib/checkout')(treeData);
+var userHandler = require('./lib/user')(treeData);
+
 var syncClient;
 
 
@@ -46,7 +48,7 @@ cognitoAuth.unAuthUserLogin().then(function () {
 
   cartCursor.on('update', function _onCartItemsUpdate() {
     checkout.autoSyncronizeCart().then(function () {
-      console.log('sync completed');
+      console.log('sync cart completed');
     });
   });
 
@@ -74,9 +76,19 @@ userCursor.on('update', function _updateUser() {
 
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
-      //userCursor.set('identityId', AWS.config.credentials.identityId);
+
       console.log('credentials', AWS.config.credentials);
+
       userCursor.set('authed', true);
+
+      userCursor.on('update', function () {
+/*
+        userHandler.autoSyncronizeCart().then(function () {
+          console.log('sync user completed');
+        });
+*/
+      });
+
     });
 
   }
@@ -94,7 +106,7 @@ var routes = (
 );
 
 // config routes
-var router = Router.create({routes: routes});
+var router = Router.create({routes: routes });
 
 var  loadApp = function loadApp() {
 

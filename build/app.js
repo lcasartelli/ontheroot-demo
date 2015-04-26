@@ -32,6 +32,8 @@ var Profile = require('./components/pages/Profile.jsx')(treeData);
 var cognitoAuth = require('./lib/cognito')();
 var facebookAuth = require('./lib/cognito.facebook')();
 var checkout = require('./lib/checkout')(treeData);
+var userHandler = require('./lib/user')(treeData);
+
 var syncClient;
 
 
@@ -47,7 +49,7 @@ cognitoAuth.unAuthUserLogin().then(function () {
 
   cartCursor.on('update', function _onCartItemsUpdate() {
     checkout.autoSyncronizeCart().then(function () {
-      console.log('sync completed');
+      console.log('sync cart completed');
     });
   });
 
@@ -75,9 +77,19 @@ userCursor.on('update', function _updateUser() {
 
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
-      //userCursor.set('identityId', AWS.config.credentials.identityId);
+
       console.log('credentials', AWS.config.credentials);
+
       userCursor.set('authed', true);
+
+      userCursor.on('update', function () {
+/*
+        userHandler.autoSyncronizeCart().then(function () {
+          console.log('sync user completed');
+        });
+*/
+      });
+
     });
 
   }
@@ -95,7 +107,7 @@ var routes = (
 );
 
 // config routes
-var router = Router.create({routes: routes});
+var router = Router.create({routes: routes });
 
 var  loadApp = function loadApp() {
 
@@ -108,7 +120,7 @@ var  loadApp = function loadApp() {
 };
 
 
-},{"./components/App.jsx":2,"./components/pages/Checkout.jsx":10,"./components/pages/Index.jsx":11,"./components/pages/Login.jsx":12,"./components/pages/Profile.jsx":13,"./components/pages/Restaurant.jsx":14,"./components/pages/Restaurants.jsx":15,"./lib/checkout":22,"./lib/cognito":24,"./lib/cognito.facebook":23,"baobab":33,"lodash":45,"react-router":70,"react/addons":85}],2:[function(require,module,exports){
+},{"./components/App.jsx":2,"./components/pages/Checkout.jsx":10,"./components/pages/Index.jsx":11,"./components/pages/Login.jsx":12,"./components/pages/Profile.jsx":13,"./components/pages/Restaurant.jsx":14,"./components/pages/Restaurants.jsx":15,"./lib/checkout":22,"./lib/cognito":24,"./lib/cognito.facebook":23,"./lib/user":27,"baobab":33,"lodash":45,"react-router":70,"react/addons":85}],2:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -414,6 +426,7 @@ module.exports = function (treeData) {
       if (!Number.isNaN(this.state.quantity)) {
         checkout.addItem(this.props.dish, this.state.quantity);
       }
+      this.closeModal();
     },
 
 
@@ -716,16 +729,11 @@ module.exports = function (treeData) {
     
     
     initMap: function initMap() {
-      var _gmapLink = document.getElementById('gmap-link');
       var _gmapImg = document.getElementById('map-img');
       var _addressEl = this.props.restaurant.address;
-      if (_addressEl) {
-        var _uriAdd = encodeURIComponent(_addressEl);
-        _gmapLink.setAttribute('href', 'https://maps.google.com?daddr=' + _uriAdd);
-        _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
-      } else {
-        _gmapLink.style.display = 'none';
-      }
+      var _uriAdd = encodeURIComponent(_addressEl);
+      _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
+
     },
     
 
@@ -999,14 +1007,19 @@ module.exports = function (treeData) {
   return React.createClass({
     displayName: 'Profile',
 
-    mixins: [treeData.mixin],
+    mixins: [treeData.mixin, React.addons.LinkedStateMixin],
     cursors: {
       user: ['user'],
     },
 
 
     getInitialState: function getInitialState()          {
-      return {};
+      return {
+        nome: '',
+        cognome: '',
+        email: '',
+        telefono: ''
+      };
     },
 
 
@@ -1039,13 +1052,13 @@ module.exports = function (treeData) {
                       React.createElement("h3", null, "Le tue informazioni")
                     ), 
                     React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "edit-profile", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Modifica"))), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "nome", placeholder: "Nome", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "nome", valueLink: this.linkState('nome'), placeholder: "Nome", required: true, readonly: true})), 
                     React.createElement("div", {className: "spacer-10"}), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "cognome", placeholder: "Cognome", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "cognome", valueLink: this.linkState('cognome'), placeholder: "Cognome", required: true, readonly: true})), 
                     React.createElement("div", {className: "spacer-10"}), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "email", name: "email", placeholder: "E-mail", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "email", name: "email", valueLink: this.linkState('email'), placeholder: "E-mail", required: true, readonly: true})), 
                     React.createElement("div", {className: "spacer-10"}), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "telefono", placeholder: "Recapito telefonico", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "telefono", valueLink: this.linkState('telefono'), placeholder: "Recapito telefonico", required: true, readonly: true})), 
                     React.createElement("div", {className: "spacer-40"}), 
                     React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", style: {"display": "none"}, className: "pure-button pure-success"}, React.createElement("span", null, "Salva profilo")))
                   )
@@ -1145,27 +1158,12 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function()        {
-      this.initMap();
     },
 
 
     componentWillMount: function()        {
       var restaurantSlug = this.context.router.getCurrentParams().restaurantSlug;
       this.setState({ restaurant: _.find(RESTAURANTS[1].restaurants, function (restaurant) { return restaurantSlug === restaurant.slug; }) });
-    },
-
-
-    initMap: function initMap() {
-      var _gmapLink = document.getElementById('gmap-link');
-      var _gmapImg = document.getElementById('map-img');
-      var _addressEl = _gmapLink.parentNode.querySelector('span.address');
-      if (_addressEl) {
-        var _uriAdd = encodeURIComponent(_addressEl.textContent);
-        _gmapLink.setAttribute('href', 'https://maps.google.com?daddr=' + _uriAdd);
-        _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
-      } else {
-        _gmapLink.style.display = 'none';
-      }
     },
 
 
@@ -1227,8 +1225,6 @@ module.exports = function (treeData) {
                     React.createElement("div", {className: "spacer-20"}), 
                     React.createElement("h3", null, 
                       React.createElement("span", {className: "address"}, componentScope.state.restaurant.address), 
-                      React.createElement("br", null), 
-                      React.createElement("a", {id: "gmap-link", href: "", className: "link"}, React.createElement("small", null, "indicazioni stradali")), 
                       React.createElement("br", null), 
                       React.createElement("br", null), 
                       React.createElement("a", {href: "mailto:" + componentScope.state.restaurant.email, className: "link"}, componentScope.state.restaurant.email)
@@ -1308,10 +1304,8 @@ module.exports = function (treeData) {
               React.createElement("div", {className: "text-center"}, 
                 React.createElement("h1", null, "Silver restaurants leek"), 
                 React.createElement("p", null, "Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut."), 
-                React.createElement("div", {className: "spacer-20"}), 
-                React.createElement("form", {className: "pure-form"}, 
-                  React.createElement("input", {id: "restaurants-filter", type: "text", name: "filter", placeholder: "Filtra i ristoranti"})
-                )
+                React.createElement("div", {className: "spacer-20"})
+
               ), 
               React.createElement("div", {className: "spacer-10"}), 
               React.createElement("hr", null), 
@@ -1334,6 +1328,14 @@ module.exports = function (treeData) {
   });
 
 };
+
+
+/*
+  SEARCH
+  <form className="pure-form">
+    <input id="restaurants-filter" type="text" name="filter" placeholder="Find restaurant " />
+  </form>
+*/
 
 
 
@@ -1758,22 +1760,22 @@ module.exports=
             "name": "Veggie Burger",
             "slug": "veggie-burger",
             "image": "veggie-burger.jpg",
-            "description": "Farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
-            "kcal": "160",
+            "description": "Filled with Legumbreta, vegan mayonnaise and ketchup of beet",
+            "kcal": "124",
             "co2": "30",
             "h2o": "600",
             "porzione": "200",
             "persona": "1",
             "global": "0,6",
-            "grassi": "28%",
-            "proteine": "52%",
-            "carboidrati": "3%",
-            "price": "8,50"
+            "grassi": "32%",
+            "proteine": "36%",
+            "carboidrati": "32%",
+            "price": "7,50"
           },
-          "Club Sandwich con Seitan": {
-            "name": "Club Sandwich con Seitan",
+          "Seitan Club Sandwich": {
+            "name": "Seitan Club Sandwich",
             "slug": "club-sandwich-con-seitan",
-            "description": "Farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "description": "", //Farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico
             "image": "seitan-sandwitch.jpg",
             "kcal": "160",
             "co2": "30",
@@ -1788,7 +1790,7 @@ module.exports=
             "name": "Panzerotto",
             "slug": "panzerotto-al-forno-con-mozzarella-di-riso",
             "image": "panzerotti.jpg",
-            "description": "Panzerotto al Forno con Mozzarella di Riso",
+            "description": "Panzerotto filled with mozzarella of rice",
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
@@ -1805,6 +1807,7 @@ module.exports=
             "description": "",
             "kcal": "160",
             "co2": "30",
+            "prozione": "200",
             "h2o": "600",
             "global": "0,6",
             "grassi": "30%",
@@ -1812,9 +1815,9 @@ module.exports=
             "carboidrati": "30%",
             "price": "8,50"
           },
-          "Porzione Tofu Cheese": {
-            "name": "Porzione Tofu Cheese",
-            "slug": "porzione-tofu-cheese",
+          "Tofu Cheese": {
+            "name": "Tofu Cheese",
+            "slug": "tofu-cheese",
             "image": "tofu-cheese.jpg",
             "description": "",
             "kcal": "160",
@@ -1864,7 +1867,7 @@ module.exports = function(treeData) {
 
 
   var autoSyncronizeCart = function autoSyncronizeCart() {
-    return new Promise(function (fullfill, reject) {  
+    return new Promise(function (fullfill, reject) {
       console.log('cart change, resync cognito databaset');
       _syncronizeDataset().then(function () {
         fullfill();
@@ -2314,24 +2317,16 @@ module.exports = function(treeData) {
   var _syncronizeDataset = function _syncronizeDataset() {
     return _loadDataset()
     .then(function () {
-      return store.setItem(PROFILE_KEY, JSON.stringify(cart.get()), profileDataset);
+      return store.setItem(PROFILE_KEY, JSON.stringify(userProfile.get()), profileDataset);
     }).then(function () {
       return store.syncronize(profileDataset);
     });
   };
 
 
-  var removeItem = function removeItem() {
-    ok(profileDataset, 'First init the dataset');
-    console.log('deleting item...');
-  };
-
-
-  var updateProfile = function updateProfile(newItem, qty) {
+  var updateProfile = function updateProfile(data) {
 
     ok(typeof newItem === 'object', 'Missing required, no item provided');
-
-    userProfile.set();
 
   };
 
@@ -2360,7 +2355,6 @@ module.exports = function(treeData) {
     updateProfile: updateProfile,
     autoSyncronizeProfile: autoSyncronizeProfile,
     loadProfile: loadProfile,
-    emptyCart: emptyCart,
   };
 };
 

@@ -49,6 +49,7 @@ module.exports = function (treeData) {
       if (!Number.isNaN(this.state.quantity)) {
         checkout.addItem(this.props.dish, this.state.quantity);
       }
+      this.closeModal();
     },
 
 

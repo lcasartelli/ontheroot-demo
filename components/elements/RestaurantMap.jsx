@@ -33,16 +33,11 @@ module.exports = function (treeData) {
     
     
     initMap: function initMap() {
-      var _gmapLink = document.getElementById('gmap-link');
       var _gmapImg = document.getElementById('map-img');
       var _addressEl = this.props.restaurant.address;
-      if (_addressEl) {
-        var _uriAdd = encodeURIComponent(_addressEl);
-        _gmapLink.setAttribute('href', 'https://maps.google.com?daddr=' + _uriAdd);
-        _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
-      } else {
-        _gmapLink.style.display = 'none';
-      }
+      var _uriAdd = encodeURIComponent(_addressEl);
+      _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
+
     },
     
 
