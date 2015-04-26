@@ -510,7 +510,7 @@ module.exports = function (treeData) {
               ), 
               React.createElement("button", {className: "pure-button pure-success", onClick: this.addToCart}, 
                 React.createElement("i", {className: "fa fa-cart-plus"}), 
-                React.createElement("span", null, "Aggiungi al carrello")
+                React.createElement("span", null, "Add to cart")
               )
             )
           )
@@ -1302,10 +1302,12 @@ module.exports = function (treeData) {
             React.createElement("div", {className: "container"}, 
               React.createElement("div", {className: "spacer-40"}), 
               React.createElement("div", {className: "text-center"}, 
-                React.createElement("h1", null, "Silver restaurants leek"), 
-                React.createElement("p", null, "Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut."), 
-                React.createElement("div", {className: "spacer-20"})
-
+                React.createElement("h1", null, "Feel free, go gluten free"), 
+                React.createElement("p", null, "You can find all the restaurants with gluten free options."), 
+                React.createElement("div", {className: "spacer-20"}), 
+                React.createElement("form", {className: "pure-form"}, 
+                  React.createElement("input", {id: "restaurants-filter", type: "text", name: "filter", placeholder: "Find what you want... "})
+                )
               ), 
               React.createElement("div", {className: "spacer-10"}), 
               React.createElement("hr", null), 

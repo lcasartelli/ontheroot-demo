@@ -11,14 +11,19 @@ module.exports = function (treeData) {
   return React.createClass({
     displayName: 'Profile',
 
-    mixins: [treeData.mixin],
+    mixins: [treeData.mixin, React.addons.LinkedStateMixin],
     cursors: {
       user: ['user'],
     },
 
 
     getInitialState: function getInitialState() : Object {
-      return {};
+      return {
+        nome: '',
+        cognome: '',
+        email: '',
+        telefono: ''
+      };
     },
 
 
@@ -51,13 +56,13 @@ module.exports = function (treeData) {
                       <h3>Le tue informazioni</h3>
                     </div>
                     <div className="pure-u-1-4"><button id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success"><i className="fa fa-plus"></i><span>Modifica</span></button></div>
-                    <div className="pure-control-group"><input type="text" name="nome" placeholder="Nome" required readonly/></div>
+                    <div className="pure-control-group"><input type="text" name="nome" valueLink={this.linkState('nome')} placeholder="Nome" required readonly/></div>
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="text" name="cognome" placeholder="Cognome" required readonly/></div>
+                    <div className="pure-control-group"><input type="text" name="cognome" valueLink={this.linkState('cognome')} placeholder="Cognome" required readonly/></div>
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="email" name="email" placeholder="E-mail" required readonly/></div>
+                    <div className="pure-control-group"><input type="email" name="email" valueLink={this.linkState('email')} placeholder="E-mail" required readonly/></div>
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="text" name="telefono" placeholder="Recapito telefonico" required readonly/></div>
+                    <div className="pure-control-group"><input type="text" name="telefono" valueLink={this.linkState('telefono')} placeholder="Recapito telefonico" required readonly/></div>
                     <div className="spacer-40"></div>
                     <div className="text-center"><button type="submit" style={{"display": "none"}} className="pure-button pure-success"><span>Salva profilo</span></button></div>
                   </form>
