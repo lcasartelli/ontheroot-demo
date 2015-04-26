@@ -126,22 +126,22 @@
             "name": "Veggie Burger",
             "slug": "veggie-burger",
             "image": "veggie-burger.jpg",
-            "description": "Farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
-            "kcal": "160",
+            "description": "Filled with Legumbreta, vegan mayonnaise and ketchup of beet",
+            "kcal": "124",
             "co2": "30",
             "h2o": "600",
             "porzione": "200",
             "persona": "1",
             "global": "0,6",
-            "grassi": "28%",
-            "proteine": "52%",
-            "carboidrati": "3%",
-            "price": "8,50"
+            "grassi": "32%",
+            "proteine": "36%",
+            "carboidrati": "32%",
+            "price": "7,50"
           },
-          "Club Sandwich con Seitan": {
-            "name": "Club Sandwich con Seitan",
+          "Seitan Club Sandwich": {
+            "name": "Seitan Club Sandwich",
             "slug": "club-sandwich-con-seitan",
-            "description": "Farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "description": "", //Farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico
             "image": "seitan-sandwitch.jpg",
             "kcal": "160",
             "co2": "30",
@@ -156,7 +156,7 @@
             "name": "Panzerotto",
             "slug": "panzerotto-al-forno-con-mozzarella-di-riso",
             "image": "panzerotti.jpg",
-            "description": "Panzerotto al Forno con Mozzarella di Riso",
+            "description": "Panzerotto filled with mozzarella of rice",
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
@@ -181,9 +181,9 @@
             "carboidrati": "30%",
             "price": "8,50"
           },
-          "Porzione Tofu Cheese": {
-            "name": "Porzione Tofu Cheese",
-            "slug": "porzione-tofu-cheese",
+          "Tofu Cheese": {
+            "name": "Tofu Cheese",
+            "slug": "tofu-cheese",
             "image": "tofu-cheese.jpg",
             "description": "",
             "kcal": "160",
