@@ -41,8 +41,8 @@ module.exports = React.createClass({
     var backgroundImg = 'outofgluten.jpg';
 
     return (
-      <Link to="restaurant" params={params}>
-        <div data-href="restaurant.html" data-filter="indian,japanese" className="restaurant-grid">
+      <Link to="restaurant" params={params} className="restaurant-item">
+        <div data-filter="indian,japanese" className="restaurant-grid">
           <div className={className.join(' ')} style={{"background-image": "url('./assets/img/" + backgroundImg + "')"}}></div>
           <h4>{ this.props.restaurant.title }</h4>
         </div>

@@ -32,8 +32,8 @@ module.exports = function (data) {
           <div className="text-center">
             <div className="spacer-150"></div>
             <div className="spacer-80"></div>
-            <h1>Alternative food</h1>
-            <h3>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion.</h3>
+            <h1>The best of Milan.</h1>
+            <h3>Alternative food</h3>
             <div className="spacer-150"></div>
             <div className="spacer-20"></div>
           </div>
