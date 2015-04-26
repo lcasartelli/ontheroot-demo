@@ -1,5 +1,4 @@
 /* @flow */
-/*jshint browser:true, devel:true */
 
 'use strict';
 

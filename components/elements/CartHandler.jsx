@@ -48,7 +48,7 @@ module.exports = function (treeData) {
           <i className="fa fa-shopping-cart">
             {cartCounter}
           </i>
-          <span>Carrello</span>
+          <span>Cart</span>
 
           <div id="cart-dropdown">
             {_.map(cartItems, function (item) {

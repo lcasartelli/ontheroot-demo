@@ -88,9 +88,12 @@ module.exports = function (treeData) {
       }
 
       return (
-        <section className="content">
+         <div className="page">
+          <div className="spacer-80"></div>
+          <div className="spacer-80"></div>
+          
           { loginButton }
-        </section>
+        </div>
       );
     }
 

@@ -40,7 +40,7 @@ module.exports = function (data) {
         className.push('comingsoon');
         restaurantsCountComponent = <p></p>;
       } else {
-        restaurantsCountComponent = <p><strong>7 ristoranti</strong></p>;
+        restaurantsCountComponent = <p><strong>7 restaurants</strong></p>;
       }
       
       var mainComponent = (        
