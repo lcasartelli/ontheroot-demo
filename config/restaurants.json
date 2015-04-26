@@ -8,6 +8,7 @@
         "image": "outofgluten.jpg",
         "slug": "out-of-gluten",
         "title": "Out of Gluten",
+        "open": false,
         "description": "Gluten Free Pasticceria",
         "address": "Viale San Michele del Carso, 13, 20144 Milano",
         "email":"info@outofgluten.it",
@@ -71,19 +72,11 @@
         }
       },
       {
-        "id": "D986362F-85F5-4954-7642-5439B9262A5C",
-        "image": "panificio.jpg",
-        "slug": "panificio-mariella",
-        "title": "Panificio Mariella",
-        "address": "Viale San Michele del Carso, 13, 20144 Milano",
-        "email":"",
-
-      },
-      {
         "id": "D986362F-85F5-8932-A604-5439B9262A5C",
         "image": "vegan-bistro.jpg",
         "slug": "vegan-bistro",
         "title": "Vegan Bistro",
+        "open": true,
         "description": "Green Never Tasted So Good.",
         "address": "Piazza Luigi Vittorio Bertarelli, Milano",
         "email": "info@veganbistro.com",
@@ -123,6 +116,7 @@
         "id": "46BE006D-D64E-47E8-A616-84E98C3C8BAD",
         "image": "radice-tonda.jpg",
         "slug": "radice-tonda",
+        "open": true,
         "description": "Vegan Organic, Gluten Free Friendly.",
         "title": "Radice Tonda",
         "email": "infobuozzi@radicetonda.it",
@@ -136,10 +130,12 @@
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
+            "porzione": "200",
+            "persona": "1",
             "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
+            "grassi": "28%",
+            "proteine": "52%",
+            "carboidrati": "3%",
             "price": "8,50"
           },
           "Club Sandwich con Seitan": {

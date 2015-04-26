@@ -216,7 +216,7 @@ module.exports = function (treeData) {
               return (
                 React.createElement("div", {className: "cart-item"}, 
                   React.createElement("strong", null, item.name), 
-                  React.createElement("span", null, item.qty, " porzioni: ", price, " €"), 
+                  React.createElement("span", null, item.qty, " portions: ", price, " €"), 
                   React.createElement("button", {className: "pure-button pure-danger"}, React.createElement("span", null, "Remove"))
                 ))}), 
             
@@ -279,7 +279,7 @@ module.exports = function (data) {
         className.push('comingsoon');
         restaurantsCountComponent = React.createElement("p", null);
       } else {
-        restaurantsCountComponent = React.createElement("p", null, React.createElement("strong", null, "7 restaurants"));
+        restaurantsCountComponent = React.createElement("p", null, React.createElement("strong", null, this.props.restaurants, " restaurants"));
       }
       
       var mainComponent = (        
@@ -353,7 +353,7 @@ module.exports = function (treeData) {
           React.createElement("div", {style: {"background-image": "url('./assets/img/dish/" + this.props.dish.image + "');"}, className: "restaurant-image"}), 
           React.createElement("h4", null,  this.props.dish.name), 
           React.createElement("p", null,  this.props.dish.description), 
-          React.createElement("p", null, React.createElement("strong", null, "a partire da € 10.00"))
+          React.createElement("p", null, React.createElement("strong", null, "€ ", this.props.dish.price))
         ));
     }
 
@@ -436,6 +436,13 @@ module.exports = function (treeData) {
       
       var headerImage = this.props.dish.image;
       
+
+      var descriptionComponent;
+
+      if (this.props.dish.description && this.props.dish.description.length > 0) {
+        descriptionComponent = React.createElement("div", null, React.createElement("h4", {id: "descrizione"}, "Descrizione"), React.createElement("p", null, this.props.dish.description));
+      }
+
       return (
       React.createElement("div", {id: "food-modal-overlay", className: "show"}, 
       React.createElement("div", {className: "food-modal-inner"}, 
@@ -447,28 +454,27 @@ module.exports = function (treeData) {
         React.createElement("div", {className: "food-modal-padding"}, 
           React.createElement("h2", null, this.props.dish.name), 
           React.createElement("div", {className: "food-description"}, 
-            React.createElement("h4", {id: "descrizione"}, "Descrizione"), 
-            React.createElement("p", null, this.props.dish.description), 
-            React.createElement("h4", {id: "quantit-"}, "Quantità"), 
-            React.createElement("p", null, "300g - porzione per ", React.createElement("strong", null, "2 persone"))
+             descriptionComponent, 
+            React.createElement("h4", {id: "quantit-"}, "Quantity"), 
+            React.createElement("p", null, "300g - portion for ", React.createElement("strong", null, "1 person"))
           ), 
           React.createElement("div", {className: "food-info"}, 
             React.createElement("div", {className: "pure-g"}, 
               React.createElement("div", {className: "pure-u-1 pure-u-sm-10-24"}, 
-                React.createElement("h4", null, "Valori nutrizionali"), 
+                React.createElement("h4", null, "Nutritional Values"), 
                 React.createElement("div", {className: "spacer-5"}), 
-                React.createElement("div", {className: "nutritional-value"}, this.props.dish.kcal, React.createElement("small", null, "kcal")), 
+                React.createElement("div", {className: "nutritional-value"}, this.props.dish.kcal, React.createElement("small", null, "Calories")), 
                 React.createElement("div", {className: "spacer-10"}), 
                 React.createElement("div", {className: "nutritional-bar"}, 
-                  React.createElement("label", null, "Proteine"), 
+                  React.createElement("label", null, "Protein"), 
                   React.createElement("div", {className: "nutritional-progress"}, React.createElement("span", {style: {"width": this.props.dish.proteine}}))
                 ), 
                 React.createElement("div", {className: "nutritional-bar"}, 
-                  React.createElement("label", null, "Grassi"), 
+                  React.createElement("label", null, "Fat"), 
                   React.createElement("div", {className: "nutritional-progress"}, React.createElement("span", {style: {"width": this.props.dish.grassi}}))
                 ), 
                 React.createElement("div", {className: "nutritional-bar"}, 
-                  React.createElement("label", null, "Carboidrati"), 
+                  React.createElement("label", null, "Carbohydrate"), 
                   React.createElement("div", {className: "nutritional-progress"}, React.createElement("span", {style: {"width": this.props.dish.carboidrati}}))
                 )
               ), 
@@ -654,7 +660,7 @@ module.exports = React.createClass({
     //<h2>{ this.props.restaurant.title }</h2>
 
     var className = [ 'restaurant-image' ];
-    if (true) {
+    if (this.props.restaurant.open) {
       className.push('nowopen');
     }
 
@@ -852,7 +858,7 @@ module.exports = function (treeData) {
               React.createElement("div", {className: "spacer-20"}), 
               React.createElement("div", {className: "pure-g"}, 
                 React.createElement("div", {className: "pure-u-1 pure-u-md-1-3"}, 
-                  React.createElement(Category, {className: "glutenfree", title: "Gluten Free", restaurant: 4})
+                  React.createElement(Category, {className: "glutenfree", title: "Gluten Free", restaurants: 3})
                 ), 
                 React.createElement("div", {className: "pure-u-1 pure-u-md-1-3"}, 
                   React.createElement(Category, {className: "vegan", comingsoon: true, title: "Vegan"})
@@ -1288,6 +1294,10 @@ module.exports = function (treeData) {
       
       var restaurants = RESTAURANTS["1"].restaurants;
 
+      restaurants = _.chain(restaurants).sortBy(function (restaurant) {
+        return restaurant.open;
+      }).reverse().value();
+
       return (
         React.createElement("div", null, 
           React.createElement(RestaurantsHeader, null), 
@@ -1450,7 +1460,8 @@ module.exports = function (treeData) {
         React.createElement("header", null, 
          React.createElement("div", {className: "header-inner"}, 
             React.createElement("div", {className: "pull-left"}, 
-              React.createElement(Link, {to: "home", activeClassName: "activeNull", className: "header-button"}, React.createElement("img", {src: "assets/img/otr-logo.png", className: "logo"}))
+              React.createElement(Link, {to: "home", activeClassName: "activeNull", className: "header-button"}, React.createElement("img", {src: "assets/img/otr-logo.png", className: "logo"})), 
+              React.createElement("p", {style: { "font-size": "120%"}}, "City: ", React.createElement("strong", {style: { "padding-left": "10px"}}, "Milan"), React.createElement("i", {style: { "padding-left": "10px"}, className: "fa fa-caret-down"}))
             ), 
             React.createElement("div", {className: "pull-right"}, 
               React.createElement(CartHandler, null), 
@@ -1628,6 +1639,7 @@ module.exports=
         "image": "outofgluten.jpg",
         "slug": "out-of-gluten",
         "title": "Out of Gluten",
+        "open": false,
         "description": "Gluten Free Pasticceria",
         "address": "Viale San Michele del Carso, 13, 20144 Milano",
         "email":"info@outofgluten.it",
@@ -1691,19 +1703,11 @@ module.exports=
         }
       },
       {
-        "id": "D986362F-85F5-4954-7642-5439B9262A5C",
-        "image": "panificio.jpg",
-        "slug": "panificio-mariella",
-        "title": "Panificio Mariella",
-        "address": "Viale San Michele del Carso, 13, 20144 Milano",
-        "email":"",
-
-      },
-      {
         "id": "D986362F-85F5-8932-A604-5439B9262A5C",
         "image": "vegan-bistro.jpg",
         "slug": "vegan-bistro",
         "title": "Vegan Bistro",
+        "open": true,
         "description": "Green Never Tasted So Good.",
         "address": "Piazza Luigi Vittorio Bertarelli, Milano",
         "email": "info@veganbistro.com",
@@ -1743,6 +1747,7 @@ module.exports=
         "id": "46BE006D-D64E-47E8-A616-84E98C3C8BAD",
         "image": "radice-tonda.jpg",
         "slug": "radice-tonda",
+        "open": true,
         "description": "Vegan Organic, Gluten Free Friendly.",
         "title": "Radice Tonda",
         "email": "infobuozzi@radicetonda.it",
@@ -1756,10 +1761,12 @@ module.exports=
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
+            "porzione": "200",
+            "persona": "1",
             "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
+            "grassi": "28%",
+            "proteine": "52%",
+            "carboidrati": "3%",
             "price": "8,50"
           },
           "Club Sandwich con Seitan": {

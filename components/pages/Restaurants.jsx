@@ -36,6 +36,10 @@ module.exports = function (treeData) {
       
       var restaurants = RESTAURANTS["1"].restaurants;
 
+      restaurants = _.chain(restaurants).sortBy(function (restaurant) {
+        return restaurant.open;
+      }).reverse().value();
+
       return (
         <div>
           <RestaurantsHeader />
