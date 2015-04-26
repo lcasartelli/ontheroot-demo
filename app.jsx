@@ -13,10 +13,13 @@ var treeData = new Baobab({
   user: {
     authed: false,
   },
+  profile: {},
   cart: []
 });
+
 var userCursor = treeData.select('user');
 var cartCursor = treeData.select('cart');
+var profileCursor = treeData.select('profile');
 
 // React components
 var App = require('./components/App.jsx')(treeData);
@@ -81,13 +84,22 @@ userCursor.on('update', function _updateUser() {
 
       userCursor.set('authed', true);
 
-      userCursor.on('update', function () {
-/*
-        userHandler.autoSyncronizeCart().then(function () {
+      userHandler.loadProfile().then(function (data) {
+        if (!data) {
+          data = {};
+        }
+
+        console.log('profile loaded', data);
+
+        profileCursor.edit(data);
+      });
+
+      profileCursor.on('update', function () {
+        userHandler.autoSyncronizeProfile().then(function () {
           console.log('sync user completed');
         });
-*/
       });
+
 
     });
 

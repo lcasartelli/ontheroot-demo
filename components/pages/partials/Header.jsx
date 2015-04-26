@@ -22,6 +22,7 @@ module.exports = function (treeData) {
 
     cursors: {
       user: ['user'],
+      profile: ['profile'],
     },
 
 
@@ -54,15 +55,17 @@ module.exports = function (treeData) {
       var userComponent;
 
       if (user.authed) {
+
         userComponent =
           <Link to='profile' activeClassName='activeNull' className="header-button">
             <img src="http://api.adorable.io/avatars/285/abott@adorable.png" />
             <span>
-            <strong>Abott Doe</strong>
+            <strong>{this.cursors.profile.get().nome + ' ' + this.cursors.profile.get().cognome} </strong>
             <br/>
             <span>View Profile</span>
             </span>
           </Link>;
+
       } else {
         userComponent = <Link to='login' activeClassName='activeNull' className="pure-button pure-success"><span>Login</span></Link>;
       }

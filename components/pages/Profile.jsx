@@ -7,6 +7,7 @@ var _ = require('lodash');
 
 module.exports = function (treeData) {
 
+  var userHandler = require('../../lib/user')(treeData);
   
   return React.createClass({
     displayName: 'Profile',
@@ -14,6 +15,7 @@ module.exports = function (treeData) {
     mixins: [treeData.mixin, React.addons.LinkedStateMixin],
     cursors: {
       user: ['user'],
+      profile: ['profile'],
     },
 
 
@@ -26,14 +28,30 @@ module.exports = function (treeData) {
       };
     },
 
-
     componentDidMount: function() : void {
+      
+      var componentScope = this;
+
+      this.cursors.profile.on('update', function () {
+        var profile = componentScope.cursors.profile.get();
+        componentScope.setState(profile);  
+      });
     },
 
 
-    componentWillMount: function() : void {
-     
+    saveProfile: function saveProfile() {
+
+      console.log('saving profile...');
+
+      userHandler.updateProfile({
+        nome: this.state.nome,
+        cognome: this.state.cognome,
+        email: this.state.email,
+        telefono: this.state.telefono
+      });
     },
+
+
 
 
     render: function() : React.PropTypes.element {
@@ -51,7 +69,7 @@ module.exports = function (treeData) {
             <div className="pure-g">
               <div className="pure-u-1 pure-u-md-1-2">
                 <div className="profile-padding">
-                  <form id="profile-form" className="pure-form">
+                  <form id="profile-form" className="pure-form" onsubmit='return false'>
                     <div className="pure-u-3-4">
                       <h3>Le tue informazioni</h3>
                     </div>
@@ -64,7 +82,7 @@ module.exports = function (treeData) {
                     <div className="spacer-10"></div>
                     <div className="pure-control-group"><input type="text" name="telefono" valueLink={this.linkState('telefono')} placeholder="Recapito telefonico" required readonly/></div>
                     <div className="spacer-40"></div>
-                    <div className="text-center"><button type="submit" style={{"display": "none"}} className="pure-button pure-success"><span>Salva profilo</span></button></div>
+                    <div className="text-center"><button onClick={this.saveProfile} className="pure-button pure-success"><span>Save profile</span></button></div>
                   </form>
                 </div>
               </div>
