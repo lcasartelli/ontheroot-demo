@@ -47,11 +47,11 @@ module.exports = function (treeData) {
             <div className="container">
               <div className="spacer-40"></div>
               <div className="text-center">
-                <h1>Silver restaurants leek</h1>
-                <p>Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut.</p>
+                <h1>Feel free, go gluten free</h1>
+                <p>You can find all the restaurants with gluten free options.</p>
                 <div className="spacer-20"></div>
                 <form className="pure-form">
-                  <input id="restaurants-filter" type="text" name="filter" placeholder="Filtra i ristoranti" />
+                  <input id="restaurants-filter" type="text" name="filter" placeholder="Find what you want... " />
                 </form>
               </div>
               <div className="spacer-10"></div>
@@ -75,3 +75,11 @@ module.exports = function (treeData) {
   });
 
 };
+
+
+/*
+  SEARCH
+  <form className="pure-form">
+    <input id="restaurants-filter" type="text" name="filter" placeholder="Find restaurant " />
+  </form>
+*/
