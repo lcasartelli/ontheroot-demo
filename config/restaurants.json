@@ -1,151 +1,138 @@
+
 {
   "1": {
     "version": "1",
     "restaurants": [
       {
         "id": "D986362F-85F5-4954-A604-5439B9262A5C",
+        "image": "outofgluten.jpg",
         "slug": "out-of-gluten",
         "title": "Out of Gluten",
-        "website": "http://www.outofgluten-milano.it/",
+        "description": "Gluten Free Pasticceria",
         "address": "Viale San Michele del Carso, 13, 20144 Milano",
-        "lat": "45.464317", 
-        "long": "9.164428",
+        "email":"info@outofgluten.it",
         "menu": {
-          "Veggie Burger": {
-            "name": "Veggie Burger",
-            "slug": "veggie-burger",
-            "description": "farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
-            "kcal": "160",
+          "Waffle": {
+            "name": "Waffle",
+            "slug": "waffle",
+            "image": "waffle.jpg",
+            "description": "",
+            "kcal": "300",
             "co2": "30",
             "h2o": "600",
             "global": "0,6",
             "grassi": "30%",
             "proteine": "40%",
             "carboidrati": "30%",
-            "price": "8,50"
+            "price": "3,50"
           },
-          "Roll di Avena e Grano Saraceno con Seitan": {
-            "name": "Roll di Avena e Grano Saraceno con Seitan",
-            "slug": "roll-di-avena-e-grano-saraceno-con-seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
-            "kcal": "160",
+          "Sachertorte": {
+            "name": "Sachertorte",
+            "slug": "sachertorte",
+            "description": "",
+            "image": "sachertorte.jpg",
+            "kcal": "800",
             "co2": "30",
             "h2o": "600",
             "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
+            "grassi": "90%",
+            "proteine": "0%",
+            "carboidrati": "10%",
+            "price": "35,00"
           },
-          "Club Sandwich con Seitan": {
-            "name": "Club Sandwich con Seitan",
-            "slug": "club-sandwich-con-seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
-            "kcal": "160",
-            "co2": "30",
-            "h2o": "600",
-            "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-            },
-          "Panzerotto al Forno con Mozzarella di Riso": {
-            "name": "Panzerotto al Forno con Mozzarella di Riso",
-            "slug": "panzerotto-al-forno-con-mozzarella-di-riso",
+          "Apple Pie": {
+            "name": "Apple Pie",
+            "slug": "apple-pie",
             "description": "",
-            "kcal": "160",
+            "image": "apple-pie.jpg",
+            "kcal": "500",
             "co2": "30",
             "h2o": "600",
             "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-            },
-          "Insalatona Mista": {
-            "name": "Insalatona Mista",
-            "slug": "insalatona-mista",
+            "grassi": "90%",
+            "proteine": "0%",
+            "carboidrati": "10%",
+            "price": "20,00"
+          },
+          "Margherita Cake": {
+            "name": "Margherita Cake",
+            "slug": "margherita-cake",
             "description": "",
-            "kcal": "160",
+            "image": "margherita.jpg",
+            "kcal": "500",
             "co2": "30",
             "h2o": "600",
             "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-            },
-          "Porzione Maionese Vegana": {
-            "name": "Porzione Maionese Vegana",
-            "slug": "porzione-maionese-vegana",
-            "description": "",
-            "kcal": "160",
-            "co2": "30",
-            "h2o": "600",
-            "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-            },
-          "Porzione Tofu Cheese": {
-            "name": "Porzione Tofu Cheese",
-            "slug": "porzione-tofu-cheese",
-            "description": "",
-            "kcal": "160",
-            "co2": "30",
-            "h2o": "600",
-            "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-          }
+            "grassi": "90%",
+            "proteine": "0%",
+            "carboidrati": "10%",
+            "price": "15,00"
+          },
         }
       },
       {
         "id": "D986362F-85F5-4954-7642-5439B9262A5C",
-        "slug": "test-1",
-        "title": "Example 1",
-        "website": "http://www.outofgluten-milano.it/",
+        "image": "panificio.jpg",
+        "slug": "panificio-mariella",
+        "title": "Panificio Mariella",
         "address": "Viale San Michele del Carso, 13, 20144 Milano",
-        "lat": "45.464317",
-        "long": "9.164428"
+        "email":"",
 
       },
       {
         "id": "D986362F-85F5-8932-A604-5439B9262A5C",
-        "slug": "test-2",
-        "title": "Example 2",
-        "website": "http://www.outofgluten-milano.it/",
-        "address": "Viale San Michele del Carso, 13, 20144 Milano",
-        "lat": "45.464317",
-        "long": "9.164428"
+        "image": "vegan-bistro.jpg",
+        "slug": "vegan-bistro",
+        "title": "Vegan Bistro",
+        "description": "Green Never Tasted So Good.",
+        "address": "Piazza Luigi Vittorio Bertarelli, Milano",
+        "email": "info@veganbistro.com",
+        "menu": {
+          "Veggie Platter": {
+            "name": "Veggie Platter",
+            "slug": "veggie-platter",
+            "image": "veggie-platter.jpg",
+            "description": "Gluten Free. Assortment of Vegetables.",
+            "price": "20,00",
+            "kcal": "150",
+            "grassi": "30%",
+            "proteine": "40%",
+            "carboidrati": "30%",
+            "co2": "30",
+            "h2o": "600",
+            "global": "0,6"
+          },
+          "Raw Veggie Wrap": {
+            "name": "Raw Veggie Wrap",
+            "slug": "raw-veggie-wrap",
+            "description": "Marinated veggies wrapped in a fresh ﬂour tortilla. Lettuce, tomato, sliced onions and sauce.",
+            "image": "raw-veggie-wrap.jpg",
+            "price": "5,00",
+            "kcal": "150",
+            "grassi": "30%",
+            "proteine": "40%",
+            "carboidrati": "30%",
+            "co2": "30",
+            "h2o": "600",
+            "global": "0,6"
 
+          }
+        }
       },
       {
         "id": "46BE006D-D64E-47E8-A616-84E98C3C8BAD",
+        "image": "radice-tonda.jpg",
         "slug": "radice-tonda",
+        "description": "Vegan Organic, Gluten Free Friendly.",
         "title": "Radice Tonda",
+        "email": "infobuozzi@radicetonda.it",
+        "address": "Via Lazzaro Spallanzani, 16, Milano",
         "menu": {
           "Veggie Burger": {
             "name": "Veggie Burger",
             "slug": "veggie-burger",
-            "description": "farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
-            "kcal": "160",
-            "co2": "30",
-            "h2o": "600",
-            "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-          },
-          "Roll di Avena e Grano Saraceno con Seitan": {
-            "name": "Roll di Avena e Grano Saraceno con Seitan",
-            "slug": "roll-di-avena-e-grano-saraceno-con-seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "image": "veggie-burger.jpg",
+            "description": "Farcito con Legumbreta (un impasto a base di lenticchie, fagioli rossi e spezie), maionese vegana e ketchup di barbabietole - prodotto biologico",
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
@@ -158,7 +145,8 @@
           "Club Sandwich con Seitan": {
             "name": "Club Sandwich con Seitan",
             "slug": "club-sandwich-con-seitan",
-            "description": "farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "description": "Farcito con straccetti di seitan prodotto artigianalmente, insalata a foglia, verdurine di stagione, maionese vegana, tofu cheese - prodotto biologico",
+            "image": "seitan-sandwitch.jpg",
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
@@ -168,10 +156,11 @@
             "carboidrati": "30%",
             "price": "8,50"
             },
-          "Panzerotto al Forno con Mozzarella di Riso": {
-            "name": "Panzerotto al Forno con Mozzarella di Riso",
+          "Panzerotto": {
+            "name": "Panzerotto",
             "slug": "panzerotto-al-forno-con-mozzarella-di-riso",
-            "description": "",
+            "image": "panzerotti.jpg",
+            "description": "Panzerotto al Forno con Mozzarella di Riso",
             "kcal": "160",
             "co2": "30",
             "h2o": "600",
@@ -184,6 +173,7 @@
           "Insalatona Mista": {
             "name": "Insalatona Mista",
             "slug": "insalatona-mista",
+            "image": "insalata-mista.jpg",
             "description": "",
             "kcal": "160",
             "co2": "30",
@@ -193,23 +183,11 @@
             "proteine": "40%",
             "carboidrati": "30%",
             "price": "8,50"
-            },
-          "Porzione Maionese Vegana": {
-            "name": "Porzione Maionese Vegana",
-            "slug": "porzione-maionese-vegana",
-            "description": "",
-            "kcal": "160",
-            "co2": "30",
-            "h2o": "600",
-            "global": "0,6",
-            "grassi": "30%",
-            "proteine": "40%",
-            "carboidrati": "30%",
-            "price": "8,50"
-            },
+          },
           "Porzione Tofu Cheese": {
             "name": "Porzione Tofu Cheese",
             "slug": "porzione-tofu-cheese",
+            "image": "tofu-cheese.jpg",
             "description": "",
             "kcal": "160",
             "co2": "30",
