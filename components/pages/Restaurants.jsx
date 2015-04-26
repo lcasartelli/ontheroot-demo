@@ -56,7 +56,7 @@ module.exports = function (treeData) {
               <div className="pure-g">
                 {_.map(restaurants, function (restaurant) {
                   return (
-                  <div className="pure-u-1 pure-u-md-1-4">
+                  <div className="pure-u-1 pure-u-md-1-4" key={restaurant.slug}>
                     <Restaurant restaurant={restaurant} />
                   </div>);
                 })}
