@@ -69,12 +69,12 @@ module.exports = function (treeData) {
     render: function() : React.PropTypes.element {
       
       
-      var headerImage = 'none';
+      var headerImage = this.props.dish.image;
       
       return (
       <div id="food-modal-overlay" className="show">
       <div className="food-modal-inner">
-        <div style={{"background-image": "url('" + headerImage + "');"}} className="food-modal-image">
+        <div style={{"background-image": "url('./assets/img/dish/" + headerImage + "');"}} className="food-modal-image">
           <a id="close-modal" onClick={this.closeModal}>
             <i className="fa fa-close"></i>  
           </a>
@@ -108,21 +108,6 @@ module.exports = function (treeData) {
                 </div>
               </div>
               <div className="pure-u-1 pure-u-sm-1-24"></div>
-              <div className="pure-u-1 pure-u-sm-13-24">
-                <h4>Impronta ambientale</h4>
-                <div className="spacer-10"></div>
-                <div className="pure-g text-center">
-                  <div className="pure-u-1 pure-u-sm-1-3">
-                    <DonutChart title={"ecologica"} value={this.props.dish.global} scale={"100"} color={"#87d860"} unit={"m" + String.fromCharCode(178) + " global"} />
-                  </div>
-                  <div className="pure-u-1-2 pure-u-sm-1-3">
-                    <DonutChart title={"CO" + String.fromCharCode(178) + " eq"} value={this.props.dish.co2} scale={"100"} color={"#f9ab30"} unit={"g"} />
-                  </div>
-                  <div className="pure-u-1-2 pure-u-sm-1-3">
-                    <DonutChart title={"H" + String.fromCharCode(178) + "O"} value={this.props.dish.h2o} scale={"100"} color={"#a89f84"} unit={"litri"} />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <div className="food-actions">
@@ -153,3 +138,26 @@ module.exports = function (treeData) {
   });
 
 };
+
+
+
+/*
+
+  IMPRONTA AMBIENTALE
+
+  <div className="pure-u-1 pure-u-sm-13-24">
+    <h4>Impronta ambientale</h4>
+    <div className="spacer-10"></div>
+    <div className="pure-g text-center">
+      <div className="pure-u-1 pure-u-sm-1-3">
+        <DonutChart title={"ecologica"} value={this.props.dish.global} scale={"100"} color={"#87d860"} unit={"m" + String.fromCharCode(178) + " global"} />
+      </div>
+      <div className="pure-u-1-2 pure-u-sm-1-3">
+        <DonutChart title={"CO" + String.fromCharCode(178) + " eq"} value={this.props.dish.co2} scale={"100"} color={"#f9ab30"} unit={"g"} />
+      </div>
+      <div className="pure-u-1-2 pure-u-sm-1-3">
+        <DonutChart title={"H" + String.fromCharCode(178) + "O"} value={this.props.dish.h2o} scale={"100"} color={"#a89f84"} unit={"litri"} />
+      </div>
+    </div>
+  </div>
+*/

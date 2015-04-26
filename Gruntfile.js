@@ -151,7 +151,7 @@ module.exports = function(grunt) {
         tasks: ['stylus:compile'],
       },
       js: {
-        files: ['components/**/*', 'lib/**/*', 'models/**/*', 'global.js', 'app.jsx'],
+        files: ['components/**/*', 'lib/**/*', 'models/**/*', 'global.js', 'app.jsx', "config/*.json"],
         tasks: ['browserify:app'],
       },
       bundle: {

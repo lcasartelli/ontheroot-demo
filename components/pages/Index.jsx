@@ -46,7 +46,7 @@ module.exports = function (treeData) {
               <div className="spacer-20"></div>
               <div className="pure-g">
                 <div className="pure-u-1 pure-u-md-1-3">
-                  <Category className={"glutenfree"} title={"Gluten Free"} restaurant={6} />
+                  <Category className={"glutenfree"} title={"Gluten Free"} restaurant={4} />
                 </div>
                 <div className="pure-u-1 pure-u-md-1-3">
                   <Category className={"vegan"} comingsoon={true} title={"Vegan"} />

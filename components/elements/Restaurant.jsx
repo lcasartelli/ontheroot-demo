@@ -38,7 +38,7 @@ module.exports = React.createClass({
       className.push('nowopen');
     }
 
-    var backgroundImg = 'outofgluten.jpg';
+    var backgroundImg = this.props.restaurant.image;
 
     return (
       <Link to="restaurant" params={params} className="restaurant-item">

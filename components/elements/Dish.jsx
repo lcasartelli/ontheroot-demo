@@ -42,11 +42,9 @@ module.exports = function (treeData) {
     render: function() : React.PropTypes.element {
       var params = {restaurantSlug: this.props.restaurant.slug, dishSlug: this.props.dish.slug};
 
-
-
       return (
        <div className="restaurant-grid food-modal-grid">
-          <div style={{"background-image": "url('https://unsplash.imgix.net/reserve/YFdIoUsRJCAehcoUnQaS_Straw.jpg?dpr=0.95&fit=crop&fm=jpg&h=725&q=75&w=1050');"}} className="restaurant-image"></div>
+          <div style={{"background-image": "url('./assets/img/dish/" + this.props.dish.image + "');"}} className="restaurant-image"></div>
           <h4>{ this.props.dish.name }</h4>
           <p>{ this.props.dish.description }</p>
           <p><strong>a partire da € 10.00</strong></p>

@@ -127,7 +127,7 @@ module.exports = function (treeData) {
                       <a id="gmap-link" href="" className="link"><small>indicazioni stradali</small></a>
                       <br/>
                       <br/>
-                      <a href="mailto:info@outofgluten.it" className="link">info@outofgluten.it</a>
+                      <a href={"mailto:" + componentScope.state.restaurant.email} className="link">{componentScope.state.restaurant.email}</a>
                     </h3>
                     <div className="spacer-20"></div>
                     <p>
