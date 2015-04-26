@@ -1306,9 +1306,16 @@ module.exports = function (treeData) {
   return React.createClass({
     displayName: 'Restaurants',
 
-    mixins: [treeData.minxin],
+    mixins: [treeData.minxin, React.addons.LinkedStateMixin],
 
     propTypes: {},
+
+
+    getInitialState: function getInitialState()          {
+      return {
+        searchString: '',
+      };
+    },
 
 
     componentDidMount: function(item)        {
@@ -1317,13 +1324,15 @@ module.exports = function (treeData) {
 
 
     render: function()                           {
+      
       var componentScope = this;
       
-      var restaurants = RESTAURANTS["1"].restaurants;
-
-      restaurants = _.chain(restaurants).sortBy(function (restaurant) {
-        return restaurant.open;
-      }).reverse().value();
+      var restaurants = _
+        .chain(RESTAURANTS["1"].restaurants)
+        .filter(function (restaurant) { return new RegExp(componentScope.state.searchString, 'i').test(restaurant.title); })
+        .sortBy(function (restaurant) { return restaurant.open; })
+        .reverse()
+        .value();
 
       return (
         React.createElement("div", null, 
@@ -1336,7 +1345,7 @@ module.exports = function (treeData) {
                 React.createElement("p", null, "You can find all the restaurants with gluten free options."), 
                 React.createElement("div", {className: "spacer-20"}), 
                 React.createElement("form", {className: "pure-form"}, 
-                  React.createElement("input", {id: "restaurants-filter", type: "text", name: "filter", placeholder: "Find what you want... "})
+                  React.createElement("input", {id: "restaurants-filter", type: "text", name: "filter", placeholder: "Find what you want... ", valueLink: this.linkState('searchString')})
                 )
               ), 
               React.createElement("div", {className: "spacer-10"}), 

@@ -21,9 +21,16 @@ module.exports = function (treeData) {
   return React.createClass({
     displayName: 'Restaurants',
 
-    mixins: [treeData.minxin],
+    mixins: [treeData.minxin, React.addons.LinkedStateMixin],
 
     propTypes: {},
+
+
+    getInitialState: function getInitialState() : Object {
+      return {
+        searchString: '',
+      };
+    },
 
 
     componentDidMount: function(item) : void {
@@ -32,13 +39,15 @@ module.exports = function (treeData) {
 
 
     render: function() : React.PropTypes.element {
+      
       var componentScope = this;
       
-      var restaurants = RESTAURANTS["1"].restaurants;
-
-      restaurants = _.chain(restaurants).sortBy(function (restaurant) {
-        return restaurant.open;
-      }).reverse().value();
+      var restaurants = _
+        .chain(RESTAURANTS["1"].restaurants)
+        .filter(function (restaurant) { return new RegExp(componentScope.state.searchString, 'i').test(restaurant.title); })
+        .sortBy(function (restaurant) { return restaurant.open; })
+        .reverse()
+        .value();
 
       return (
         <div>
@@ -51,7 +60,7 @@ module.exports = function (treeData) {
                 <p>You can find all the restaurants with gluten free options.</p>
                 <div className="spacer-20"></div>
                 <form className="pure-form">
-                  <input id="restaurants-filter" type="text" name="filter" placeholder="Find what you want... " />
+                  <input id="restaurants-filter" type="text" name="filter" placeholder="Find what you want... " valueLink={this.linkState('searchString')} />
                 </form>
               </div>
               <div className="spacer-10"></div>
