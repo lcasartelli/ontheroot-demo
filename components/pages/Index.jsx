@@ -38,8 +38,8 @@ module.exports = function (treeData) {
            <div className="container">
               <div className="spacer-40"></div>
               <div className="text-center">
-                 <h1>Nori grape silver beet </h1>
-                 <p>Bunya nuts black-eyed pea prairie turnip leek lentil turnip greens parsnip. Sea lettuce lettuce water chestnut.</p>
+                 <h1>Your food, the easy way</h1>
+                 <p>Choose your diet and find the perfect meal.</p>
               </div>
               <div className="spacer-10"></div>
               <hr />
@@ -49,10 +49,10 @@ module.exports = function (treeData) {
                   <Category className={"glutenfree"} title={"Gluten Free"} restaurant={6} />
                 </div>
                 <div className="pure-u-1 pure-u-md-1-3">
-                  <Category className={"vegan"} comingsoon={true} title={"Vegano"} />
+                  <Category className={"vegan"} comingsoon={true} title={"Vegan"} />
                 </div>
                 <div className="pure-u-1 pure-u-md-1-3">
-                  <Category className={"vegetarian"} comingsoon={true} title={"Vegetariano"} />
+                  <Category className={"vegetarian"} comingsoon={true} title={"Vegetarian"} />
                 </div>
               </div>
               <div className="spacer-100"></div>

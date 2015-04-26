@@ -55,14 +55,14 @@ module.exports = function (treeData) {
 
       if (user.authed) {
         userComponent =
-          <a href="profilo.html" className="header-button">
+          <Link to='profile' className="header-button">
             <img src="http://api.adorable.io/avatars/285/abott@adorable.png" />
             <span>
             <strong>Abott Doe</strong>
             <br/>
-            <span>il tuo profilo</span>
+            <span>View Profile</span>
             </span>
-          </a>;
+          </Link>;
       } else {
         userComponent = <Link to='login' activeClassName='activeNull' className="pure-button pure-success"><span>Login</span></Link>;
       }
