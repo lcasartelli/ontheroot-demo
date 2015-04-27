@@ -1487,18 +1487,29 @@ module.exports = function (treeData) {
       var user = this.cursors.user.get();
 
       if (!user.authed) {
-        loginButton = React.createElement("button", {className: "pure-button pure-facebook", onClick: this.doLoginFB}, React.createElement("i", {className: "fa fa-lg fa-facebook"}), React.createElement("span", null, "Effettua il login tramite Facebook"));
+        loginButton = React.createElement("button", {className: "pure-button pure-facebook", onClick: this.doLoginFB}, React.createElement("i", {className: "fa fa-lg fa-facebook"}), React.createElement("span", null, "Login with Facebook"));
       } else {
         loginButton = React.createElement("div", null);
       }
 
       return (
-         React.createElement("div", {className: "page"}, 
-         React.createElement("div", {className: "spacer-100"}), 
-          React.createElement("div", {className: "login-container text-center"}, 
-            React.createElement("div", {className: "spacer-80"}), 
-             loginButton, 
-            React.createElement("div", {className: "spacer-80"})
+        React.createElement("div", null, 
+          React.createElement("div", {className: "page header-image", style: {"background-image": "url('./assets/img/headers/login.jpg');"}}, 
+            React.createElement("div", {className: "text-center"}, 
+              React.createElement("div", {className: "spacer-150"}), 
+              React.createElement("h1", null, "Login"), 
+              React.createElement("div", {className: "spacer-100"})
+            )
+          ), 
+           React.createElement("div", {className: "page"}, 
+           React.createElement("div", {className: "spacer-100"}), 
+            React.createElement("div", {className: "login-container text-center"}, 
+              React.createElement("div", {className: "spacer-50"}), 
+               loginButton, 
+              React.createElement("div", {className: "spacer-80"}), 
+              React.createElement("div", {className: "spacer-80"}), 
+              React.createElement("div", {className: "spacer-50"})
+            )
           )
         )
       );
@@ -1803,11 +1814,9 @@ module.exports = function (treeData) {
                     ), 
                     React.createElement("div", {className: "spacer-20"}), 
                     React.createElement("p", null, 
-                      React.createElement("strong", null, "Orario d'apertura"), 
+                      React.createElement("strong", null, "Opening Hours"), 
                       React.createElement("br", null), 
-                      "Lun - Domenica / 11.30 - 23.30", 
-                      React.createElement("br", null), 
-                      React.createElement("small", null, React.createElement("strong", null, "Aperto ora!"), " Vuoi ordinare qualcosa?")
+                      "Monday - Sunday / 11.30 - 23.30"
                     )
                   )
                 )

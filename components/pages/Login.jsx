@@ -60,18 +60,29 @@ module.exports = function (treeData) {
       var user = this.cursors.user.get();
 
       if (!user.authed) {
-        loginButton = <button className='pure-button pure-facebook' onClick={this.doLoginFB}><i className='fa fa-lg fa-facebook'></i><span>Effettua il login tramite Facebook</span></button>;
+        loginButton = <button className='pure-button pure-facebook' onClick={this.doLoginFB}><i className='fa fa-lg fa-facebook'></i><span>Login with Facebook</span></button>;
       } else {
         loginButton = <div></div>;
       }
 
       return (
-         <div className="page">
-         <div className="spacer-100"></div>
-          <div className="login-container text-center">
-            <div className="spacer-80"></div>
-            { loginButton }
-            <div className="spacer-80"></div>
+        <div>
+          <div className="page header-image" style={{"background-image": "url('./assets/img/headers/login.jpg');"}}>
+            <div className="text-center">
+              <div className="spacer-150"></div>
+              <h1>Login</h1>
+              <div className="spacer-100"></div>
+            </div>
+          </div>
+           <div className="page">
+           <div className="spacer-100"></div>
+            <div className="login-container text-center">
+              <div className="spacer-50"></div>
+              { loginButton }
+              <div className="spacer-80"></div>
+              <div className="spacer-80"></div>
+              <div className="spacer-50"></div>
+            </div>
           </div>
         </div>
       );
