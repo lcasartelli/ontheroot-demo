@@ -12,6 +12,8 @@ var Link = Router.Link;
 
 module.exports = function (treeData) {
 
+  var checkout = require('../../lib/checkout')(treeData);
+
   return React.createClass({
     displayName: 'CartHandler',
 
@@ -56,8 +58,16 @@ module.exports = function (treeData) {
     },
 
 
+    removeItem: function removeItem(item) {
+      return function removeItemHandler() {
+        checkout.removeItem(item);
+      };
+    },
+
+
     render: function() : React.PropTypes.element {
       
+      var componentScope = this;
       var cartItems = this.cursors.cart.get();
 
       var cartCounter = <span></span>;
@@ -78,11 +88,13 @@ module.exports = function (treeData) {
               item.price = item.price.replace(',', '.');
               var price = Number.parseInt(item.qty, 10) * Number.parseFloat(item.price, 10);
 
+              var removeItem = componentScope.removeItem(item);
+
               return (
                 <div className="cart-item">
                   <strong>{item.name}</strong>
                   <span>{item.qty}&nbsp;portions:&nbsp;{price}&nbsp;€</span>
-                  <button className="pure-button pure-danger"><span>Remove</span></button>
+                  <button className="pure-button pure-danger" onClick={removeItem}><span>Remove</span></button>
                 </div>)})
             }
             <div className="cart-item">

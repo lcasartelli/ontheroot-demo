@@ -187,6 +187,8 @@ var Link = Router.Link;
 
 module.exports = function (treeData) {
 
+  var checkout = require('../../lib/checkout')(treeData);
+
   return React.createClass({
     displayName: 'CartHandler',
 
@@ -231,8 +233,16 @@ module.exports = function (treeData) {
     },
 
 
+    removeItem: function removeItem(item) {
+      return function removeItemHandler() {
+        checkout.removeItem(item);
+      };
+    },
+
+
     render: function()                           {
       
+      var componentScope = this;
       var cartItems = this.cursors.cart.get();
 
       var cartCounter = React.createElement("span", null);
@@ -253,11 +263,13 @@ module.exports = function (treeData) {
               item.price = item.price.replace(',', '.');
               var price = Number.parseInt(item.qty, 10) * Number.parseFloat(item.price, 10);
 
+              var removeItem = componentScope.removeItem(item);
+
               return (
                 React.createElement("div", {className: "cart-item"}, 
                   React.createElement("strong", null, item.name), 
                   React.createElement("span", null, item.qty, " portions: ", price, " €"), 
-                  React.createElement("button", {className: "pure-button pure-danger"}, React.createElement("span", null, "Remove"))
+                  React.createElement("button", {className: "pure-button pure-danger", onClick: removeItem}, React.createElement("span", null, "Remove"))
                 ))}), 
             
             React.createElement("div", {className: "cart-item"}, 
@@ -276,7 +288,7 @@ module.exports = function (treeData) {
 
 
 
-},{"lodash":47,"react-router":72,"react/addons":87}],4:[function(require,module,exports){
+},{"../../lib/checkout":24,"lodash":47,"react-router":72,"react/addons":87}],4:[function(require,module,exports){
 
 /* @flow */
 
@@ -1046,7 +1058,7 @@ module.exports = function (treeData) {
       var _confirm = confirm('Remove item from your shopping cart?');
 
       if (_confirm) {
-        _that.cursors.cart.edit(_.without(_that.cursors.cart.get(), item));
+        checkout.removeItem(item);
       }
     },
 
@@ -2361,9 +2373,9 @@ module.exports = function(treeData) {
   };
 
 
-  var removeItem = function removeItem() {
-    ok(ordersDataset, 'First init the dataset');
-    console.log('deleting item...');
+  var removeItem = function removeItem(item) {
+    ok(typeof item === 'object', 'Missing required, no item provided');
+    cart.edit(_.without(cart.get(), item));
   };
 
 
@@ -2404,12 +2416,12 @@ module.exports = function(treeData) {
 
   var emptyCart = function emptyCart() {
     cart.edit([]);
-    console.log('Empty cart...');
   };
 
 
   return {
     addItem: addItem,
+    removeItem: removeItem,
     autoSyncronizeCart: autoSyncronizeCart,
     getCurrentOrder: getCurrentOrder,
     emptyCart: emptyCart,

@@ -103,7 +103,7 @@ module.exports = function (treeData) {
       var _confirm = confirm('Remove item from your shopping cart?');
 
       if (_confirm) {
-        _that.cursors.cart.edit(_.without(_that.cursors.cart.get(), item));
+        checkout.removeItem(item);
       }
     },
 
