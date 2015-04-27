@@ -32,8 +32,7 @@ var Profile = require('./components/pages/Profile.jsx')(treeData);
 
 
 var cognitoAuth = require('./lib/cognito')();
-var facebookCognito = require('./lib/cognito.facebook')(userCursor, profileCursor);
-var facebookAuth = require('./lib/cognito.facebook')();
+var facebookCognito = require('./lib/cognito.facebook')(treeData);
 var checkout = require('./lib/checkout')(treeData);
 var userHandler = require('./lib/user')(treeData);
 
@@ -47,7 +46,6 @@ cognitoAuth.unAuthUserLogin().then(function () {
       data = [];
     }
     cartCursor.edit(data);
-    console.log('update', treeData);
   });
 
   cartCursor.on('update', function _onCartItemsUpdate() {
@@ -63,7 +61,6 @@ cognitoAuth.unAuthUserLogin().then(function () {
 var facebookToken = window.sessionStorage.getItem('facebookToken');
 
 if (facebookToken) {
-  console.log('facebookToken', facebookToken);
   userCursor.set('accessToken', {
     type: 'fb',
     token: facebookToken,
@@ -73,6 +70,12 @@ if (facebookToken) {
 }
 
 
+profileCursor.on('update', function () {
+  userHandler.autoSyncronizeProfile().then(function () {
+    console.log('sync user completed');
+  });  
+});
+
 userCursor.on('update', function _updateUser() {
   var user = userCursor.get();
   
@@ -81,35 +84,17 @@ userCursor.on('update', function _updateUser() {
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
     .then(function () {
 
-      console.log('credentials', AWS.config.credentials);
-
       userCursor.set('authed', true);
 
       userHandler.loadProfile().then(function (data) {
         if (!data) {
-          data = {};
-        }
-
-        console.log('profile loaded', data);
-
-        if (!data.nome & !data.cognome) {
-          //facebookCognito.getProfileInfo();
+          return facebookCognito.loadFacebookProfile();  
         } else {
-          profileCursor.edit(data);  
+          return data;
         }
-
+      }).then(function (data) {
+        profileCursor.edit(data);
       });
-
-      profileCursor.on('update', function () {
-        
-        console.log('profile change', profileCursor.get());
-
-        userHandler.autoSyncronizeProfile().then(function () {
-          console.log('sync user completed');
-        });
-      });
-
-
     });
 
   }

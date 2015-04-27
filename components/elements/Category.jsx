@@ -15,8 +15,11 @@ module.exports = function (data) {
   return React.createClass({
     displayName: 'Category',
 
-    propTypes: {},
-
+    propTypes: {
+      restaurants: React.PropTypes.object.isRequired,
+      title: React.PropTypes.string.isRequired,
+      className: React.PropTypes.string.isRequired,
+    },
 
 
     getInitialState: function getInitialState() : Object {

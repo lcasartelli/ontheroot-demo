@@ -8,7 +8,7 @@ var _ = require('lodash');
 
 module.exports = function (treeData) {
 
-  var facebookCognito = require('../../lib/cognito.facebook')(treeData.select('user'), treeData.select('profile'));
+  var facebookCognito = require('../../lib/cognito.facebook')(treeData);
 
   return React.createClass({
     displayName: 'Login',
