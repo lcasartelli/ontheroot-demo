@@ -58,9 +58,9 @@ module.exports = function (treeData) {
           <span id="cities-current">{citiesItem[0]}</span>
 
           <div id="cities-dropdown">
-            {_.map(citiesItem, function (item) {
+            {_.map(citiesItem, function (item, index) {
               return (
-                <div className="cities-item">{item}</div>)})
+                <div className="cities-item" key={index}>{item}</div>)})
             }
           </div>            
         </a>

@@ -6,7 +6,9 @@
 
 var React = require('react/addons');
 var _ = require('lodash');
-
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 module.exports = function (treeData) {
 
@@ -14,9 +16,14 @@ module.exports = function (treeData) {
     displayName: 'CartHandler',
 
     mixins: [treeData.mixin],
+    
     cursors: {
       user: ['user'],
       cart: ['cart'],
+    },
+
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
     },
 
 
@@ -33,14 +40,19 @@ module.exports = function (treeData) {
 
       return function () {
         if (tof) {
-          React.findDOMNode(that).querySelector('#cart-dropdown').classList.add('show');
+          React.findDOMNode(that.refs.cartDropdown).classList.add('show');
           React.findDOMNode(that).classList.add('active');
         } else {
           React.findDOMNode(that).classList.remove('active');
-          React.findDOMNode(that).querySelector('#cart-dropdown').classList.remove('show');
+          React.findDOMNode(that.refs.cartDropdown).classList.remove('show');
         }
         
       }
+    },
+
+
+    openCheckout: function openCheckout() {
+      this.context.router.transitionTo('checkout');
     },
 
 
@@ -60,7 +72,7 @@ module.exports = function (treeData) {
           </i>
           <span>Cart</span>
 
-          <div id="cart-dropdown">
+          <div id="cart-dropdown" ref='cartDropdown'>
             {_.map(cartItems, function (item) {
               // i don't believe in this shit
               item.price = item.price.replace(',', '.');
@@ -74,7 +86,7 @@ module.exports = function (treeData) {
                 </div>)})
             }
             <div className="cart-item">
-              <button id="show-cart" className="pure-button">
+              <button onClick={this.openCheckout} id="show-cart" className="pure-button">
                 <span>Go to cart</span>
               </button>
             </div>
