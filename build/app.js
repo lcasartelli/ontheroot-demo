@@ -1210,6 +1210,14 @@ module.exports = function (treeData) {
 
     render: function()                           {
 
+      var _toFill = false;
+
+      if (this.state.email === '' || this.state.telefono === '') {
+        _toFill = false;
+      } else {
+        _toFill = false;
+      }
+
       return (
         React.createElement("div", {className: "page"}, 
           React.createElement("div", {className: "container"}, 
@@ -1228,14 +1236,18 @@ module.exports = function (treeData) {
                     React.createElement("div", {className: "pure-u-3-4"}, 
                       React.createElement("h3", null, "Le tue informazioni")
                     ), 
-                    React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "edit-profile", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Modifica"))), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "nome", valueLink: this.linkState('nome'), placeholder: "Nome", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-u-1-4"}, 
+                    React.createElement("button", {id: "edit-profile", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, 
+                      React.createElement("i", {className: "fa fa-plus"}), 
+                      React.createElement("span", {onClick: this.editFields}, "Modifica")
+                    )), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "nome", valueLink: this.linkState('nome'), placeholder: "Nome", required: true, readOnly: {_toFill}})), 
                     React.createElement("div", {className: "spacer-10"}), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "cognome", valueLink: this.linkState('cognome'), placeholder: "Cognome", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "cognome", valueLink: this.linkState('cognome'), placeholder: "Cognome", required: true, readOnly: {_toFill}})), 
                     React.createElement("div", {className: "spacer-10"}), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "email", name: "email", valueLink: this.linkState('email'), placeholder: "E-mail", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "email", name: "email", valueLink: this.linkState('email'), placeholder: "E-mail", required: true, readOnly: {_toFill}})), 
                     React.createElement("div", {className: "spacer-10"}), 
-                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "telefono", valueLink: this.linkState('telefono'), placeholder: "Recapito telefonico", required: true, readonly: true})), 
+                    React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "telefono", valueLink: this.linkState('telefono'), placeholder: "Recapito telefonico", required: true, readOnly: {_toFill}})), 
                     React.createElement("div", {className: "spacer-40"}), 
                     React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", className: "pure-button pure-success"}, React.createElement("span", null, "Save profile")))
                   )
@@ -1551,6 +1563,34 @@ module.exports = function (data) {
 
 
     componentDidMount: function()        {
+      /*
+      var _that = this;
+
+      window.addEventListener('resize', this.footerPosition);
+      setTimeout(function () { _that.footerPosition(); }, 3000);
+      */
+    },
+
+
+    footerPosition: function footerPosition() {
+      /*
+      var _fullnode = document.querySelector('#fullnode');
+      var _footer = React.findDOMNode(this);
+      var _wh = window.innerHeight;
+
+      if (_wh > (_fullnode.offsetHeight - _footer.offsetHeight)) {
+        _footer.style.position = 'fixed';
+        _footer.style.width = '100%';
+        _footer.style.left = '0px';
+        _footer.style.bottom = '0px';
+      } else {
+        _footer.style.position = 'static';
+        _footer.style.width = 'auto';
+        _footer.style.left = 'auto';
+        _footer.style.bottom = 'auto';
+      }
+      */
+
 
     },
 
