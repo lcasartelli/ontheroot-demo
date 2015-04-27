@@ -187,7 +187,9 @@ module.exports = function (data) {
 
 var React = require('react/addons');
 var _ = require('lodash');
-
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 module.exports = function (treeData) {
 
@@ -195,9 +197,14 @@ module.exports = function (treeData) {
     displayName: 'CartHandler',
 
     mixins: [treeData.mixin],
+    
     cursors: {
       user: ['user'],
       cart: ['cart'],
+    },
+
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
     },
 
 
@@ -214,14 +221,19 @@ module.exports = function (treeData) {
 
       return function () {
         if (tof) {
-          React.findDOMNode(that).querySelector('#cart-dropdown').classList.add('show');
+          React.findDOMNode(that.refs.cartDropdown).classList.add('show');
           React.findDOMNode(that).classList.add('active');
         } else {
           React.findDOMNode(that).classList.remove('active');
-          React.findDOMNode(that).querySelector('#cart-dropdown').classList.remove('show');
+          React.findDOMNode(that.refs.cartDropdown).classList.remove('show');
         }
         
       }
+    },
+
+
+    openCheckout: function openCheckout() {
+      this.context.router.transitionTo('checkout');
     },
 
 
@@ -241,7 +253,7 @@ module.exports = function (treeData) {
           ), 
           React.createElement("span", null, "Cart"), 
 
-          React.createElement("div", {id: "cart-dropdown"}, 
+          React.createElement("div", {id: "cart-dropdown", ref: "cartDropdown"}, 
             _.map(cartItems, function (item) {
               // i don't believe in this shit
               item.price = item.price.replace(',', '.');
@@ -255,7 +267,7 @@ module.exports = function (treeData) {
                 ))}), 
             
             React.createElement("div", {className: "cart-item"}, 
-              React.createElement("button", {id: "show-cart", className: "pure-button"}, 
+              React.createElement("button", {onClick: this.openCheckout, id: "show-cart", className: "pure-button"}, 
                 React.createElement("span", null, "Go to cart")
               )
             )
@@ -270,7 +282,7 @@ module.exports = function (treeData) {
 
 
 
-},{"lodash":46,"react/addons":86}],4:[function(require,module,exports){
+},{"lodash":46,"react-router":71,"react/addons":86}],4:[function(require,module,exports){
 
 /* @flow */
 
@@ -398,9 +410,9 @@ module.exports = function (treeData) {
           React.createElement("span", {id: "cities-current"}, citiesItem[0]), 
 
           React.createElement("div", {id: "cities-dropdown"}, 
-            _.map(citiesItem, function (item) {
+            _.map(citiesItem, function (item, index) {
               return (
-                React.createElement("div", {className: "cities-item"}, item))})
+                React.createElement("div", {className: "cities-item", key: index}, item))})
             
           )
         )
@@ -896,17 +908,56 @@ module.exports = function (treeData) {
       var orders = this.cursors.cart.get();
 
       return (
-      React.createElement("div", null, 
-        React.createElement("h2", null, "Checkout"), 
-        React.createElement("div", {className: "actualOrder"}, 
-          React.createElement("button", {className: "pure-button", onClick: this.emptyCart}, "Svuota carrello"), 
-          React.createElement("ul", null, 
-          _.map(orders, function (item) {
-            return (React.createElement("li", null, item.name, " - ", item.qty));
-          })
+        React.createElement("div", {className: "page"}, 
+          React.createElement("div", {className: "spacer-100"}), 
+          React.createElement("div", {className: "container"}, 
+            React.createElement("div", {className: "spacer-40"}), 
+            React.createElement("div", {className: "text-center"}, 
+              React.createElement("h1", null, "Il tuo carrello")
+            ), 
+            React.createElement("div", {className: "spacer-10"}), 
+            React.createElement("hr", null), 
+            React.createElement("form", {id: "checkout-order-form", className: "pure-form shopping-form"}, 
+              React.createElement("h2", null, "Riepilogo ordine"), 
+              React.createElement("div", {className: "spacer-20"}), 
+              React.createElement("ul", {id: "shopping-cart"}, 
+                React.createElement("li", {className: "header"}, React.createElement("span", {className: "item"}, "Pietanza"), React.createElement("span", {className: "price"}, "Prezzo"), React.createElement("span", {className: "quantity"}, "Quantità")), 
+                _.map(orders, function (item) {
+                  return (
+                    React.createElement("li", null, 
+                      React.createElement("span", {className: "item"}, item.name), 
+                      React.createElement("span", {className: "price"}, "×", React.createElement("span", {className: "price-num"}, "7,50"), "€"), 
+                      React.createElement("span", {className: "quantity"}, 
+                        React.createElement("input", {type: "number", value: "1", min: "1", max: "99"}), 
+                        React.createElement("span", {className: "qty-plus"}, React.createElement("i", {className: "fa fa-plus"})), 
+                        React.createElement("span", {className: "qty-minus"}, React.createElement("i", {className: "fa fa-minus"})), 
+                        React.createElement("span", {className: "qty-remove"}, React.createElement("i", {className: "fa fa-times"}))
+                      )
+                    ));
+                })
+              ), 
+              React.createElement("div", {className: "spacer-20"}), 
+              React.createElement("div", {className: "text-center"}, React.createElement("span", {id: "totalCart"}, "0 €")), 
+              React.createElement("div", {className: "spacer-20"}), 
+              React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", className: "pure-button pure-success"}, React.createElement("span", null, "spedizione")))
+            ), 
+            React.createElement("div", {className: "spacer-100"}), 
+            React.createElement("div", {className: "spacer-100"}), 
+            React.createElement("form", {id: "checkout-address-form", className: "pure-form shopping-form disabled"}, 
+              React.createElement("h2", null, "Indirizzo di spedizione"), 
+              React.createElement("div", {className: "spacer-20"}), 
+              React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", className: "pure-button pure-success"}, React.createElement("span", null, "Pagamento")))
+            ), 
+            React.createElement("div", {className: "spacer-100"}), 
+            React.createElement("div", {className: "spacer-100"}), 
+            React.createElement("form", {id: "checkout-payment-form", className: "pure-form shopping-form disabled"}, 
+              React.createElement("h2", null, "Metodo di pagamento"), 
+              React.createElement("div", {className: "spacer-20"}), 
+              React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", className: "pure-button pure-success"}, React.createElement("span", null, "Conferma ordine")))
+            ), 
+            React.createElement("div", {className: "spacer-100"})
           )
-        )
-      ));
+        ));
     }
 
   });
@@ -22255,9 +22306,7 @@ var isUnitlessNumber = {
   columnCount: true,
   flex: true,
   flexGrow: true,
-  flexPositive: true,
   flexShrink: true,
-  flexNegative: true,
   fontWeight: true,
   lineClamp: true,
   lineHeight: true,
@@ -22270,9 +22319,7 @@ var isUnitlessNumber = {
 
   // SVG-related properties
   fillOpacity: true,
-  strokeDashoffset: true,
-  strokeOpacity: true,
-  strokeWidth: true
+  strokeOpacity: true
 };
 
 /**
@@ -25337,7 +25384,6 @@ var HTMLDOMPropertyConfig = {
     headers: null,
     height: MUST_USE_ATTRIBUTE,
     hidden: MUST_USE_ATTRIBUTE | HAS_BOOLEAN_VALUE,
-    high: null,
     href: null,
     hrefLang: null,
     htmlFor: null,
@@ -25348,7 +25394,6 @@ var HTMLDOMPropertyConfig = {
     lang: null,
     list: MUST_USE_ATTRIBUTE,
     loop: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
-    low: null,
     manifest: MUST_USE_ATTRIBUTE,
     marginHeight: null,
     marginWidth: null,
@@ -25363,7 +25408,6 @@ var HTMLDOMPropertyConfig = {
     name: null,
     noValidate: HAS_BOOLEAN_VALUE,
     open: HAS_BOOLEAN_VALUE,
-    optimum: null,
     pattern: null,
     placeholder: null,
     poster: null,
@@ -25377,7 +25421,6 @@ var HTMLDOMPropertyConfig = {
     rowSpan: null,
     sandbox: null,
     scope: null,
-    scoped: HAS_BOOLEAN_VALUE,
     scrolling: null,
     seamless: MUST_USE_ATTRIBUTE | HAS_BOOLEAN_VALUE,
     selected: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
@@ -25419,9 +25462,7 @@ var HTMLDOMPropertyConfig = {
     itemID: MUST_USE_ATTRIBUTE,
     itemRef: MUST_USE_ATTRIBUTE,
     // property is supported for OpenGraph in meta tags.
-    property: null,
-    // IE-only attribute that controls focus behavior
-    unselectable: MUST_USE_ATTRIBUTE
+    property: null
   },
   DOMAttributeNames: {
     acceptCharset: 'accept-charset',
@@ -26065,7 +26106,7 @@ if ("production" !== "development") {
   }
 }
 
-React.version = '0.13.2';
+React.version = '0.13.1';
 
 module.exports = React;
 
@@ -28358,14 +28399,6 @@ var ReactCompositeComponentMixin = {
         this.getName() || 'a component'
       ) : null);
       ("production" !== "development" ? warning(
-        !inst.getDefaultProps ||
-        inst.getDefaultProps.isReactClassApproved,
-        'getDefaultProps was defined on %s, a plain JavaScript class. ' +
-        'This is only supported for classes created using React.createClass. ' +
-        'Use a static property to define defaultProps instead.',
-        this.getName() || 'a component'
-      ) : null);
-      ("production" !== "development" ? warning(
         !inst.propTypes,
         'propTypes was defined as an instance property on %s. Use a static ' +
         'property to define propTypes instead.',
@@ -28934,7 +28967,7 @@ var ReactCompositeComponentMixin = {
         this._renderedComponent,
         thisID,
         transaction,
-        this._processChildContext(context)
+        context
       );
       this._replaceNodeWithMarkupByID(prevComponentID, nextMarkup);
     }
@@ -29802,8 +29835,6 @@ ReactDOMComponent.Mixin = {
       if (propKey === STYLE) {
         if (nextProp) {
           nextProp = this._previousStyleCopy = assign({}, nextProp);
-        } else {
-          this._previousStyleCopy = null;
         }
         if (lastProp) {
           // Unset styles on `lastProp` but not on `nextProp`.
@@ -32410,9 +32441,9 @@ function warnForPropsMutation(propName, element) {
 
   ("production" !== "development" ? warning(
     false,
-    'Don\'t set .props.%s of the React component%s. Instead, specify the ' +
-    'correct value when initially creating the element or use ' +
-    'React.cloneElement to make a new element with updated props.%s',
+    'Don\'t set .props.%s of the React component%s. ' +
+    'Instead, specify the correct value when ' +
+    'initially creating the element.%s',
     propName,
     elementInfo,
     ownerInfo
@@ -41719,7 +41750,6 @@ assign(
 function isInternalComponentType(type) {
   return (
     typeof type === 'function' &&
-    typeof type.prototype !== 'undefined' &&
     typeof type.prototype.mountComponent === 'function' &&
     typeof type.prototype.receiveComponent === 'function'
   );
@@ -42975,14 +43005,11 @@ module.exports = traverseAllChildren;
  * @providesModule update
  */
 
- /* global hasOwnProperty:true */
-
 'use strict';
 
 var assign = require("./Object.assign");
 var keyOf = require("./keyOf");
 var invariant = require("./invariant");
-var hasOwnProperty = {}.hasOwnProperty;
 
 function shallowCopy(x) {
   if (Array.isArray(x)) {
@@ -43042,7 +43069,7 @@ function update(value, spec) {
     COMMAND_SET
   ) : invariant(typeof spec === 'object'));
 
-  if (hasOwnProperty.call(spec, COMMAND_SET)) {
+  if (spec.hasOwnProperty(COMMAND_SET)) {
     ("production" !== "development" ? invariant(
       Object.keys(spec).length === 1,
       'Cannot have more than one key in an object with %s',
@@ -43054,7 +43081,7 @@ function update(value, spec) {
 
   var nextValue = shallowCopy(value);
 
-  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
+  if (spec.hasOwnProperty(COMMAND_MERGE)) {
     var mergeObj = spec[COMMAND_MERGE];
     ("production" !== "development" ? invariant(
       mergeObj && typeof mergeObj === 'object',
@@ -43071,21 +43098,21 @@ function update(value, spec) {
     assign(nextValue, spec[COMMAND_MERGE]);
   }
 
-  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
+  if (spec.hasOwnProperty(COMMAND_PUSH)) {
     invariantArrayCase(value, spec, COMMAND_PUSH);
     spec[COMMAND_PUSH].forEach(function(item) {
       nextValue.push(item);
     });
   }
 
-  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
+  if (spec.hasOwnProperty(COMMAND_UNSHIFT)) {
     invariantArrayCase(value, spec, COMMAND_UNSHIFT);
     spec[COMMAND_UNSHIFT].forEach(function(item) {
       nextValue.unshift(item);
     });
   }
 
-  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
+  if (spec.hasOwnProperty(COMMAND_SPLICE)) {
     ("production" !== "development" ? invariant(
       Array.isArray(value),
       'Expected %s target to be an array; got %s',
@@ -43111,7 +43138,7 @@ function update(value, spec) {
     });
   }
 
-  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
+  if (spec.hasOwnProperty(COMMAND_APPLY)) {
     ("production" !== "development" ? invariant(
       typeof spec[COMMAND_APPLY] === 'function',
       'update(): expected spec of %s to be a function; got %s.',
