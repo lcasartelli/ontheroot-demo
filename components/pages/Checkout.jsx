@@ -13,30 +13,21 @@ module.exports = function (treeData) {
   var checkout = require('../../lib/checkout')(treeData);
   
   var CheckoutItem = require('../elements/CheckoutItem.jsx')(treeData);
+  var CartBox = require('../elements/CartBox.jsx')(treeData);
+  var ShippingBox = require('../elements/ShippingBox.jsx')(treeData);
+  var PaymentBox = require('../elements/PaymentBox.jsx')(treeData);
+
+
 
   return React.createClass({
     displayName: 'Checkout',
 
     mixins: [treeData.mixin, React.addons.LinkedStateMixin],
+
     cursors: {
       user: ['user'],
       cart: ['cart'],
     },
-
-
-  /*
-
-
-
-    //  -- step 3 --
-    document.getElementById('checkout-payment-form').addEventListener('submit', function (evt) {
-      evt.preventDefault();
-      alert('Ordine inviato! Grazie!');
-      return false;
-    });
-
-    */
-
 
 
     getInitialState: function getInitialState() : Object {
@@ -48,19 +39,15 @@ module.exports = function (treeData) {
 
     componentDidMount: function() : void {
 
-      // -- check scrolling bar position --
       window.addEventListener('scroll', function () {
-        var top = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-        var paymentPxFromTop = document.getElementById('checkout-payment-form').offsetTop;
-        var _totalCartEl = document.getElementById('totalCart');
+        var topPosition = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+        /*var _totalCartEl = React.findDOMNode(this.refs.cartBox.refs.totalCart);
 
-        console.log(top, paymentPxFromTop);
-
-        if (top <=  300) {
+        if (topPosition <=  300) {
           _totalCartEl.classList.remove('fixed');
         } else {
           _totalCartEl.classList.add('fixed');
-        }
+          }*/
       });
 
     },
@@ -71,74 +58,17 @@ module.exports = function (treeData) {
     },
 
 
-    addUnit: function addUnit() {
-      var _that = this;
-      var _input = React.findDOMNode(_that).parentNode.querySelector('input');
-      var _currentNumber = parseInt(_input.value, 10);
-
-      _input.value = (_currentNumber + 1);
-
-      //  add +1 to item in order
-      this.totalSum();
-    },
-
-
-    removeUnit: function removeUnit() {
-      var _that = this;
-      var _input = React.findDOMNode(_that).parentNode.querySelector('input');
-      var _currentNumber = parseInt(_input.value, 10);
-
-      if (_currentNumber <= 1) {
-        return;
-      }
-      _input.value = (_currentNumber - 1);
-
-      //  subtract -1 to item in order
-      this.totalSum();
-    },
-
-
-    removeItem: function removeItem(item) {
-      var _that = this;
-      var _confirm = confirm('Remove item from your shopping cart?');
-
-      if (_confirm) {
-        checkout.removeItem(item);
-      }
-    },
-
-
-    totalSum: function totalSum() {
-      var _that = this;
-
-
-    },
-
-
-    updateItemQuantity: function updateItemQuantity(item, quantity) {
-      var cart = this.cursors.cart.get();
-      var itemIndex = _.findIndex(cart, function (o) { return item.slug === o.slug; });
-      if (itemIndex > -1) {
-        var item = cart[itemIndex];
-        checkout.addItem(item, quantity);
-      }
-
-    },
-
-
     emptyCart: function emptyCart() : void {
       checkout.emptyCart();
     },
 
 
-    checkoutStep1: function checkoutStep1() {
+    cartStep: function checkoutStep1() {
       var _that = this;
 
       if (React.findDOMNode(_that).querySelector('#checkout-order-form').classList.contains('disabled')) {
         return;
       }
-
-      this.totalSum();
 
       React.findDOMNode(_that).querySelector('#checkout-order-form').classList.add('disabled');
       React.findDOMNode(_that).querySelector('#checkout-address-form').classList.remove('disabled');
@@ -147,12 +77,8 @@ module.exports = function (treeData) {
     },
 
 
-    checkoutStep2: function checkoutStep2() {
+    shipEnd: function checkoutStep2() {
       var _that = this;
-
-      if (React.findDOMNode(_that).querySelector('#checkout-address-form').classList.contains('disabled')) {
-        return;
-      }
 
       React.findDOMNode(_that).querySelector('#checkout-address-form').classList.add('disabled');
       React.findDOMNode(_that).querySelector('#checkout-payment-form').classList.remove('disabled');
@@ -161,16 +87,10 @@ module.exports = function (treeData) {
     },
 
 
-    checkoutStep3: function checkoutStep3() {
+    payEnd: function checkoutStep3() {
       var _that = this;
 
-      if (React.findDOMNode(_that).querySelector('#checkout-payment-form').classList.contains('disabled')) {
-        return;
-      }
-
-      //  -- check if payment went well --
       React.findDOMNode(_that).querySelector('#checkout-payment-form').classList.add('disabled');
-      alert('Ordine inviato! Grazie!');
       return false;
     },
 
@@ -178,10 +98,10 @@ module.exports = function (treeData) {
     render: function() : React.PropTypes.element {
 
       var _that = this;
-      var orders = _that.cursors.cart.get();
+      var orders = this.cursors.cart.get();
 
 
-      var orderTotal = _.sum(orders, function (order) {
+      var totalCart = _.sum(orders, function (order) {
         return order.qty * order.price;
       });
 
@@ -191,36 +111,11 @@ module.exports = function (treeData) {
 
         itemsTmpl = (
           <div>
-            <form id="checkout-order-form" className="pure-form shopping-form" onSubmit={this.checkoutStep1}>
-              <h2>Riepilogo ordine</h2>
-              <div className="spacer-20"></div>
-              <ul id="shopping-cart">
-                <li className="header"><span className="item">Pietanza</span><span className="price">Prezzo</span><span className="quantity">Quantità</span></li>
-                {_.map(orders, function (item) {
-                  return (<CheckoutItem item={item} onUpdateQuantity={_that.updateItemQuantity} onRemoveItem={_that.removeItem} />);
-                })}
-              </ul>
-              <div className="spacer-20"></div>
-              <div className="text-center">
-                <span id="totalCart">{orderTotal} &euro;</span>
-              </div>
-              <div className="spacer-20"></div>
-              <div className="text-center"><button type="submit" className="pure-button pure-success"><span>spedizione</span></button></div>
-            </form>
-            <div className="spacer-100"></div>
-            <div className="spacer-100"></div>
-            <form id="checkout-address-form" className="pure-form shopping-form disabled" onSubmit={this.checkoutStep2}>
-              <h2>Indirizzo di spedizione</h2>
-              <div className="spacer-20"></div>
-              <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Pagamento</span></button></div>
-            </form>
-            <div className="spacer-100"></div>
-            <div className="spacer-100"></div>
-            <form id="checkout-payment-form" className="pure-form shopping-form disabled" onSubmit={this.checkoutStep3}>
-              <h2>Metodo di pagamento</h2>
-              <div className="spacer-20"></div>
-              <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Conferma ordine</span></button></div>
-            </form>
+            <CartBox ref='cartBox' onEnd={this.cartStep} />
+            <div className="spacer-100"></div><div className="spacer-100"></div>
+            <ShippingBox ref='shipBox' onEnd={this.shipEnd} />
+            <div className="spacer-100"></div><div className="spacer-100"></div>
+            <PaymentBox ref='shipBox' onEnd={this.payEnd} />
           </div>
         );
 
@@ -243,7 +138,7 @@ module.exports = function (treeData) {
           <div className="container">
             <div className="spacer-40"></div>
             <div className="text-center">
-              <h1>Il tuo carrello</h1>
+              <h1>Your Cart</h1>
             </div>
             <div className="spacer-10"></div>
             <hr/>
