@@ -55,8 +55,19 @@ module.exports = function (treeData) {
 
 
     loadProfile: function loadProfile() {
+      
       var profile = this.cursors.profile.get();
       this.setState(profile);
+
+      var editable = (this.state.email === '' || this.state.telefono === '');
+      
+      _.each(this.refs, function(item) {
+        if (editable) {
+          React.findDOMNode(item).setAttribute('readonly', true);
+        } else {
+          React.findDOMNode(item).removeAttribute('readonly');
+        }
+      });
     },
 
 
@@ -74,6 +85,7 @@ module.exports = function (treeData) {
       return false;
     },
 
+
     logout: function logout() {
       console.log('logout...');
       cognitoAuth.authUserLogout();
@@ -83,14 +95,6 @@ module.exports = function (treeData) {
 
 
     render: function() : React.PropTypes.element {
-
-      var _toFill = false;
-
-      if (this.state.email === '' || this.state.telefono === '') {
-        _toFill = false;
-      } else {
-        _toFill = false;
-      }
 
       return (
         <div className="page">
@@ -115,13 +119,13 @@ module.exports = function (treeData) {
                       <i className="fa fa-plus"></i>
                       <span onClick={this.editFields}>Modifica</span>
                     </button></div>
-                    <div className="pure-control-group"><input type="text" name="nome" valueLink={this.linkState('nome')} placeholder="Nome" required readOnly={{_toFill}} /></div>
+                    <div className="pure-control-group"><input type="text" name="nome" valueLink={this.linkState('nome')} placeholder="Nome" required ref='nome' /></div>
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="text" name="cognome" valueLink={this.linkState('cognome')} placeholder="Cognome" required readOnly={{_toFill}}/></div>
+                    <div className="pure-control-group"><input type="text" name="cognome" valueLink={this.linkState('cognome')} placeholder="Cognome" required ref='cognome' /></div>
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="email" name="email" valueLink={this.linkState('email')} placeholder="E-mail" required readOnly={{_toFill}}/></div>
+                    <div className="pure-control-group"><input type="email" name="email" valueLink={this.linkState('email')} placeholder="E-mail" required ref='email' /></div>
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="text" name="telefono" valueLink={this.linkState('telefono')} placeholder="Recapito telefonico" required readOnly={{_toFill}}/></div>
+                    <div className="pure-control-group"><input type="text" name="telefono" valueLink={this.linkState('telefono')} placeholder="Recapito telefonico" required ref='telefono' /></div>
                     <div className="spacer-40"></div>
                     <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Save profile</span></button></div>
                   </form>
