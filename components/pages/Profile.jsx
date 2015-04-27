@@ -70,6 +70,8 @@ module.exports = function (treeData) {
         email: this.state.email,
         telefono: this.state.telefono
       });
+
+      return false;
     },
 
     logout: function logout() {
@@ -96,7 +98,7 @@ module.exports = function (treeData) {
             <div className="pure-g">
               <div className="pure-u-1 pure-u-md-1-2">
                 <div className="profile-padding">
-                  <form id="profile-form" className="pure-form" onsubmit='return false'>
+                  <form id="profile-form" className="pure-form" onSubmit={this.saveProfile}>
                     <div className="pure-u-3-4">
                       <h3>Le tue informazioni</h3>
                     </div>
@@ -109,7 +111,7 @@ module.exports = function (treeData) {
                     <div className="spacer-10"></div>
                     <div className="pure-control-group"><input type="text" name="telefono" valueLink={this.linkState('telefono')} placeholder="Recapito telefonico" required readonly/></div>
                     <div className="spacer-40"></div>
-                    <div className="text-center"><button onClick={this.saveProfile} className="pure-button pure-success"><span>Save profile</span></button></div>
+                    <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Save profile</span></button></div>
                   </form>
                 </div>
               </div>
