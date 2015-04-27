@@ -114,11 +114,9 @@ module.exports = function (treeData) {
                     </h3>
                     <div className="spacer-20"></div>
                     <p>
-                      <strong>Orario d'apertura</strong>
+                      <strong>Opening Hours</strong>
                       <br/>
-                      Lun - Domenica / 11.30 - 23.30
-                      <br/>
-                      <small><strong>Aperto ora!</strong>&nbsp;Vuoi ordinare qualcosa?</small>
+                      Monday - Sunday / 11.30 - 23.30
                     </p>
                   </div>
                 </div>
