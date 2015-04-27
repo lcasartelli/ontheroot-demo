@@ -32,15 +32,8 @@ module.exports = function (treeData) {
       return {};
     },
 
+
     componentDidMount: function() : void {
-    },
-
-
-    logout: function logout() {
-      console.log('logout...');
-      cognitoAuth.authUserLogout();
-      this.cursors.user.set('authed', false);
-      this.cursors.user.set('accessToken', null);
     },
 
 

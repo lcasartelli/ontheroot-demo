@@ -32,6 +32,7 @@ var Profile = require('./components/pages/Profile.jsx')(treeData);
 
 
 var cognitoAuth = require('./lib/cognito')();
+var facebookCognito = require('./lib/cognito.facebook')(userCursor, profileCursor);
 var facebookAuth = require('./lib/cognito.facebook')();
 var checkout = require('./lib/checkout')(treeData);
 var userHandler = require('./lib/user')(treeData);
@@ -91,10 +92,18 @@ userCursor.on('update', function _updateUser() {
 
         console.log('profile loaded', data);
 
-        profileCursor.edit(data);
+        if (!data.nome & !data.cognome) {
+          //facebookCognito.getProfileInfo();
+        } else {
+          profileCursor.edit(data);  
+        }
+
       });
 
       profileCursor.on('update', function () {
+        
+        console.log('profile change', profileCursor.get());
+
         userHandler.autoSyncronizeProfile().then(function () {
           console.log('sync user completed');
         });

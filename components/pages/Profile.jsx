@@ -7,6 +7,7 @@ var _ = require('lodash');
 
 module.exports = function (treeData) {
 
+  var cognitoAuth = require('../../lib/cognito')();
   var userHandler = require('../../lib/user')(treeData);
   
   return React.createClass({
@@ -51,7 +52,12 @@ module.exports = function (treeData) {
       });
     },
 
-
+    logout: function logout() {
+      console.log('logout...');
+      cognitoAuth.authUserLogout();
+      this.cursors.user.set('authed', false);
+      this.cursors.user.set('accessToken', null);
+    },
 
 
     render: function() : React.PropTypes.element {
@@ -64,6 +70,7 @@ module.exports = function (treeData) {
             <div className="text-center">
               <h1>Il tuo profilo</h1>
             </div>
+            <button className='pure-button' onClick={this.logout}>Logout</button>
             <div className="spacer-10"></div>
             <hr/>
             <div className="pure-g">

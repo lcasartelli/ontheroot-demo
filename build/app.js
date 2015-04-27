@@ -33,6 +33,7 @@ var Profile = require('./components/pages/Profile.jsx')(treeData);
 
 
 var cognitoAuth = require('./lib/cognito')();
+var facebookCognito = require('./lib/cognito.facebook')(userCursor, profileCursor);
 var facebookAuth = require('./lib/cognito.facebook')();
 var checkout = require('./lib/checkout')(treeData);
 var userHandler = require('./lib/user')(treeData);
@@ -92,10 +93,18 @@ userCursor.on('update', function _updateUser() {
 
         console.log('profile loaded', data);
 
-        profileCursor.edit(data);
+        if (!data.nome & !data.cognome) {
+          //facebookCognito.getProfileInfo();
+        } else {
+          profileCursor.edit(data);  
+        }
+
       });
 
       profileCursor.on('update', function () {
+        
+        console.log('profile change', profileCursor.get());
+
         userHandler.autoSyncronizeProfile().then(function () {
           console.log('sync user completed');
         });
@@ -1048,6 +1057,8 @@ var _ = require('lodash');
 
 module.exports = function (treeData) {
 
+  var facebookCognito = require('../../lib/cognito.facebook')(treeData.select('user'), treeData.select('profile'));
+
   return React.createClass({
     displayName: 'Login',
 
@@ -1061,57 +1072,11 @@ module.exports = function (treeData) {
       return {};
     },
 
-
-    checkLoginState: function checkLoginState() {
-      FB.getLoginStatus(function (response) {
-        this.statusChangeCallback(response);
-      }.bind(this));
-    },
-
-
     componentDidMount: function()        {
-
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '274301609428595',
-          xfbml      : true,
-          version    : 'v2.3'
-        });
-
-        //this.checkLoginState();
-
-      }.bind(this);
-
-      (function (d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-
     },
 
     doLoginFB: function() {
-      FB.login(this.checkLoginState());
-    },
-
-
-    statusChangeCallback: function statusChangeCallback(response) {
-
-      console.log('statusChangeCallback', response);
-
-      if (response.status === 'connected') {
-        // Logged into your app and Facebook.
-        console.log('logged');
-        this.cursors.user.set('accessToken', {
-          type: 'fb',
-          token: response.authResponse.accessToken,
-        });
-
-      } else {
-        console.log('not logged');
-      }
+      facebookCognito.checkLogin(this.cursors.user);
     },
 
 
@@ -1144,7 +1109,7 @@ module.exports = function (treeData) {
 };
 
 
-},{"lodash":46,"react/addons":86}],14:[function(require,module,exports){
+},{"../../lib/cognito.facebook":24,"lodash":46,"react/addons":86}],14:[function(require,module,exports){
 /* @flow */
 
 'use strict';
@@ -1154,6 +1119,7 @@ var _ = require('lodash');
 
 module.exports = function (treeData) {
 
+  var cognitoAuth = require('../../lib/cognito')();
   var userHandler = require('../../lib/user')(treeData);
   
   return React.createClass({
@@ -1198,7 +1164,12 @@ module.exports = function (treeData) {
       });
     },
 
-
+    logout: function logout() {
+      console.log('logout...');
+      cognitoAuth.authUserLogout();
+      this.cursors.user.set('authed', false);
+      this.cursors.user.set('accessToken', null);
+    },
 
 
     render: function()                           {
@@ -1211,6 +1182,7 @@ module.exports = function (treeData) {
             React.createElement("div", {className: "text-center"}, 
               React.createElement("h1", null, "Il tuo profilo")
             ), 
+            React.createElement("button", {className: "pure-button", onClick: this.logout}, "Logout"), 
             React.createElement("div", {className: "spacer-10"}), 
             React.createElement("hr", null), 
             React.createElement("div", {className: "pure-g"}, 
@@ -1283,7 +1255,7 @@ module.exports = function (treeData) {
 
 
 
-},{"../../lib/user":28,"lodash":46,"react/addons":86}],15:[function(require,module,exports){
+},{"../../lib/cognito":25,"../../lib/user":28,"lodash":46,"react/addons":86}],15:[function(require,module,exports){
 /* @flow */
 /*jshint browser:true, devel:true */
 
@@ -1604,15 +1576,8 @@ module.exports = function (treeData) {
       return {};
     },
 
+
     componentDidMount: function()        {
-    },
-
-
-    logout: function logout() {
-      console.log('logout...');
-      cognitoAuth.authUserLogout();
-      this.cursors.user.set('authed', false);
-      this.cursors.user.set('accessToken', null);
     },
 
 
@@ -2136,9 +2101,9 @@ var ok = require('assert');
 //var Promise = require('bluebird');
 
 
-module.exports = function () {
+module.exports = function (userCursor, profileCursor) {
 
-  var statusChangeCallback = function statusChangeCallback (response, userCursor) {
+  var statusChangeCallback = function statusChangeCallback (response) {
 
     ok(response, 'response not provided');
     ok(userCursor, 'userCursor not provided');
@@ -2151,13 +2116,18 @@ module.exports = function () {
         token: response.authResponse.accessToken,
       });
 
+      FB.api('/me', function (userData) {
+        profileCursor.set('cognome', userData.last_name);
+        profileCursor.set('nome', userData.first_name);
+      });
+
     } else {
       console.log('facebook login failed', response.status, response);
     }
   };
 
 
-  var checkLoginState =  function checkLoginState(userCursor) {
+  var checkLoginState =  function checkLoginState() {
 
     ok(userCursor, 'userCursor not provided');
 
@@ -2167,7 +2137,7 @@ module.exports = function () {
   };
 
 
-  var checkLogin = function checkLogin(userCursor) {
+  var checkLogin = function checkLogin() {
 
     ok(userCursor, 'userCursor not provided');
 
@@ -2178,7 +2148,7 @@ module.exports = function () {
         version    : 'v2.3'
       });
 
-      checkLoginState(userCursor);
+      checkLoginState();
     };
 
     (function (d, s, id){
