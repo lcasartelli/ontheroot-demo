@@ -45,6 +45,10 @@ body
     background _red
     &:hover
       background darken(@background, 20%)
+  &.pure-facebook
+    background-color #3b5998
+    &:hover
+      background-color darken(#3b5998, 20%)
 
   i, span
     display inline-block
@@ -256,6 +260,15 @@ header
         background _green
         &:hover
           background darken(@background, 20%)
+#cities-dropdown
+  width 200px
+  .cities-item
+    text-align center
+    font-size 16px
+    cursor pointer
+    &:hover
+      color _orange
+
 
 .header-image
   background-image url("../img/header-index.jpg")
@@ -291,6 +304,17 @@ header
 
   &.glutenfree
     background-image: url('../img/headers/glutenfree.jpg')
+
+
+.login-container
+  width 300px
+  max-width 100%
+  margin 0 auto
+img.loading-logo
+  display block
+  width 100px
+  height auto
+  margin 0 auto
 
 
 footer
