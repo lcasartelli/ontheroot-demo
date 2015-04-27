@@ -12,6 +12,8 @@ module.exports = function (treeData) {
 
   var checkout = require('../../lib/checkout')(treeData);
   
+  var CheckoutItem = require('../elements/CheckoutItem.jsx')(treeData);
+
   return React.createClass({
     displayName: 'Checkout',
 
@@ -38,7 +40,9 @@ module.exports = function (treeData) {
 
 
     getInitialState: function getInitialState() : Object {
-      return {};
+      return {
+        cartTotal: 0,
+      };
     },
 
 
@@ -96,24 +100,28 @@ module.exports = function (treeData) {
 
     removeItem: function removeItem(item) {
       var _that = this;
+      var _confirm = confirm('Remove item from your shopping cart?');
 
-      return function () {
-        var _confirm = confirm('Remove item from your shopping cart?');
-
-        if (_confirm) {
-          _that.cursors.cart.edit(_.without(_that.cursors.cart.get(), item));
-        }
+      if (_confirm) {
+        _that.cursors.cart.edit(_.without(_that.cursors.cart.get(), item));
       }
-
-      //  recalculate total
-      this.totalSum();
-
     },
 
 
     totalSum: function totalSum() {
       var _that = this;
 
+
+    },
+
+
+    updateItemQuantity: function updateItemQuantity(item, quantity) {
+      var cart = this.cursors.cart.get();
+      var itemIndex = _.findIndex(cart, function (o) { return item.slug === o.slug; });
+      if (itemIndex > -1) {
+        var item = cart[itemIndex];
+        checkout.addItem(item, quantity);
+      }
 
     },
 
@@ -172,6 +180,11 @@ module.exports = function (treeData) {
       var _that = this;
       var orders = _that.cursors.cart.get();
 
+
+      var orderTotal = _.sum(orders, function (order) {
+        return order.qty * order.price;
+      });
+
       var itemsTmpl;
 
       if (orders.length > 0) {
@@ -184,22 +197,12 @@ module.exports = function (treeData) {
               <ul id="shopping-cart">
                 <li className="header"><span className="item">Pietanza</span><span className="price">Prezzo</span><span className="quantity">Quantità</span></li>
                 {_.map(orders, function (item) {
-                  return (
-                    <li>
-                      <span className="item">{item.name}</span>
-                      <span className="price">&times;<span className="price-num">7,50</span>&euro;</span>
-                      <span className="quantity">
-                        <input type="number" value={item.quantity} min="1" max="99" step="1" />
-                        <span className="qty-plus"><i className="fa fa-plus" onClick={_that.addUnit}></i></span>
-                        <span className="qty-minus"><i className="fa fa-minus" onClick={_that.removeUnit}></i></span>
-                        <span className="qty-remove"><i className="fa fa-times" onClick={_that.removeItem(item)}></i></span>
-                      </span>
-                    </li>);
+                  return (<CheckoutItem item={item} onUpdateQuantity={_that.updateItemQuantity} onRemoveItem={_that.removeItem} />);
                 })}
               </ul>
               <div className="spacer-20"></div>
               <div className="text-center">
-                <span id="totalCart">0 &euro;</span>
+                <span id="totalCart">{orderTotal} &euro;</span>
               </div>
               <div className="spacer-20"></div>
               <div className="text-center"><button type="submit" className="pure-button pure-success"><span>spedizione</span></button></div>
