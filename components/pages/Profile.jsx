@@ -14,9 +14,14 @@ module.exports = function (treeData) {
     displayName: 'Profile',
 
     mixins: [treeData.mixin, React.addons.LinkedStateMixin],
+    
     cursors: {
       user: ['user'],
       profile: ['profile'],
+    },
+
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
     },
 
 
@@ -29,14 +34,29 @@ module.exports = function (treeData) {
       };
     },
 
+    
+    componentWillMount: function() : void {
+      if (!this.cursors.user.get().authed) {
+        this.context.router.transitionTo('home');
+      }
+    },
+
+
     componentDidMount: function() : void {
       
       var componentScope = this;
 
-      this.cursors.profile.on('update', function () {
-        var profile = componentScope.cursors.profile.get();
-        componentScope.setState(profile);  
-      });
+      if (!_.isEmpty(componentScope.cursors.profile.get())) {
+        componentScope.loadProfile();
+      } else {
+        this.cursors.profile.on('update', function () { componentScope.loadProfile(); });
+      }
+    },
+
+
+    loadProfile: function loadProfile() {
+      var profile = this.cursors.profile.get();
+      this.setState(profile);
     },
 
 

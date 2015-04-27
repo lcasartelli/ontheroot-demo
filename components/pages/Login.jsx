@@ -14,8 +14,13 @@ module.exports = function (treeData) {
     displayName: 'Login',
 
     mixins: [treeData.mixin],
+    
     cursors: {
       user: ['user'],
+    },
+
+    contextTypes: {
+      router: React.PropTypes.func.isRequired
     },
 
 
@@ -23,8 +28,17 @@ module.exports = function (treeData) {
       return {};
     },
 
+
     componentDidMount: function() : void {
     },
+
+
+    componentWillMount: function() : void {
+      if (this.cursors.user.get().authed) {
+        this.context.router.transitionTo('home');
+      }
+    },
+
 
     doLoginFB: function() {
       facebookCognito.checkLogin(this.cursors.user);
