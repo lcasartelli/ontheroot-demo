@@ -63,12 +63,19 @@ module.exports = function (data) {
         <li>
           <span className="item">{this.props.item.name}</span>
           <span className="price"><span className="price-num">{this.props.item.price}</span>&euro;</span>
-          <span className="quantity">
+
+          <div className='qty'>
             <input type="number" valueLink={this.linkState('quantity')} min="1" max="99" step="1" />
-            <span className="qty-plus"><i className="fa fa-plus" onClick={this.quantityPlus}></i></span>
-            <span className="qty-minus"><i className="fa fa-minus" onClick={this.quantityMinus}></i></span>
-            <span className="qty-remove"><i className="fa fa-times" onClick={this.removeItem}></i></span>
-          </span>
+            <div className="qty-actions">
+                <a onClick={this.quantityPlus} className="qty-plus">
+                  <i className="fa fa-plus"></i>
+                </a>
+                <a onClick={this.quantityMinus} className="qty-minus">
+                  <i className="fa fa-minus"></i>
+                </a>
+              </div>
+              <span style={{ "padding-left": "10px" }} className="qty-remove"><i className="fa fa-times" onClick={this.removeItem}></i></span>
+          </div>
         </li>);
     }
 

@@ -99,7 +99,7 @@ module.exports = function (treeData) {
             }
             <div className="cart-item">
               <button onClick={this.openCheckout} id="show-cart" className="pure-button">
-                <span>Go to cart</span>
+                <span>Go to Cart</span>
               </button>
             </div>
           </div>            
