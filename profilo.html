@@ -1,0 +1,29 @@
+<!DOCTYPE html><html><head><title>ontheroot :: welcome</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/pure-min.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.5.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"><link rel="stylesheet" href="static/css/style.css"><link rel="shortcut icon" href="static/img/favicon.png" type="image/png"></head><body><header><div class="header-inner"><div class="pull-left"><a href="index.html" class="header-button"><img src="static/img/otr-logo.png" class="logo"></a></div><div class="pull-right"><a onclick="document.getElementById(&quot;cart-dropdown&quot;).classList.toggle(&quot;show&quot;); this.classList.toggle(&quot;active&quot;);" class="header-button"><i class="fa fa-shopping-cart"><strong class="badge">5</strong></i><span>Carrello</span><div id="cart-dropdown"><div class="cart-item"><strong>McBacon</strong><span>1 porzione : € 10.00</span><button class="pure-button pure-danger"><span>Remove</span></button></div><div class="cart-item"><strong>Dakota</strong><span>2 porzioni : € 24.00</span><button class="pure-button pure-danger"><span>Remove</span></button></div><div class="cart-item"><button id="show-cart" data-href="cart.html" class="pure-button"><span>Go to cart</span></button></div></div></a><a href="profilo.html" class="header-button"><img src="http://api.adorable.io/avatars/285/abott@adorable.png"><span><strong>Abott Doe</strong><br><span>il tuo profilo</span></span></a><a class="pure-button pure-success"><span>Login</span></a></div></div></header><div class="page"><div class="spacer-100"></div></div><div class="page"><div class="container"><div class="spacer-40"></div><div class="text-center"><h1>Il tuo profilo</h1></div><div class="spacer-10"></div><hr><div class="pure-g"><div class="pure-u-1 pure-u-md-1-2"><div class="profile-padding"><form id="profile-form" class="pure-form"><div class="pure-u-3-4"><h3>Le tue informazioni</h3></div><div class="pure-u-1-4"><button id="edit-profile" style="padding: 2px 5px;" class="pure-button pure-success"><i class="fa fa-plus"></i><span>Modifica</span></button></div><div class="pure-control-group"><input type="text" name="nome" placeholder="Nome" required readonly></div><div class="spacer-10"></div><div class="pure-control-group"><input type="text" name="cognome" placeholder="Cognome" required readonly></div><div class="spacer-10"></div><div class="pure-control-group"><input type="email" name="email" placeholder="E-mail" required readonly></div><div class="spacer-10"></div><div class="pure-control-group"><input type="text" name="telefono" placeholder="Recapito telefonico" required readonly></div><div class="spacer-40"></div><div class="text-center"><button type="submit" style="display:none" class="pure-button pure-success"><span>Salva profilo</span></button></div></form></div></div><div class="pure-u-1 pure-u-md-1-2"><div class="profile-padding"><div class="pure-g"><div class="pure-u-3-4"><h3>I tuoi indirizzi di spedizione</h3></div><div class="pure-u-1-4"><button id="new-address" style="padding: 2px 5px;" class="pure-button pure-success"><i class="fa fa-plus"></i><span>Nuovo</span></button></div></div><ol><li class="single-address"><blockquote><p>piazza L. V. Bertarelli 1<br>20123, Milano</p></blockquote></li></ol><div class="spacer-40"></div><form id="delivery-form" style="display:none;" class="pure-form"><div class="pure-control-group"><label>Etichetta</label><input type="text" name="etichetta" placeholder="Etichetta"></div><div class="pure-g"><div class="pure-u-19-24"><div class="pure-control-group"><label>Via / P.zza</label><input type="text" name="via" placeholder="Via / P.zza"></div></div><div class="pure-u-1-24"></div><div class="pure-u-4-24"><div class="pure-control-group"><label>Numero</label><input type="text" name="numeroCivico" placeholder="Nr."></div></div></div><div class="spacer-10"></div><div class="pure-g"><div class="pure-u-5-24"><label>CAP</label><input type="text" name="cap" placeholder="CAP"></div><div class="pure-u-1-24"></div><div class="pure-u-18-24"><label>Città</label><input type="text" name="citta" placeholder="Città"></div></div><div class="spacer-40"></div><div class="text-center"><button type="submit" class="pure-button pure-success"><span>Salva indirizzo di spedizione</span></button></div></form></div></div></div><div class="spacer-60"></div></div></div><footer><div class="footer-inner"><div class="pull-left"><img src="static/img/otr-logo-footer.png" class="logo"></div><div class="pull-right"><p>&copy; 2015 <strong>ontheroot </strong>- Turnip greens yarrow ricebean rutabaga<a href="">hello@ontheroot.it</a><a href="">Privacy</a></p></div></div></footer><script type="text/javascript" src="static/js/main.js"></script><script>(function () {
+
+  document.getElementById('profile-form').addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    return false;
+  });
+
+  document.getElementById('delivery-form').addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    return false;
+  });
+
+  document.getElementById('new-address').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    document.getElementById('delivery-form').style.display = 'block';
+    return false;
+  });
+
+  document.getElementById('edit-profile').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    document.querySelectorAll('#profile-form input').forEach(function (input) {
+      input.removeAttribute('readonly');
+      //-input.prevElement.style.display = 'block';
+    });
+    document.querySelector('#profile-form button[type="submit"]').style.display = 'block';
+    return false;
+  });
+
+})();</script></body></html>

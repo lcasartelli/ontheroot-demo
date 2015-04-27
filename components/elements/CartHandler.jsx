@@ -28,9 +28,19 @@ module.exports = function (treeData) {
     componentDidMount: function() : void {},
     
     
-    openCartDropdown: function openCartDropdown() {
-      React.findDOMNode(this).querySelector('#cart-dropdown').classList.toggle('show');
-      React.findDOMNode(this).classList.toggle('active');
+    openCartDropdown: function openCartDropdown(tof) {
+      var that = this;
+
+      return function () {
+        if (tof) {
+          React.findDOMNode(that).querySelector('#cart-dropdown').classList.add('show');
+          React.findDOMNode(that).classList.add('active');
+        } else {
+          React.findDOMNode(that).classList.remove('active');
+          React.findDOMNode(that).querySelector('#cart-dropdown').classList.remove('show');
+        }
+        
+      }
     },
 
 
@@ -44,7 +54,7 @@ module.exports = function (treeData) {
       }
       
       return (
-        <a className="header-button cart-button" onClick={this.openCartDropdown}>
+        <a className="header-button cart-button" onMouseEnter={this.openCartDropdown(true)} onMouseLeave={this.openCartDropdown(false)}>
           <i className="fa fa-shopping-cart">
             {cartCounter}
           </i>

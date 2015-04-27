@@ -14,6 +14,8 @@ var cognitoAuth = require('../../../lib/cognito')();
 module.exports = function (treeData) {
 
   var CartHandler = require('../../elements/CartHandler.jsx')(treeData);
+  var CityHandler = require('../../elements/CityHandler.jsx')(treeData);
+
 
   return React.createClass({
     displayName: 'Header',
@@ -75,7 +77,8 @@ module.exports = function (treeData) {
          <div className="header-inner">
             <div className="pull-left">
               <Link to="home" activeClassName='activeNull' className="header-button"><img src="assets/img/otr-logo.png" className="logo"/></Link>
-              <p style={{ "font-size": "120%" }}>City: <strong style={{ "padding-left": "10px" }}>Milan</strong><i style={{ "padding-left": "10px" }} className="fa fa-caret-down"></i></p>
+
+              <CityHandler cities={['Milan']} />
             </div>
             <div className="pull-right">
               <CartHandler />
