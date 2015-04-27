@@ -4,6 +4,9 @@
 
 var React = require('react/addons');
 var _ = require('lodash');
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 module.exports = function (treeData) {
 
@@ -169,16 +172,12 @@ module.exports = function (treeData) {
       var _that = this;
       var orders = _that.cursors.cart.get();
 
-      return (
-        <div className="page">
-          <div className="spacer-100"></div>
-          <div className="container">
-            <div className="spacer-40"></div>
-            <div className="text-center">
-              <h1>Il tuo carrello</h1>
-            </div>
-            <div className="spacer-10"></div>
-            <hr/>
+      var itemsTmpl;
+
+      if (orders.length > 0) {
+
+        itemsTmpl = (
+          <div>
             <form id="checkout-order-form" className="pure-form shopping-form" onSubmit={this.checkoutStep1}>
               <h2>Riepilogo ordine</h2>
               <div className="spacer-20"></div>
@@ -219,6 +218,39 @@ module.exports = function (treeData) {
               <div className="spacer-20"></div>
               <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Conferma ordine</span></button></div>
             </form>
+          </div>
+        );
+
+      } else {
+
+        itemsTmpl = (
+            <div className="text-center">
+              <div className="spacer-20">
+                Your cart is empty... Start shopping by choosing a genre on <Link to='home'>homepage</Link>.
+              </div>
+              <div class="spacer-20"></div>
+            </div>
+        );
+
+      }
+
+      return (
+        <div className="page">
+          <div className="spacer-100"></div>
+          <div className="container">
+            <div className="spacer-40"></div>
+            <div className="text-center">
+              <h1>Il tuo carrello</h1>
+            </div>
+            <div className="spacer-10"></div>
+            <hr/>
+
+
+            {itemsTmpl}
+            
+
+
+
             <div className="spacer-100"></div>
           </div>
         </div>);

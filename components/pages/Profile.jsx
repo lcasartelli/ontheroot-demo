@@ -86,14 +86,6 @@ module.exports = function (treeData) {
     },
 
 
-    logout: function logout() {
-      console.log('logout...');
-      cognitoAuth.authUserLogout();
-      this.cursors.user.set('authed', false);
-      this.cursors.user.set('accessToken', null);
-    },
-
-
     render: function() : React.PropTypes.element {
 
       return (
@@ -102,9 +94,8 @@ module.exports = function (treeData) {
             <div className="spacer-40"></div>
             <div className="spacer-80"></div>
             <div className="text-center">
-              <h1>Il tuo profilo</h1>
+              <h1>Your profile</h1>
             </div>
-            <button className='pure-button' onClick={this.logout}>Logout</button>
             <div className="spacer-10"></div>
             <hr/>
             <div className="pure-g">
@@ -112,12 +103,12 @@ module.exports = function (treeData) {
                 <div className="profile-padding">
                   <form id="profile-form" className="pure-form" onSubmit={this.saveProfile}>
                     <div className="pure-u-3-4">
-                      <h3>Le tue informazioni</h3>
+                      <h3>Your details</h3>
                     </div>
                     <div className="pure-u-1-4">
                     <button id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success">
                       <i className="fa fa-plus"></i>
-                      <span onClick={this.editFields}>Modifica</span>
+                      <span onClick={this.editFields}>Edit profile</span>
                     </button></div>
                     <div className="pure-control-group"><input type="text" name="nome" valueLink={this.linkState('nome')} placeholder="Nome" required ref='nome' /></div>
                     <div className="spacer-10"></div>
@@ -135,9 +126,11 @@ module.exports = function (treeData) {
                 <div className="profile-padding">
                   <div className="pure-g">
                     <div className="pure-u-3-4">
-                      <h3>I tuoi indirizzi di spedizione</h3>
+                      <h3>Your delivery addresses</h3>
                     </div>
-                    <div className="pure-u-1-4"><button id="new-address" style={{"padding": "2px 5px;"}} className="pure-button pure-success"><i className="fa fa-plus"></i><span>Nuovo</span></button></div>
+                    <div className="pure-u-1-4">
+                      <button id="new-address" style={{"padding": "2px 5px;"}} className="pure-button pure-success"><i className="fa fa-plus"></i><span>Add new</span></button>
+                    </div>
                   </div>
                   <ol>
                     <li className="single-address">

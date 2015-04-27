@@ -37,6 +37,13 @@ module.exports = function (treeData) {
     },
 
 
+    logout: function logout() {
+      cognitoAuth.authUserLogout();
+      this.cursors.user.set('authed', false);
+      this.cursors.user.set('accessToken', null);
+    },
+
+
     openCartDropdown: function openCartDropdown() {
       React.findDOMNode(this.refs.cartDropdown).classList.toggle('show');
       React.findDOMNode(this).querySelector('.cart-button').classList.toggle('active');
@@ -52,14 +59,17 @@ module.exports = function (treeData) {
       if (user.authed) {
 
         userComponent =
-          <Link to='profile' activeClassName='activeNull' className="header-button">
-            <img src="http://api.adorable.io/avatars/285/abott@adorable.png" />
-            <span>
-            <strong>{this.cursors.profile.get().nome + ' ' + this.cursors.profile.get().cognome} </strong>
-            <br/>
-            <span>View Profile</span>
-            </span>
-          </Link>;
+          <div className="profileBtnsContainer">
+            <Link to='profile' activeClassName='activeNull' className="header-button">
+              <img src="http://api.adorable.io/avatars/285/abott@adorable.png" />
+              <span>
+              <strong>{this.cursors.profile.get().nome + ' ' + this.cursors.profile.get().cognome} </strong>
+              <br/>
+              <span>View Profile</span>
+              </span>
+            </Link>
+            <button className='pure-button pure-button-logout' onClick={this.logout}><i className="fa fa-power-off"></i></button>
+          </div>;
 
       } else {
         userComponent = <Link to='login' activeClassName='activeNull' className="pure-button pure-success"><span>Login</span></Link>;

@@ -878,6 +878,9 @@ module.exports = function (treeData) {
 
 var React = require('react/addons');
 var _ = require('lodash');
+var Router = require('react-router');
+var Route = Router.Route;
+var Link = Router.Link;
 
 module.exports = function (treeData) {
 
@@ -1043,16 +1046,12 @@ module.exports = function (treeData) {
       var _that = this;
       var orders = _that.cursors.cart.get();
 
-      return (
-        React.createElement("div", {className: "page"}, 
-          React.createElement("div", {className: "spacer-100"}), 
-          React.createElement("div", {className: "container"}, 
-            React.createElement("div", {className: "spacer-40"}), 
-            React.createElement("div", {className: "text-center"}, 
-              React.createElement("h1", null, "Il tuo carrello")
-            ), 
-            React.createElement("div", {className: "spacer-10"}), 
-            React.createElement("hr", null), 
+      var itemsTmpl;
+
+      if (orders.length > 0) {
+
+        itemsTmpl = (
+          React.createElement("div", null, 
             React.createElement("form", {id: "checkout-order-form", className: "pure-form shopping-form", onSubmit: this.checkoutStep1}, 
               React.createElement("h2", null, "Riepilogo ordine"), 
               React.createElement("div", {className: "spacer-20"}), 
@@ -1092,7 +1091,40 @@ module.exports = function (treeData) {
               React.createElement("h2", null, "Metodo di pagamento"), 
               React.createElement("div", {className: "spacer-20"}), 
               React.createElement("div", {className: "text-center"}, React.createElement("button", {type: "submit", className: "pure-button pure-success"}, React.createElement("span", null, "Conferma ordine")))
+            )
+          )
+        );
+
+      } else {
+
+        itemsTmpl = (
+            React.createElement("div", {className: "text-center"}, 
+              React.createElement("div", {className: "spacer-20"}, 
+                "Your cart is empty... Start shopping by choosing a genre on ", React.createElement(Link, {to: "home"}, "homepage"), "."
+              ), 
+              React.createElement("div", {class: "spacer-20"})
+            )
+        );
+
+      }
+
+      return (
+        React.createElement("div", {className: "page"}, 
+          React.createElement("div", {className: "spacer-100"}), 
+          React.createElement("div", {className: "container"}, 
+            React.createElement("div", {className: "spacer-40"}), 
+            React.createElement("div", {className: "text-center"}, 
+              React.createElement("h1", null, "Il tuo carrello")
             ), 
+            React.createElement("div", {className: "spacer-10"}), 
+            React.createElement("hr", null), 
+
+
+            itemsTmpl, 
+            
+
+
+
             React.createElement("div", {className: "spacer-100"})
           )
         ));
@@ -1104,7 +1136,7 @@ module.exports = function (treeData) {
 
 
 
-},{"../../lib/checkout":23,"lodash":46,"react/addons":86}],12:[function(require,module,exports){
+},{"../../lib/checkout":23,"lodash":46,"react-router":71,"react/addons":86}],12:[function(require,module,exports){
 /* @flow */
 
 'use strict';
@@ -1341,14 +1373,6 @@ module.exports = function (treeData) {
     },
 
 
-    logout: function logout() {
-      console.log('logout...');
-      cognitoAuth.authUserLogout();
-      this.cursors.user.set('authed', false);
-      this.cursors.user.set('accessToken', null);
-    },
-
-
     render: function()                           {
 
       return (
@@ -1357,9 +1381,8 @@ module.exports = function (treeData) {
             React.createElement("div", {className: "spacer-40"}), 
             React.createElement("div", {className: "spacer-80"}), 
             React.createElement("div", {className: "text-center"}, 
-              React.createElement("h1", null, "Il tuo profilo")
+              React.createElement("h1", null, "Your profile")
             ), 
-            React.createElement("button", {className: "pure-button", onClick: this.logout}, "Logout"), 
             React.createElement("div", {className: "spacer-10"}), 
             React.createElement("hr", null), 
             React.createElement("div", {className: "pure-g"}, 
@@ -1367,12 +1390,12 @@ module.exports = function (treeData) {
                 React.createElement("div", {className: "profile-padding"}, 
                   React.createElement("form", {id: "profile-form", className: "pure-form", onSubmit: this.saveProfile}, 
                     React.createElement("div", {className: "pure-u-3-4"}, 
-                      React.createElement("h3", null, "Le tue informazioni")
+                      React.createElement("h3", null, "Your details")
                     ), 
                     React.createElement("div", {className: "pure-u-1-4"}, 
                     React.createElement("button", {id: "edit-profile", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, 
                       React.createElement("i", {className: "fa fa-plus"}), 
-                      React.createElement("span", {onClick: this.editFields}, "Modifica")
+                      React.createElement("span", {onClick: this.editFields}, "Edit profile")
                     )), 
                     React.createElement("div", {className: "pure-control-group"}, React.createElement("input", {type: "text", name: "nome", valueLink: this.linkState('nome'), placeholder: "Nome", required: true, ref: "nome"})), 
                     React.createElement("div", {className: "spacer-10"}), 
@@ -1390,9 +1413,11 @@ module.exports = function (treeData) {
                 React.createElement("div", {className: "profile-padding"}, 
                   React.createElement("div", {className: "pure-g"}, 
                     React.createElement("div", {className: "pure-u-3-4"}, 
-                      React.createElement("h3", null, "I tuoi indirizzi di spedizione")
+                      React.createElement("h3", null, "Your delivery addresses")
                     ), 
-                    React.createElement("div", {className: "pure-u-1-4"}, React.createElement("button", {id: "new-address", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Nuovo")))
+                    React.createElement("div", {className: "pure-u-1-4"}, 
+                      React.createElement("button", {id: "new-address", style: {"padding": "2px 5px;"}, className: "pure-button pure-success"}, React.createElement("i", {className: "fa fa-plus"}), React.createElement("span", null, "Add new"))
+                    )
                   ), 
                   React.createElement("ol", null, 
                     React.createElement("li", {className: "single-address"}, 
@@ -1790,6 +1815,13 @@ module.exports = function (treeData) {
     },
 
 
+    logout: function logout() {
+      cognitoAuth.authUserLogout();
+      this.cursors.user.set('authed', false);
+      this.cursors.user.set('accessToken', null);
+    },
+
+
     openCartDropdown: function openCartDropdown() {
       React.findDOMNode(this.refs.cartDropdown).classList.toggle('show');
       React.findDOMNode(this).querySelector('.cart-button').classList.toggle('active');
@@ -1805,13 +1837,16 @@ module.exports = function (treeData) {
       if (user.authed) {
 
         userComponent =
-          React.createElement(Link, {to: "profile", activeClassName: "activeNull", className: "header-button"}, 
-            React.createElement("img", {src: "http://api.adorable.io/avatars/285/abott@adorable.png"}), 
-            React.createElement("span", null, 
-            React.createElement("strong", null, this.cursors.profile.get().nome + ' ' + this.cursors.profile.get().cognome, " "), 
-            React.createElement("br", null), 
-            React.createElement("span", null, "View Profile")
-            )
+          React.createElement("div", {className: "profileBtnsContainer"}, 
+            React.createElement(Link, {to: "profile", activeClassName: "activeNull", className: "header-button"}, 
+              React.createElement("img", {src: "http://api.adorable.io/avatars/285/abott@adorable.png"}), 
+              React.createElement("span", null, 
+              React.createElement("strong", null, this.cursors.profile.get().nome + ' ' + this.cursors.profile.get().cognome, " "), 
+              React.createElement("br", null), 
+              React.createElement("span", null, "View Profile")
+              )
+            ), 
+            React.createElement("button", {className: "pure-button pure-button-logout", onClick: this.logout}, React.createElement("i", {className: "fa fa-power-off"}))
           );
 
       } else {
