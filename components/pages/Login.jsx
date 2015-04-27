@@ -82,17 +82,19 @@ module.exports = function (treeData) {
       var user = this.cursors.user.get();
 
       if (!user.authed) {
-        loginButton = <button className='pure-button' onClick={this.doLoginFB}>Login</button>;
+        loginButton = <button className='pure-button pure-facebook' onClick={this.doLoginFB}><i className='fa fa-lg fa-facebook'></i><span>Effettua il login tramite Facebook</span></button>;
       } else {
         loginButton = <div></div>;
       }
 
       return (
          <div className="page">
-          <div className="spacer-80"></div>
-          <div className="spacer-80"></div>
-          
-          { loginButton }
+         <div className="spacer-100"></div>
+          <div className="login-container text-center">
+            <div className="spacer-80"></div>
+            { loginButton }
+            <div className="spacer-80"></div>
+          </div>
         </div>
       );
     }

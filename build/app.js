@@ -1071,17 +1071,19 @@ module.exports = function (treeData) {
       var user = this.cursors.user.get();
 
       if (!user.authed) {
-        loginButton = React.createElement("button", {className: "pure-button", onClick: this.doLoginFB}, "Login");
+        loginButton = React.createElement("button", {className: "pure-button pure-facebook", onClick: this.doLoginFB}, React.createElement("i", {className: "fa fa-lg fa-facebook"}), React.createElement("span", null, "Effettua il login tramite Facebook"));
       } else {
         loginButton = React.createElement("div", null);
       }
 
       return (
          React.createElement("div", {className: "page"}, 
-          React.createElement("div", {className: "spacer-80"}), 
-          React.createElement("div", {className: "spacer-80"}), 
-          
-           loginButton 
+         React.createElement("div", {className: "spacer-100"}), 
+          React.createElement("div", {className: "login-container text-center"}, 
+            React.createElement("div", {className: "spacer-80"}), 
+             loginButton, 
+            React.createElement("div", {className: "spacer-80"})
+          )
         )
       );
     }
