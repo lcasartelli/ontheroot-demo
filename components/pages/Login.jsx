@@ -34,18 +34,26 @@ module.exports = function (treeData) {
 
 
     componentWillMount: function() : void {
+      this.checkUserStatus();
+    },
+
+
+    doLoginFB: function() {
+      facebookCognito.checkLogin(this.cursors.user);
+      this.cur
+    },
+
+
+    checkUserStatus: function checkUserStatus() {
       if (this.cursors.user.get().authed) {
         this.context.router.transitionTo('home');
       }
     },
 
 
-    doLoginFB: function() {
-      facebookCognito.checkLogin(this.cursors.user);
-    },
-
-
     render: function() : React.PropTypes.element {
+
+      this.checkUserStatus();
 
       var loginButton;
 
