@@ -720,13 +720,25 @@ input#restaurants-filter
       line-height 23px
       font-size 14px
       position absolute
-      content '1'
+      content ''
       left -60px
       width 24px
       height 24px
       border-radius 24px
       border 2px solid _accent
       overflow hidden
+  &#checkout-order-form
+    & > h2
+      &:before
+        content '1'
+  &#checkout-address-form
+    & > h2
+      &:before
+        content '2'
+  &#checkout-payment-form
+    & > h2
+      &:before
+        content '3'
   &.disabled
     &:before
       content: ''
