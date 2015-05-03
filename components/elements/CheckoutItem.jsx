@@ -10,45 +10,42 @@ var Route = Router.Route;
 var Link = Router.Link;
 
 
-module.exports = function (data) {
+module.exports = function (treeData) {
 
   return React.createClass({
     displayName: 'CheckoutItem',
 
-    mixins: [React.addons.LinkedStateMixin],
+    mixins: [treeData.mixin, React.addons.LinkedStateMixin],
+
+    cursors: {
+      cart: ['cart'],
+    },
 
     propTypes: {
       item: React.PropTypes.object.isRequired,
       onUpdateQuantity: React.PropTypes.func.isRequired,
       onRemoveItem: React.PropTypes.func.isRequired,
-    },
-
-
-    getInitialState: function getInitialState() : Object {
-      return {
-        quantity: 0, 
-      };
+      itemIndex: React.PropTypes.number.isRequired
     },
 
 
     componentDidMount: function() : void {
-      this.setState({ quantity: Number.parseInt(this.props.item.qty, 10) });
     },
 
 
     quantityPlus: function quantityPlus() {
-      var qtyInput = this.state.quantity;
-      if (qtyInput >= 10) { return; }
-      this.setState({ quantity: (qtyInput + 1) });
-      this.props.onUpdateQuantity(this.props.item, this.state.quantity);
+      var val = Number.parseInt(this.props.item.qty, 10);
+      val = val + 1;
+      this.props.onUpdateQuantity(this.props.item, val);
     },
 
 
     quantityMinus: function quantityMinus() {
-      var qtyInput = this.state.quantity;
-      if (qtyInput <= 1) { return; }
-      this.setState({ quantity: (qtyInput - 1) });
-      this.props.onUpdateQuantity(this.props.item, this.state.quantity);
+      var val = Number.parseInt(this.props.item.qty, 10);
+      if (val - 1 >= 1) {
+        val = val - 1;
+        this.props.onUpdateQuantity(this.props.item, val);
+      }
     },
 
 
@@ -56,8 +53,15 @@ module.exports = function (data) {
       this.props.onRemoveItem(this.props.item);
     },
 
+    onChangeValue: function onChangeValue(event) {
+      var val = Number.parseInt(event.target.value, 10);
+      this.props.onUpdateQuantity(this.props.item, val);
+    },
+
 
     render: function() : React.PropTypes.element {
+
+      var initialValue = Number.parseInt(this.props.item.qty, 10);
 
       return (
         <li>
@@ -65,7 +69,7 @@ module.exports = function (data) {
           <span className="price"><span className="price-num">{this.props.item.price}</span>&euro;</span>
 
           <div className='qty'>
-            <input type="number" valueLink={this.linkState('quantity')} min="1" max="99" step="1" />
+            <input type="number" min="1" max="99" step="1" ref='quantity' onChange={this.onChangeValue} value={initialValue} />
             <div className="qty-actions">
                 <a onClick={this.quantityPlus} className="qty-plus">
                   <i className="fa fa-plus"></i>

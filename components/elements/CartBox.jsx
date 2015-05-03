@@ -71,7 +71,7 @@ module.exports = function (treeData) {
       var orders = this.cursors.cart.get();
 
       var totalCart = _.sum(orders, function (order) {
-        return order.qty * order.price;
+        return Number.parseInt(order.qty, 10) * Number.parseFloat(order.price, 10);
       });
 
       return (
@@ -80,8 +80,8 @@ module.exports = function (treeData) {
         <div className="spacer-20"></div>
         <ul id="shopping-cart">
           <li className="header"><span className="item">Dish</span><span className="price">Price</span><span className="quantity">Quantity</span></li>
-          {_.map(orders, function (item) {
-            return (<CheckoutItem item={item} onUpdateQuantity={componentScope.updateItemQuantity} onRemoveItem={componentScope.removeItem} />);
+          {_.map(orders, function (item, index) {
+            return (<CheckoutItem item={item} itemIndex={index} onUpdateQuantity={componentScope.updateItemQuantity} onRemoveItem={componentScope.removeItem} />);
           })}
         </ul>
         <div className="spacer-20"></div>

@@ -46,22 +46,25 @@ module.exports = function (treeData) {
 
 
     addToCart: function addToCart() {
+
+
       if (!Number.isNaN(this.state.quantity)) {
-        checkout.addItem(this.props.dish, this.state.quantity);
+        var qtyVal = Number.parseInt(this.state.quantity, 10);
+        checkout.addItem(this.props.dish, qtyVal);
       }
       this.closeModal();
     },
 
 
     quantityPlus: function quantityPlus() {
-      var qtyInput = this.state.quantity;
+      var qtyInput = Number.parseInt(this.state.quantity, 10);
       if (qtyInput >= 10) { return; }
       this.setState({ quantity: (qtyInput + 1) });
     },
 
 
     quantityMinus: function quantityMinus() {
-      var qtyInput = this.state.quantity;
+      var qtyInput = Number.parseInt(this.state.quantity, 10);
       if (qtyInput <= 1) { return; }
       this.setState({ quantity: (qtyInput - 1) });
     },
