@@ -44,7 +44,7 @@ module.exports = function (treeData) {
 
       return (
        <div className="restaurant-grid food-modal-grid">
-          <div style={{"background-image": "url('./assets/img/dish/" + this.props.dish.image + "');"}} className="restaurant-image"></div>
+          <div style={{ backgroundImage: "url('./assets/img/dish/" + this.props.dish.image + "')"}} className="restaurant-image"></div>
           <h4>{ this.props.dish.name }</h4>
           <p>{ this.props.dish.description }</p>
           <p><strong>€ {this.props.dish.price}</strong></p>
@@ -52,4 +52,4 @@ module.exports = function (treeData) {
     }
 
   });
-}; 
+};

@@ -85,7 +85,7 @@ module.exports = function (treeData) {
       return (
       <div id="food-modal-overlay" className="show">
       <div className="food-modal-inner">
-        <div style={{"background-image": "url('./assets/img/dish/" + headerImage + "');"}} className="food-modal-image">
+        <div style={{ backgroundImage: "url('./assets/img/dish/" + headerImage + "')" }} className="food-modal-image">
           <a id="close-modal" onClick={this.closeModal}>
             <i className="fa fa-close"></i>
           </a>

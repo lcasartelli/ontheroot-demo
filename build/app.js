@@ -690,7 +690,7 @@ module.exports = function (treeData) {
 
       return (
        React.createElement("div", {className: "restaurant-grid food-modal-grid"}, 
-          React.createElement("div", {style: {"background-image": "url('./assets/img/dish/" + this.props.dish.image + "');"}, className: "restaurant-image"}), 
+          React.createElement("div", {style: { backgroundImage: "url('./assets/img/dish/" + this.props.dish.image + "')"}, className: "restaurant-image"}), 
           React.createElement("h4", null,  this.props.dish.name), 
           React.createElement("p", null,  this.props.dish.description), 
           React.createElement("p", null, React.createElement("strong", null, "€ ", this.props.dish.price))
@@ -698,7 +698,7 @@ module.exports = function (treeData) {
     }
 
   });
-}; 
+};
 
 
 
@@ -790,7 +790,7 @@ module.exports = function (treeData) {
       return (
       React.createElement("div", {id: "food-modal-overlay", className: "show"}, 
       React.createElement("div", {className: "food-modal-inner"}, 
-        React.createElement("div", {style: {"background-image": "url('./assets/img/dish/" + headerImage + "');"}, className: "food-modal-image"}, 
+        React.createElement("div", {style: { backgroundImage: "url('./assets/img/dish/" + headerImage + "')"}, className: "food-modal-image"}, 
           React.createElement("a", {id: "close-modal", onClick: this.closeModal}, 
             React.createElement("i", {className: "fa fa-close"})
           )
@@ -1225,7 +1225,7 @@ var Link = Router.Link;
 module.exports = function (treeData) {
 
   var checkout = require('../../lib/checkout')(treeData);
-  
+
   var CheckoutItem = require('../elements/CheckoutItem.jsx')(treeData);
   var CartBox = require('../elements/CartBox.jsx')(treeData);
   var ShippingBox = require('../elements/ShippingBox.jsx')(treeData);
@@ -1268,7 +1268,7 @@ module.exports = function (treeData) {
 
 
     componentWillMount: function()        {
-     
+
     },
 
 
@@ -1340,7 +1340,7 @@ module.exports = function (treeData) {
               React.createElement("div", {className: "spacer-20"}, 
                 "Your cart is empty... Start shopping by choosing a genre on ", React.createElement(Link, {to: "home"}, "homepage"), "."
               ), 
-              React.createElement("div", {class: "spacer-20"})
+              React.createElement("div", {className: "spacer-20"})
             )
         );
 
@@ -1359,7 +1359,7 @@ module.exports = function (treeData) {
 
 
             itemsTmpl, 
-            
+
 
 
 
@@ -1806,7 +1806,7 @@ module.exports = function (treeData) {
               React.createElement("div", {className: "pure-g"}, 
                    _.map(this.state.restaurant.menu, function (dish) {
                   return (
-                    React.createElement("div", {className: "pure-u-1 pure-u-md-1-4", onClick: componentScope.openDishDetail(dish)}, 
+                    React.createElement("div", {className: "pure-u-1 pure-u-md-1-4", key: dish.slug, onClick: componentScope.openDishDetail(dish)}, 
                       React.createElement(Dish, {dish: dish, restaurant: componentScope.state.restaurant})
                     )
                     );
@@ -1842,7 +1842,7 @@ module.exports = function (treeData) {
                   )
                 )
               ), 
-              React.createElement("div", {class: "spacer-60"})
+              React.createElement("div", {className: "spacer-60"})
             )
           ), 
           detailComponent
@@ -2197,7 +2197,7 @@ module.exports = function (data) {
 
   return React.createClass({
     displayName: 'IndexHeader',
-    
+
     propTypes: {
       restaurant: React.PropTypes.object.isRequired,
     },
@@ -2214,11 +2214,11 @@ module.exports = function (data) {
 
 
     render: function()                           {
-    
+
       var headerImage = this.props.restaurant.image;
 
       return (
-        React.createElement("div", {className: "page header-image glutenfree", style: {"background-image": "url('./assets/img/headers/" + headerImage + "');"}}, 
+        React.createElement("div", {className: "page header-image glutenfree", style: { backgroundImage : "url('./assets/img/headers/" + headerImage + "')"}}, 
           React.createElement("div", {className: "text-center"}, 
             React.createElement("div", {className: "spacer-150"}), 
             React.createElement("h1", null, this.props.restaurant.title), 
@@ -2232,6 +2232,7 @@ module.exports = function (data) {
   });
 
 };
+
 
 
 },{"lodash":50,"react/addons":90}],25:[function(require,module,exports){

@@ -11,7 +11,7 @@ var Link = Router.Link;
 module.exports = function (treeData) {
 
   var checkout = require('../../lib/checkout')(treeData);
-  
+
   var CheckoutItem = require('../elements/CheckoutItem.jsx')(treeData);
   var CartBox = require('../elements/CartBox.jsx')(treeData);
   var ShippingBox = require('../elements/ShippingBox.jsx')(treeData);
@@ -54,7 +54,7 @@ module.exports = function (treeData) {
 
 
     componentWillMount: function() : void {
-     
+
     },
 
 
@@ -126,7 +126,7 @@ module.exports = function (treeData) {
               <div className="spacer-20">
                 Your cart is empty... Start shopping by choosing a genre on <Link to='home'>homepage</Link>.
               </div>
-              <div class="spacer-20"></div>
+              <div className="spacer-20"></div>
             </div>
         );
 
@@ -145,7 +145,7 @@ module.exports = function (treeData) {
 
 
             {itemsTmpl}
-            
+
 
 
 

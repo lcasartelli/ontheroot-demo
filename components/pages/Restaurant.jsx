@@ -85,7 +85,7 @@ module.exports = function (treeData) {
               <div className="pure-g">
                   { _.map(this.state.restaurant.menu, function (dish) {
                   return (
-                    <div className="pure-u-1 pure-u-md-1-4" onClick={componentScope.openDishDetail(dish)}>
+                    <div className="pure-u-1 pure-u-md-1-4" key={dish.slug} onClick={componentScope.openDishDetail(dish)}>
                       <Dish dish={dish} restaurant={componentScope.state.restaurant} />
                     </div>
                     );
@@ -121,7 +121,7 @@ module.exports = function (treeData) {
                   </div>
                 </div>
               </div>
-              <div class="spacer-60"></div>
+              <div className="spacer-60"></div>
             </div>
           </div>
           {detailComponent}
