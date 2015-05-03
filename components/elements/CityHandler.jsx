@@ -22,8 +22,8 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function() : void {},
-    
-    
+
+
     openCityDropdown: function openCityDropdown(tof) {
       var that = this;
 
@@ -35,7 +35,7 @@ module.exports = function (treeData) {
           React.findDOMNode(that).classList.remove('active');
           React.findDOMNode(that).querySelector('#cities-dropdown').classList.remove('show');
         }
-        
+
       }
     },
 
@@ -47,11 +47,11 @@ module.exports = function (treeData) {
 
 
     render: function() : React.PropTypes.element {
-      
+
       var citiesItem = this.props.cities;
       var _this = this;
 
-      
+
       return (
         <a className="header-button cart-button" onMouseEnter={this.openCityDropdown(true)} onMouseLeave={this.openCityDropdown(false)}>
           <i className="fa fa-caret-down"></i>
@@ -60,9 +60,9 @@ module.exports = function (treeData) {
           <div id="cities-dropdown">
             {_.map(citiesItem, function (item, index) {
               return (
-                <div className="cities-item" key={index}>{item}</div>)})
+                <div className="cities-item" key={index}>{item}</div>);})
             }
-          </div>            
+          </div>
         </a>
       );
     }

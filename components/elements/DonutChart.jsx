@@ -1,6 +1,5 @@
 
 /* @flow */
-/*jshint browser:true, devel:true */
 
 'use strict';
 
@@ -35,10 +34,10 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function() : void {
-      var donut = React.findDOMNode(this.refs.canvas)
+      var donut = React.findDOMNode(this.refs.canvas);
       this.setState({ chart: this._halfDoughnut(donut) });
     },
-    
+
     _halfDoughnut: function _halfDoughnut(canvas) {
       var ctx = canvas.getContext('2d');
       var cd = {
@@ -59,16 +58,16 @@ module.exports = function (treeData) {
 
       return new Chart(ctx).Doughnut(data,options);
     },
-    
+
     componentWillUnmount: function () {
-      if (this.state.chart) { 
+      if (this.state.chart) {
         this.state.chart.destroy();
       }
     },
-    
+
 
     render: function() : React.PropTypes.element {
-    
+
       return (
        <div>
         <div className="donut-label">{this.props.title}</div>
@@ -76,9 +75,9 @@ module.exports = function (treeData) {
           <canvas ref='canvas' id="canvas-impronta-ecologica" width="80" height="80" className="donut"></canvas>
         </div>
         <div className="donut-value">{this.props.value}<small>{this.props.unit}</small></div>
-       </div> 
+       </div>
        );
     }
 
   });
-}; 
+};

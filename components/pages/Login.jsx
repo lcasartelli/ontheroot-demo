@@ -14,7 +14,7 @@ module.exports = function (treeData) {
     displayName: 'Login',
 
     mixins: [treeData.mixin],
-    
+
     cursors: {
       user: ['user'],
     },
@@ -40,7 +40,6 @@ module.exports = function (treeData) {
 
     doLoginFB: function() {
       facebookCognito.checkLogin(this.cursors.user);
-      this.cur
     },
 
 

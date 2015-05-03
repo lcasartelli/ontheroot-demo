@@ -9,12 +9,12 @@ module.exports = function (treeData) {
 
   var cognitoAuth = require('../../lib/cognito')();
   var userHandler = require('../../lib/user')(treeData);
-  
+
   return React.createClass({
     displayName: 'Profile',
 
     mixins: [treeData.mixin, React.addons.LinkedStateMixin],
-    
+
     cursors: {
       user: ['user'],
       profile: ['profile'],
@@ -34,7 +34,7 @@ module.exports = function (treeData) {
       };
     },
 
-    
+
     componentWillMount: function() : void {
       if (!this.cursors.user.get().authed) {
         this.context.router.transitionTo('home');
@@ -43,7 +43,7 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function() : void {
-      
+
       var componentScope = this;
 
       if (!_.isEmpty(componentScope.cursors.profile.get())) {
@@ -55,12 +55,12 @@ module.exports = function (treeData) {
 
 
     loadProfile: function loadProfile() {
-      
+
       var profile = this.cursors.profile.get();
       this.setState(profile);
 
       var editable = (this.state.email === '' || this.state.telefono === '');
-      
+
       _.each(this.refs, function(item) {
         if (editable) {
           React.findDOMNode(item).setAttribute('readonly', true);

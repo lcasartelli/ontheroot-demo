@@ -63,15 +63,15 @@ module.exports = function (treeData) {
     quantityMinus: function quantityMinus() {
       var qtyInput = this.state.quantity;
       if (qtyInput <= 1) { return; }
-      this.setState({ quantity: (qtyInput - 1) })
+      this.setState({ quantity: (qtyInput - 1) });
     },
 
 
     render: function() : React.PropTypes.element {
-      
-      
+
+
       var headerImage = this.props.dish.image;
-      
+
 
       var descriptionComponent;
 
@@ -84,7 +84,7 @@ module.exports = function (treeData) {
       <div className="food-modal-inner">
         <div style={{"background-image": "url('./assets/img/dish/" + headerImage + "');"}} className="food-modal-image">
           <a id="close-modal" onClick={this.closeModal}>
-            <i className="fa fa-close"></i>  
+            <i className="fa fa-close"></i>
           </a>
         </div>
         <div className="food-modal-padding">

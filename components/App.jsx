@@ -20,13 +20,13 @@ module.exports = function (data) {
 
     mixins: [data.minxin],
 
-    
+
     componentDidMount: function() {
     },
 
 
     componentWillMount: function() {
-      
+
     },
 
 

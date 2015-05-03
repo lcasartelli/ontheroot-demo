@@ -16,9 +16,9 @@ module.exports = function (data) {
     displayName: 'Category',
 
     propTypes: {
-      restaurants: React.PropTypes.object.isRequired,
       title: React.PropTypes.string.isRequired,
       className: React.PropTypes.string.isRequired,
+      restaurants: React.PropTypes.number,
     },
 
 
@@ -33,31 +33,31 @@ module.exports = function (data) {
 
 
     render: function() : React.PropTypes.element {
-      
+
       var isComing = this.props.comingsoon === true;
-      
+
       var restaurantsCountComponent;
       var className = [ 'food-type', this.props.className ];
-      
+
       if(isComing) {
         className.push('comingsoon');
         restaurantsCountComponent = <p></p>;
       } else {
         restaurantsCountComponent = <p><strong>{this.props.restaurants}&nbsp;restaurants</strong></p>;
       }
-      
-      var mainComponent = (        
+
+      var mainComponent = (
         <div className={className.join(' ')}>
            <div className="food-type-inner">
               <h1>{this.props.title}</h1>
               {restaurantsCountComponent}
            </div>
         </div>);
-        
+
       if (!isComing) {
         mainComponent = (<Link to='restaurants'>{mainComponent}</Link>);
       }
-      
+
       return mainComponent;
     }
 

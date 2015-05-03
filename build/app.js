@@ -149,13 +149,13 @@ module.exports = function (data) {
 
     mixins: [data.minxin],
 
-    
+
     componentDidMount: function() {
     },
 
 
     componentWillMount: function() {
-      
+
     },
 
 
@@ -172,6 +172,7 @@ module.exports = function (data) {
 };
 
 
+
 },{"./pages/partials/Footer.jsx":21,"./pages/partials/Header.jsx":22,"react-router":75,"react/addons":90}],3:[function(require,module,exports){
 
 /* @flow */
@@ -183,20 +184,20 @@ var _ = require('lodash');
 
 
 module.exports = function (treeData) {
-  
+
   var checkout = require('../../lib/checkout')(treeData);
   var CheckoutItem = require('./CheckoutItem.jsx')(treeData);
-  
-  
+
+
   return React.createClass({
     displayName: 'CartBox',
 
     propTypes: {
       onEnd: React.PropTypes.func.isRequired,
     },
-    
+
     mixins: [treeData.mixin],
-    
+
     cursors: {
       cart: ['cart'],
     },
@@ -207,33 +208,33 @@ module.exports = function (treeData) {
         totalCart: 0,
       };
     },
-    
-    
+
+
     componentDidMount: function()        {
 
     },
-    
-    
+
+
     updateItemQuantity: function updateItemQuantity(item, quantity) {
       var cart = this.cursors.cart.get();
       var itemIndex = _.findIndex(cart, function (o) { return item.slug === o.slug; });
       if (itemIndex > -1) {
-        var item = cart[itemIndex];
-        checkout.addItem(item, quantity);
+        var newItem = cart[itemIndex];
+        checkout.addItem(newItem, quantity);
       }
     },
-    
-    
+
+
     removeItem: function removeItem(item) {
       var _that = this;
-      var _confirm = confirm('Remove item from your shopping cart?');
+      var _confirm = window.confirm('Remove item from your shopping cart?');
 
       if (_confirm) {
         checkout.removeItem(item);
       }
     },
-    
-    
+
+
     onComplete: function endCart() {
       this.props.onEnd();
       return false;
@@ -241,14 +242,14 @@ module.exports = function (treeData) {
 
 
     render: function()                           {
-      
-      var componentScope = this;      
+
+      var componentScope = this;
       var orders = this.cursors.cart.get();
 
       var totalCart = _.sum(orders, function (order) {
         return order.qty * order.price;
       });
-    
+
       return (
       React.createElement("form", {id: "checkout-order-form", className: "pure-form shopping-form", onSubmit: this.onComplete}, 
         React.createElement("h2", null, "Order Overview"), 
@@ -295,7 +296,7 @@ module.exports = function (treeData) {
     displayName: 'CartHandler',
 
     mixins: [treeData.mixin],
-    
+
     cursors: {
       user: ['user'],
       cart: ['cart'],
@@ -312,8 +313,8 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function()        {},
-    
-    
+
+
     openCartDropdown: function openCartDropdown(tof) {
       var that = this;
 
@@ -325,8 +326,7 @@ module.exports = function (treeData) {
           React.findDOMNode(that).classList.remove('active');
           React.findDOMNode(that.refs.cartDropdown).classList.remove('show');
         }
-        
-      }
+      };
     },
 
 
@@ -343,7 +343,7 @@ module.exports = function (treeData) {
 
 
     render: function()                           {
-      
+
       var componentScope = this;
       var cartItems = this.cursors.cart.get();
 
@@ -351,7 +351,7 @@ module.exports = function (treeData) {
       if (cartItems.length > 0) {
         cartCounter = React.createElement("strong", {className: "badge"}, cartItems.length);
       }
-      
+
       return (
         React.createElement("a", {className: "header-button cart-button", onMouseEnter: this.openCartDropdown(true), onMouseLeave: this.openCartDropdown(false)}, 
           React.createElement("i", {className: "fa fa-shopping-cart"}, 
@@ -372,7 +372,7 @@ module.exports = function (treeData) {
                   React.createElement("strong", null, item.name), 
                   React.createElement("span", null, item.qty, " portions: ", price, " €"), 
                   React.createElement("button", {className: "pure-button pure-danger", onClick: removeItem}, React.createElement("span", null, "Remove"))
-                ))}), 
+                ));}), 
             
             React.createElement("div", {className: "cart-item"}, 
               React.createElement("button", {onClick: this.openCheckout, id: "show-cart", className: "pure-button"}, 
@@ -409,9 +409,9 @@ module.exports = function (data) {
     displayName: 'Category',
 
     propTypes: {
-      restaurants: React.PropTypes.object.isRequired,
       title: React.PropTypes.string.isRequired,
       className: React.PropTypes.string.isRequired,
+      restaurants: React.PropTypes.number,
     },
 
 
@@ -426,31 +426,31 @@ module.exports = function (data) {
 
 
     render: function()                           {
-      
+
       var isComing = this.props.comingsoon === true;
-      
+
       var restaurantsCountComponent;
       var className = [ 'food-type', this.props.className ];
-      
+
       if(isComing) {
         className.push('comingsoon');
         restaurantsCountComponent = React.createElement("p", null);
       } else {
         restaurantsCountComponent = React.createElement("p", null, React.createElement("strong", null, this.props.restaurants, " restaurants"));
       }
-      
-      var mainComponent = (        
+
+      var mainComponent = (
         React.createElement("div", {className: className.join(' ')}, 
            React.createElement("div", {className: "food-type-inner"}, 
               React.createElement("h1", null, this.props.title), 
               restaurantsCountComponent
            )
         ));
-        
+
       if (!isComing) {
         mainComponent = (React.createElement(Link, {to: "restaurants"}, mainComponent));
       }
-      
+
       return mainComponent;
     }
 
@@ -573,8 +573,8 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function()        {},
-    
-    
+
+
     openCityDropdown: function openCityDropdown(tof) {
       var that = this;
 
@@ -586,7 +586,7 @@ module.exports = function (treeData) {
           React.findDOMNode(that).classList.remove('active');
           React.findDOMNode(that).querySelector('#cities-dropdown').classList.remove('show');
         }
-        
+
       }
     },
 
@@ -598,11 +598,11 @@ module.exports = function (treeData) {
 
 
     render: function()                           {
-      
+
       var citiesItem = this.props.cities;
       var _this = this;
 
-      
+
       return (
         React.createElement("a", {className: "header-button cart-button", onMouseEnter: this.openCityDropdown(true), onMouseLeave: this.openCityDropdown(false)}, 
           React.createElement("i", {className: "fa fa-caret-down"}), 
@@ -611,7 +611,7 @@ module.exports = function (treeData) {
           React.createElement("div", {id: "cities-dropdown"}, 
             _.map(citiesItem, function (item, index) {
               return (
-                React.createElement("div", {className: "cities-item", key: index}, item))})
+                React.createElement("div", {className: "cities-item", key: index}, item));})
             
           )
         )
@@ -749,15 +749,15 @@ module.exports = function (treeData) {
     quantityMinus: function quantityMinus() {
       var qtyInput = this.state.quantity;
       if (qtyInput <= 1) { return; }
-      this.setState({ quantity: (qtyInput - 1) })
+      this.setState({ quantity: (qtyInput - 1) });
     },
 
 
     render: function()                           {
-      
-      
+
+
       var headerImage = this.props.dish.image;
-      
+
 
       var descriptionComponent;
 
@@ -860,7 +860,6 @@ module.exports = function (treeData) {
 },{"../../lib/checkout":27,"./DonutChart.jsx":10,"lodash":50,"react-router":75,"react/addons":90}],10:[function(require,module,exports){
 
 /* @flow */
-/*jshint browser:true, devel:true */
 
 'use strict';
 
@@ -895,10 +894,10 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function()        {
-      var donut = React.findDOMNode(this.refs.canvas)
+      var donut = React.findDOMNode(this.refs.canvas);
       this.setState({ chart: this._halfDoughnut(donut) });
     },
-    
+
     _halfDoughnut: function _halfDoughnut(canvas) {
       var ctx = canvas.getContext('2d');
       var cd = {
@@ -919,16 +918,16 @@ module.exports = function (treeData) {
 
       return new Chart(ctx).Doughnut(data,options);
     },
-    
+
     componentWillUnmount: function () {
-      if (this.state.chart) { 
+      if (this.state.chart) {
         this.state.chart.destroy();
       }
     },
-    
+
 
     render: function()                           {
-    
+
       return (
        React.createElement("div", null, 
         React.createElement("div", {className: "donut-label"}, this.props.title), 
@@ -936,12 +935,12 @@ module.exports = function (treeData) {
           React.createElement("canvas", {ref: "canvas", id: "canvas-impronta-ecologica", width: "80", height: "80", className: "donut"})
         ), 
         React.createElement("div", {className: "donut-value"}, this.props.value, React.createElement("small", null, this.props.unit))
-       ) 
+       )
        );
     }
 
   });
-}; 
+};
 
 
 
@@ -1441,7 +1440,7 @@ module.exports = function (treeData) {
     displayName: 'Login',
 
     mixins: [treeData.mixin],
-    
+
     cursors: {
       user: ['user'],
     },
@@ -1467,7 +1466,6 @@ module.exports = function (treeData) {
 
     doLoginFB: function() {
       facebookCognito.checkLogin(this.cursors.user);
-      this.cur
     },
 
 
@@ -1520,6 +1518,7 @@ module.exports = function (treeData) {
 };
 
 
+
 },{"../../lib/cognito.facebook":28,"lodash":50,"react/addons":90}],18:[function(require,module,exports){
 /* @flow */
 
@@ -1532,12 +1531,12 @@ module.exports = function (treeData) {
 
   var cognitoAuth = require('../../lib/cognito')();
   var userHandler = require('../../lib/user')(treeData);
-  
+
   return React.createClass({
     displayName: 'Profile',
 
     mixins: [treeData.mixin, React.addons.LinkedStateMixin],
-    
+
     cursors: {
       user: ['user'],
       profile: ['profile'],
@@ -1557,7 +1556,7 @@ module.exports = function (treeData) {
       };
     },
 
-    
+
     componentWillMount: function()        {
       if (!this.cursors.user.get().authed) {
         this.context.router.transitionTo('home');
@@ -1566,7 +1565,7 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function()        {
-      
+
       var componentScope = this;
 
       if (!_.isEmpty(componentScope.cursors.profile.get())) {
@@ -1578,12 +1577,12 @@ module.exports = function (treeData) {
 
 
     loadProfile: function loadProfile() {
-      
+
       var profile = this.cursors.profile.get();
       this.setState(profile);
 
       var editable = (this.state.email === '' || this.state.telefono === '');
-      
+
       _.each(this.refs, function(item) {
         if (editable) {
           React.findDOMNode(item).setAttribute('readonly', true);
@@ -1718,7 +1717,7 @@ module.exports = function (treeData) {
   var RestaurantHeader = require('./partials/RestaurantHeader.jsx')(treeData);
   var RestaurantMap = require('../elements/RestaurantMap.jsx')(treeData);
 
-  
+
   return React.createClass({
     displayName: 'Restaurant',
 
@@ -1762,7 +1761,7 @@ module.exports = function (treeData) {
       var componentScope = scope;
       return function closeDishDetailHandler(){
         componentScope.setState({ show: null });
-      }
+      };
 
     },
 
@@ -1773,7 +1772,7 @@ module.exports = function (treeData) {
 
       var detailComponent = React.createElement("div", null);
       if (componentScope.state.show) {
-        detailComponent = React.createElement(DishModal, {dish: componentScope.state.show, onClose: componentScope.closeDishDetail(componentScope)})
+        detailComponent = React.createElement(DishModal, {dish: componentScope.state.show, onClose: componentScope.closeDishDetail(componentScope)});
       }
 
       return (
@@ -1831,6 +1830,7 @@ module.exports = function (treeData) {
   });
 
 };
+
 
 
 },{"../../config/restaurants.json":26,"../../lib/map":30,"../elements/Dish.jsx":8,"../elements/DishModal.jsx":9,"../elements/RestaurantMap.jsx":13,"./partials/RestaurantHeader.jsx":24,"lodash":50,"react/addons":90}],20:[function(require,module,exports){
@@ -2472,7 +2472,7 @@ var store = require('./store')();
 var DATASET_NAME = 'orders';
 var ACTUAL_ORDER_KEY = 'actualOrder';
 
- 
+
 module.exports = function(treeData) {
 
   var ordersDataset = null;
@@ -2491,7 +2491,7 @@ module.exports = function(treeData) {
         console.log('dataset already loaded');
         fullfill();
       }
-    }); 
+    });
   };
 
 
@@ -2526,7 +2526,7 @@ module.exports = function(treeData) {
     ok(typeof newItem === 'object', 'Missing required, no item provided');
     ok(!_.isNaN(qty), 'Missing required, no quantity provided');
 
-    var itemIndex = _.findIndex(cart.get(), function (o) { return o.slug ===  newItem.slug});
+    var itemIndex = _.findIndex(cart.get(), function (o) { return o.slug ===  newItem.slug; });
 
     if (itemIndex > -1) {
       var oldItem = cart.get()[itemIndex];
@@ -2535,7 +2535,7 @@ module.exports = function(treeData) {
     } else {
       var item = newItem;
       item.qty = qty;
-      
+
       cart.push(item);
     }
 
@@ -2569,6 +2569,7 @@ module.exports = function(treeData) {
     emptyCart: emptyCart,
   };
 };
+
 
 
 },{"./store":31,"assert":33,"lodash":50}],28:[function(require,module,exports){
@@ -2689,7 +2690,7 @@ module.exports = function () {
     ok(accessToken, 'facebookToken not provided');
 
     AWS.config.credentials.RoleArn = 'arn:aws:iam::668302708306:role/Cognito_ontheroot_demoAuth_DefaultRole';
-    
+
     if (type === 'fb') {
       window.sessionStorage.setItem('facebookToken', accessToken);
       console.log('login with facebook token', accessToken);
@@ -2725,6 +2726,7 @@ module.exports = function () {
   };
 
 };
+
 
 
 },{"assert":33}],30:[function(require,module,exports){

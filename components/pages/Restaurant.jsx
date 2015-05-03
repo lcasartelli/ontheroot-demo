@@ -18,7 +18,7 @@ module.exports = function (treeData) {
   var RestaurantHeader = require('./partials/RestaurantHeader.jsx')(treeData);
   var RestaurantMap = require('../elements/RestaurantMap.jsx')(treeData);
 
-  
+
   return React.createClass({
     displayName: 'Restaurant',
 
@@ -62,7 +62,7 @@ module.exports = function (treeData) {
       var componentScope = scope;
       return function closeDishDetailHandler(){
         componentScope.setState({ show: null });
-      }
+      };
 
     },
 
@@ -73,7 +73,7 @@ module.exports = function (treeData) {
 
       var detailComponent = <div></div>;
       if (componentScope.state.show) {
-        detailComponent = <DishModal dish={componentScope.state.show} onClose={componentScope.closeDishDetail(componentScope)} />
+        detailComponent = <DishModal dish={componentScope.state.show} onClose={componentScope.closeDishDetail(componentScope)} />;
       }
 
       return (

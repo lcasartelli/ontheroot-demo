@@ -18,7 +18,7 @@ module.exports = function (treeData) {
     displayName: 'CartHandler',
 
     mixins: [treeData.mixin],
-    
+
     cursors: {
       user: ['user'],
       cart: ['cart'],
@@ -35,8 +35,8 @@ module.exports = function (treeData) {
 
 
     componentDidMount: function() : void {},
-    
-    
+
+
     openCartDropdown: function openCartDropdown(tof) {
       var that = this;
 
@@ -48,8 +48,7 @@ module.exports = function (treeData) {
           React.findDOMNode(that).classList.remove('active');
           React.findDOMNode(that.refs.cartDropdown).classList.remove('show');
         }
-        
-      }
+      };
     },
 
 
@@ -66,7 +65,7 @@ module.exports = function (treeData) {
 
 
     render: function() : React.PropTypes.element {
-      
+
       var componentScope = this;
       var cartItems = this.cursors.cart.get();
 
@@ -74,7 +73,7 @@ module.exports = function (treeData) {
       if (cartItems.length > 0) {
         cartCounter = <strong className="badge">{cartItems.length}</strong>;
       }
-      
+
       return (
         <a className="header-button cart-button" onMouseEnter={this.openCartDropdown(true)} onMouseLeave={this.openCartDropdown(false)}>
           <i className="fa fa-shopping-cart">
@@ -95,14 +94,14 @@ module.exports = function (treeData) {
                   <strong>{item.name}</strong>
                   <span>{item.qty}&nbsp;portions:&nbsp;{price}&nbsp;€</span>
                   <button className="pure-button pure-danger" onClick={removeItem}><span>Remove</span></button>
-                </div>)})
+                </div>);})
             }
             <div className="cart-item">
               <button onClick={this.openCheckout} id="show-cart" className="pure-button">
                 <span>Go to Cart</span>
               </button>
             </div>
-          </div>            
+          </div>
         </a>
       );
     }

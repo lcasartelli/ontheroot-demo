@@ -1,11 +1,11 @@
 {
   "browser":true,
   "node": true,
-  "esnext":true, 
-  "eqnull":true, 
-  "laxcomma":true, 
-  "undef":true, 
-  "indent":2, 
+  "esnext":true,
+  "eqnull":true,
+  "laxcomma":true,
+  "undef":true,
+  "indent":2,
   "strict": false,
-  "globals": {"AWS": true, "FB": true}
+  "globals": {"AWS": true, "FB": true, "Chart": true}
 }
