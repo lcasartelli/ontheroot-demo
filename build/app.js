@@ -2624,9 +2624,9 @@ module.exports = function (treeData) {
       });
     } if (response.status ===  'not_authorized'){
 
-      FB.login(function (resp) {
-        statusChangeCallback(resp);
-      }, {scope: 'public_profile,email'});
+      // FB.login(function (resp) {
+      //   statusChangeCallback(resp);
+      // }, {scope: 'public_profile,email'});
 
     } else {
       console.log('facebook login failed', response.status, response);
@@ -2652,9 +2652,13 @@ module.exports = function (treeData) {
 
     ok(userCursor, 'userCursor not provided');
 
-    FB.getLoginStatus(function (response) {
-      statusChangeCallback(response, userCursor);
-    });
+    FB.login(function (resp) {
+      statusChangeCallback(resp, userCursor);
+    }, {scope: 'public_profile,email'});
+
+    // FB.getLoginStatus(function (response) {
+    //   statusChangeCallback(response, userCursor);
+    // });
   };
 
 
