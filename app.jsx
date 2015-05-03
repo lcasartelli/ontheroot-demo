@@ -37,6 +37,8 @@ var checkout = require('./lib/checkout')(treeData);
 var userHandler = require('./lib/user')(treeData);
 
 var syncClient;
+var syncProfileTimer = null;
+var syncCartTimer = null;
 
 
 cognitoAuth.unAuthUserLogin().then(function () {
@@ -49,9 +51,15 @@ cognitoAuth.unAuthUserLogin().then(function () {
   });
 
   cartCursor.on('update', function _onCartItemsUpdate() {
-    checkout.autoSyncronizeCart().then(function () {
-      console.log('sync cart completed');
-    });
+
+    if (!syncCartTimer) {
+      syncCartTimer = setInterval(function _autoSyncronizeCart_Interval() {
+        checkout.autoSyncronizeCart().then(function () {
+          console.log('sync cart completed');
+        });
+      }, 1000 * 30);
+    }
+
   });
 
 
@@ -70,15 +78,21 @@ if (facebookToken) {
 }
 
 
+
 profileCursor.on('update', function () {
-  userHandler.autoSyncronizeProfile().then(function () {
-    console.log('sync user completed');
-  });  
+  if (!syncProfileTimer) {
+    syncProfileTimer = setInterval(function _autoSyncronizeProfile_Interval () {
+      userHandler.autoSyncronizeProfile().then(function () {
+        console.log('sync user completed');
+      });
+    }, 1000 * 30);
+  }
+
 });
 
 userCursor.on('update', function _updateUser() {
   var user = userCursor.get();
-  
+
   if (!user.authed && user.accessToken !== null) {
 
     cognitoAuth.authUserLogin(user.accessToken.type, user.accessToken.token)
@@ -88,7 +102,7 @@ userCursor.on('update', function _updateUser() {
 
       userHandler.loadProfile().then(function (data) {
         if (!data) {
-          return facebookCognito.loadFacebookProfile();  
+          return facebookCognito.loadFacebookProfile();
         } else {
           return data;
         }
