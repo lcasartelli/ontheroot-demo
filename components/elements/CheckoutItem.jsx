@@ -18,7 +18,7 @@ module.exports = function (treeData) {
     mixins: [treeData.mixin, React.addons.LinkedStateMixin],
 
     cursors: {
-      cart: ['cart'],
+      cart: ['cart']
     },
 
     propTypes: {

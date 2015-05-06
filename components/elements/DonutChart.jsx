@@ -22,7 +22,7 @@ module.exports = function (treeData) {
       unit: React.PropTypes.string.isRequired,
       scale: React.PropTypes.string.isRequired,
       value: React.PropTypes.string.isRequired,
-      color: React.PropTypes.string.isRequired,
+      color: React.PropTypes.string.isRequired
     },
 
 

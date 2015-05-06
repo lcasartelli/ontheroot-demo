@@ -17,13 +17,13 @@ module.exports = function (treeData) {
     displayName: 'CartBox',
 
     propTypes: {
-      onEnd: React.PropTypes.func.isRequired,
+      onEnd: React.PropTypes.func.isRequired
     },
 
     mixins: [treeData.mixin],
 
     cursors: {
-      cart: ['cart'],
+      cart: ['cart']
     },
 
 

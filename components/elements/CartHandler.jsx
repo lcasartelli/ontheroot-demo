@@ -21,7 +21,7 @@ module.exports = function (treeData) {
 
     cursors: {
       user: ['user'],
-      cart: ['cart'],
+      cart: ['cart']
     },
 
     contextTypes: {

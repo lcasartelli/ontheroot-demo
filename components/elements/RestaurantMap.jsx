@@ -18,7 +18,7 @@ module.exports = function (treeData) {
     displayName: 'RestaurantMap',
 
     propTypes: {
-      restaurant: React.PropTypes.object.isRequired,
+      restaurant: React.PropTypes.object.isRequired
     },
 
 
@@ -30,8 +30,8 @@ module.exports = function (treeData) {
     componentDidMount: function() : void {
       this.initMap();
     },
-    
-    
+
+
     initMap: function initMap() {
       var _gmapImg = document.getElementById('map-img');
       var _addressEl = this.props.restaurant.address;
@@ -39,10 +39,10 @@ module.exports = function (treeData) {
       _gmapImg.setAttribute('src', _gmapImg.getAttribute('src') + '&center=' + _uriAdd + '&markers=color:0x87d860%7C' + _uriAdd + '&' + map.getStatic());
 
     },
-    
+
 
     render: function() : React.PropTypes.element {
-      
+
       var mapImageSrc = 'https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyC2zI1kN7ipCVqTs3Rh_huFawuDPMRhBnA&zoom=15&size=1280x400&scale=2&language=it';
 
       return (
@@ -52,4 +52,4 @@ module.exports = function (treeData) {
     }
 
   });
-}; 
+};

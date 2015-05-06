@@ -20,7 +20,7 @@ module.exports = function (treeData) {
 
     propTypes: {
       restaurant: React.PropTypes.object.isRequired,
-      dish: React.PropTypes.object.isRequired,
+      dish: React.PropTypes.object.isRequired
     },
 
 

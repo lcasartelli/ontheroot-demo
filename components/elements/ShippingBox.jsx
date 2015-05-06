@@ -8,24 +8,24 @@ var _ = require('lodash');
 
 
 module.exports = function (treeData) {
-  
+
   var checkout = require('../../lib/checkout')(treeData);
   var CheckoutItem = require('./CheckoutItem.jsx')(treeData);
-  
-  
+
+
   return React.createClass({
     displayName: 'ShippingBox',
-    
-    
-    
+
+
+
     mixins: [treeData.mixin],
-    
+
     cursors: {
-      cart: ['profile'],
+      cart: ['profile']
     },
-    
+
     propTypes: {
-      onEnd: React.PropTypes.func.isRequired,
+      onEnd: React.PropTypes.func.isRequired
     },
 
 
@@ -33,13 +33,13 @@ module.exports = function (treeData) {
       return {
       };
     },
-    
-    
+
+
     componentDidMount: function() : void {
 
     },
-    
-    
+
+
     onComplete: function endCart() {
       this.props.onEnd();
       return false;
@@ -47,9 +47,9 @@ module.exports = function (treeData) {
 
 
     render: function() : React.PropTypes.element {
-      
+
       var componentScope = this;
-    
+
       return (
         <form id="checkout-address-form" className="pure-form shopping-form disabled" onSubmit={this.onComplete}>
           <h2>Shipping</h2>

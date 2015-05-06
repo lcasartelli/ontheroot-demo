@@ -22,7 +22,7 @@ module.exports = function (treeData) {
 
     propTypes: {
       dish: React.PropTypes.object.isRequired,
-      onClose: React.PropTypes.func.isRequired,
+      onClose: React.PropTypes.func.isRequired
     },
 
 

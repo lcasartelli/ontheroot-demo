@@ -13,7 +13,7 @@ module.exports = function (data) {
     displayName: 'IndexHeader',
 
     propTypes: {
-      restaurant: React.PropTypes.object.isRequired,
+      restaurant: React.PropTypes.object.isRequired
     },
 
 

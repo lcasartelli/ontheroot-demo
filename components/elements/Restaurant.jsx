@@ -15,7 +15,7 @@ module.exports = React.createClass({
   displayName: 'RestaurantItem',
 
   propTypes: {
-    restaurant: React.PropTypes.object.isRequired,
+    restaurant: React.PropTypes.object.isRequired
   },
 
 
@@ -43,7 +43,7 @@ module.exports = React.createClass({
     return (
       <Link to="restaurant" params={params} className="restaurant-item">
         <div data-filter="indian,japanese" className="restaurant-grid">
-          <div className={className.join(' ')} style={{"background-image": "url('./assets/img/" + backgroundImg + "')"}}></div>
+          <div className={className.join(' ')} style={{"background-image": "url('/assets/img/restaurants/" + backgroundImg + "')"}}></div>
           <h4>{ this.props.restaurant.title }</h4>
         </div>
       </Link>

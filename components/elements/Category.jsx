@@ -18,7 +18,7 @@ module.exports = function (data) {
     propTypes: {
       title: React.PropTypes.string.isRequired,
       className: React.PropTypes.string.isRequired,
-      restaurants: React.PropTypes.number,
+      restaurants: React.PropTypes.number
     },
 
 
