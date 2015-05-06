@@ -10,37 +10,36 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     env: process.env.NODE_ENV,
-    
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= env %> <%= grunt.template.today("yyyymmdd") %> */\n',
         report: 'min'
       }
     },
-    
-    
+
+
     clean: {
       build: ['build']
     },
-    
-    
+
+
     stylus: {
       compile: {
         options: {
           linenos: false,
         },
         files: {
-          'assets/css/style.css': 'assets/css/style.styl',
-          'assets/css/admin.css': 'assets/css/admin.styl'
+          'assets/css/style.css': 'assets/css/style.styl'
         }
       }
     },
-    
-    
+
+
     copy: {
       statics: {
         files: [
-          { expand: true, src: ['assets/font/**', 'assets/img/**', 'assets/css/**',], dest: 'build/' },
+          { expand: true, src: ['assets/font/**', 'assets/js/**', 'assets/img/**', 'assets/css/**', 'global.js'], dest: 'build/' },
         ]
       },
     },
@@ -53,18 +52,18 @@ module.exports = function(grunt) {
           transform: ['reactify']
         }
       },
-      
+
       options: {
         basedir: __dirname,
         debug: false,
         detectGlobals: true,
       },
     },
-    
-    
+
+
     manifest: {
       generate: {
-        src: ['app.js', 'vendor.js', 'local.css', 'index.html', 'assets/img/*'],
+        src: ['app.js',  'global.js', 'index.html', 'assets/img/**', 'assets/css/**/*.css', 'assets/js/**'],
         dest: 'build/manifest.appcache',
         options: {
           basePath: 'build',
@@ -72,14 +71,14 @@ module.exports = function(grunt) {
         },
       }
     },
-    
-    
+
+
     useref: {
       html: 'build/*.html',
       temp: 'build'
     },
-    
-    
+
+
     processhtml: {
       options: {
         commentMarker: 'preprocess',
@@ -94,19 +93,19 @@ module.exports = function(grunt) {
         }
       }
     },
-    
-    
+
+
     ver: {
       all: {
         versionFile: 'build/versions.json',
         phases: [
-          { files: ['build/assets/img/*'], references: ['build/*.css', 'build/index.html', 'build/app.js', 'build/manifest.appcache'] },
-          { files: ['build/*.js', 'build/*.css'], references: ['build/index.html', 'build/manifest.appcache'] }
+          { files: ['build/assets/img/*.jpg', 'build/assets/img/*.png'], references: ['build/assets/css/style.css', 'build/index.html', 'build/app.min.js', 'build/manifest.appcache'] },
+          { files: ['build/app.min.js', 'build/assets/css/style.css'], references: ['build/index.html', 'build/manifest.appcache'] }
         ]
       }
     },
-    
-    
+
+
     connect: {
       dev: {
         options: {
@@ -115,7 +114,27 @@ module.exports = function(grunt) {
           hostname: '*',
           base: '.',
           middleware: function(connect, options, middlewares) {
-            
+
+            middlewares.push(function (req, res, next) {
+              if (!req.url.endsWith(/\.([a-z]+)/)) {
+                require('fs').createReadStream(__dirname + '/index.html').pipe(res);
+              } else {
+                next();
+              }
+            });
+
+            return middlewares;
+          },
+        }
+      },
+      prod: {
+        options: {
+          port: process.env.PORT || 3100,
+          protocol: 'http',
+          hostname: '*',
+          base: 'build',
+          middleware: function(connect, options, middlewares) {
+
             middlewares.push(function (req, res, next) {
               if (!req.url.endsWith(/\.([a-z]+)/)) {
                 require('fs').createReadStream(__dirname + '/index.html').pipe(res);
@@ -129,22 +148,22 @@ module.exports = function(grunt) {
         }
       }
     },
-    
-    
+
+
     'closure-compiler': {
       frontend: {
         closurePath: __dirname + '/closure',
         js: 'build/app.js',
-        jsOutputFile: 'build/app.o.js',
+        jsOutputFile: 'build/app.min.js',
         maxBuffer: 500,
         options: {
-          compilation_level: 'ADVANCED_OPTIMIZATIONS',
-          language_in: 'ECMASCRIPT5'
+          compilation_level: 'SIMPLE_OPTIMIZATIONS',
+          language_in: 'ECMASCRIPT5_STRICT',
         }
       }
     },
-      
-    
+
+
     watch: {
       css: {
         files: ['assets/**/*.styl', '**/*.html'],
@@ -155,8 +174,8 @@ module.exports = function(grunt) {
         tasks: ['browserify:app'],
       },
       bundle: {
-        files: ['build/app.js'],
-        tasks: [], // 'closure-compiler'
+        files: ['build/app.min.js'],
+        tasks: [],
         options: {
           livereload: true,
         }
@@ -166,8 +185,8 @@ module.exports = function(grunt) {
         spawn: true
       }
     },
-    
-    
+
+
     concurrent: {
       watch: {
         tasks: [
@@ -180,7 +199,7 @@ module.exports = function(grunt) {
         }
       }
     }
-    
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -198,23 +217,23 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-closure-compiler');
-  
+
   grunt.registerTask('_copy', ['copy:statics']);
   grunt.registerTask('_douseref', ['useref:html', 'concat', 'uglify']);
   grunt.registerTask('_versioning', ['manifest:generate', 'ver']);
-  
+
   grunt.registerTask('bundle', [
     'clean:build',
-    '_copy',
     'stylus:compile',
     'processhtml:prod',
+    '_copy',
     'browserify:app',
-    // 'closure-compiler:frontend',
-    '_douseref',
+    'closure-compiler:frontend',
     '_versioning' // keep as last
   ]);
-  grunt.registerTask('prod', ['bundle', 'connect:prod']);
-  
+
+  grunt.registerTask('prod', ['bundle', 'connect:prod', 'concurrent:watch']);
+
   grunt.registerTask('dev', [
     'clean:build',
     'stylus:compile', // first time compile
