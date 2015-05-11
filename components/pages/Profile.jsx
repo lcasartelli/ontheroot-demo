@@ -10,6 +10,8 @@ module.exports = function (treeData) {
   var cognitoAuth = require('../../lib/cognito')();
   var userHandler = require('../../lib/user')(treeData);
 
+  var Field = require('../elements/ProfileField.jsx')(treeData);
+
   return React.createClass({
     displayName: 'Profile',
 
@@ -27,10 +29,7 @@ module.exports = function (treeData) {
 
     getInitialState: function getInitialState() : Object {
       return {
-        nome: '',
-        cognome: '',
-        email: '',
-        telefono: ''
+        isEditable: false
       };
     },
 
@@ -57,36 +56,54 @@ module.exports = function (treeData) {
     loadProfile: function loadProfile() {
 
       var profile = this.cursors.profile.get();
-      this.setState(profile);
 
       var editable = (this.state.email === '' || this.state.telefono === '');
-
-      _.each(this.refs, function(item) {
-        if (editable) {
-          React.findDOMNode(item).setAttribute('readonly', true);
-        } else {
-          React.findDOMNode(item).removeAttribute('readonly');
-        }
-      });
+      this.editMode(!editable);
     },
 
 
-    saveProfile: function saveProfile() {
+    saveProfile: function saveProfile(e) {
 
       console.log('saving profile...');
-
-      userHandler.updateProfile({
-        nome: this.state.nome,
-        cognome: this.state.cognome,
-        email: this.state.email,
-        telefono: this.state.telefono
+      var data = {};
+      _.each(this.refs, function (ref, key) {
+        data[key] = ref.state.value;
       });
 
-      return false;
+      userHandler.updateProfile(data);
+
+      this.editMode(false);
+
+      e.preventDefault();
+      e.stopPropagation();
+    },
+
+
+    editMode: function editMode(isEditable) {
+      this.setState({ isEditable: isEditable });
+    },
+
+
+    onEditProfile: function onEditProfile() {
+      this.editMode(true);
     },
 
 
     render: function() : React.PropTypes.element {
+
+      var saveProfileButton;
+
+      if (this.state.isEditable) {
+        saveProfileButton = (
+          <div className="text-center">
+            <button type="submit" className="pure-button pure-success">
+              <span>Save profile</span>
+            </button>
+          </div>);
+      } else  {
+        saveProfileButton = <div></div>;
+      }
+
 
       return (
         <div className="page">
@@ -106,19 +123,36 @@ module.exports = function (treeData) {
                       <h3>Your details</h3>
                     </div>
                     <div className="pure-u-1-4">
-                    <button id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success">
-                      <i className="fa fa-plus"></i>
-                      <span onClick={this.editFields}>Edit profile</span>
-                    </button></div>
-                    <div className="pure-control-group"><input type="text" name="nome" valueLink={this.linkState('nome')} placeholder="Nome" required ref='nome' /></div>
+                      <button type='button' id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success">
+                        <i className="fa fa-plus"></i>
+                        <span  onClick={this.onEditProfile}>Edit profile</span>
+                      </button>
+                    </div>
+                    <div className="pure-control-group">
+                      <Field key={"nome"} type={"text"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().nome} placeholder={"Nome"} ref='nome' />
+                    </div>
+
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="text" name="cognome" valueLink={this.linkState('cognome')} placeholder="Cognome" required ref='cognome' /></div>
+
+                    <div className="pure-control-group">
+                      <Field key={"cognome"} type={"text"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().cognome} placeholder={"Cognome"} ref='cognome' />
+                    </div>
+
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="email" name="email" valueLink={this.linkState('email')} placeholder="E-mail" required ref='email' /></div>
+
+                    <div className="pure-control-group">
+                      <Field key={"email"} type={"email"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().email} placeholder={"E-Mail"} ref='email' />
+                    </div>
+
                     <div className="spacer-10"></div>
-                    <div className="pure-control-group"><input type="text" name="telefono" valueLink={this.linkState('telefono')} placeholder="Recapito telefonico" required ref='telefono' /></div>
+
+                    <div className="pure-control-group">
+                      <Field key={"telefono"} type={"tel"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().telefono} placeholder={"Recapito telefonico"} ref='telefono' />
+                    </div>
                     <div className="spacer-40"></div>
-                    <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Save profile</span></button></div>
+
+                    {saveProfileButton}
+
                   </form>
                 </div>
               </div>
@@ -140,7 +174,7 @@ module.exports = function (treeData) {
                     </li>
                   </ol>
                   <div className="spacer-40"></div>
-                  <form id="delivery-form" style={{"display": "none"}} className="pure-form">
+                  <div id="delivery-form" style={{"display": "none"}} className="pure-form">
                     <div className="pure-control-group"><label>Etichetta</label><input type="text" name="etichetta" placeholder="Etichetta"/></div>
                     <div className="pure-g">
                       <div className="pure-u-19-24">
@@ -159,7 +193,7 @@ module.exports = function (treeData) {
                     </div>
                     <div className="spacer-40"></div>
                     <div className="text-center"><button type="submit" className="pure-button pure-success"><span>Salva indirizzo di spedizione</span></button></div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
