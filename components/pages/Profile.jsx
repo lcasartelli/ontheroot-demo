@@ -57,7 +57,7 @@ module.exports = function (treeData) {
 
       var profile = this.cursors.profile.get();
 
-      var editable = (this.state.email === '' || this.state.telefono === '');
+      var editable = profile.nome !== '' && profile.cognome !== '';
       this.editMode(!editable);
     },
 
@@ -91,7 +91,7 @@ module.exports = function (treeData) {
 
     render: function() : React.PropTypes.element {
 
-      var saveProfileButton;
+      var saveProfileButton, editProfileButton;
 
       if (this.state.isEditable) {
         saveProfileButton = (
@@ -99,8 +99,16 @@ module.exports = function (treeData) {
             <button type="submit" className="pure-button pure-success">
               <span>Save profile</span>
             </button>
-          </div>);
+          </div>
+        );
+        editProfileButton = <div></div>;
       } else  {
+        editProfileButton = (
+          <button type='button' id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success">
+            <i className="fa fa-plus"></i>
+            <span  onClick={this.onEditProfile}>Edit profile</span>
+          </button>
+        );
         saveProfileButton = <div></div>;
       }
 
@@ -123,31 +131,28 @@ module.exports = function (treeData) {
                       <h3>Your details</h3>
                     </div>
                     <div className="pure-u-1-4">
-                      <button type='button' id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success">
-                        <i className="fa fa-plus"></i>
-                        <span  onClick={this.onEditProfile}>Edit profile</span>
-                      </button>
+                      { editProfileButton }
                     </div>
                     <div className="pure-control-group">
-                      <Field key={"nome"} type={"text"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().nome} placeholder={"Nome"} ref='nome' />
+                      <Field key={"nome"} type={"text"} isEditable={this.state.isEditable} initialValue={this.cursors.profile.get().nome} placeholder={"Nome"} ref='nome' />
                     </div>
 
                     <div className="spacer-10"></div>
 
                     <div className="pure-control-group">
-                      <Field key={"cognome"} type={"text"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().cognome} placeholder={"Cognome"} ref='cognome' />
+                      <Field key={"cognome"} type={"text"} isEditable={this.state.isEditable} initialValue={this.cursors.profile.get().cognome} placeholder={"Cognome"} ref='cognome' />
                     </div>
 
                     <div className="spacer-10"></div>
 
                     <div className="pure-control-group">
-                      <Field key={"email"} type={"email"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().email} placeholder={"E-Mail"} ref='email' />
+                      <Field key={"email"} type={"email"} isEditable={this.state.isEditable} initialValue={this.cursors.profile.get().email} placeholder={"E-Mail"} ref='email' />
                     </div>
 
                     <div className="spacer-10"></div>
 
                     <div className="pure-control-group">
-                      <Field key={"telefono"} type={"tel"} isEditable={this.linkState('isEditable')} initialValue={this.cursors.profile.get().telefono} placeholder={"Recapito telefonico"} ref='telefono' />
+                      <Field key={"telefono"} type={"tel"} isEditable={this.state.isEditable} initialValue={this.cursors.profile.get().telefono} placeholder={"Recapito telefonico"} ref='telefono' />
                     </div>
                     <div className="spacer-40"></div>
 

@@ -34,28 +34,14 @@ module.exports = function (treeData) {
     },
 
 
-    componentWillReceiveProps: function componentWillReceiveProps () {
-      var isEditable = this.props.isEditable.value;
-
-      if (!this.refs.input) {
-        return;
-      }
-
-      console.log('isEditable', this.props.isEditable.value);
-
-      if (!isEditable) {
-        React.findDOMNode(this.refs.input).setAttribute('readonly', true);
-      } else {
-        React.findDOMNode(this.refs.input).removeAttribute('readonly');
-      }
-    },
-
 
     render: function() : React.PropTypes.element {
 
-      var componentScope = this;
-
-      return (<input type={this.props.type} valueLink={this.linkState('value')} placeholder={this.props.placeholder} ref='input' required />);
+      if (this.props.isEditable) {
+        return (<input type={this.props.type} valueLink={this.linkState('value')} placeholder={this.props.placeholder} ref='input' required />);
+      } else {
+        return (<input type={this.props.type} valueLink={this.linkState('value')} placeholder={this.props.placeholder} ref='input' required readOnly/>);
+      }
     }
 
   });
