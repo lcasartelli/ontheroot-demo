@@ -104,7 +104,7 @@ module.exports = function (treeData) {
         editProfileButton = <div></div>;
       } else  {
         editProfileButton = (
-          <button type='button' id="edit-profile" style={{"padding": "2px 5px;"}} className="pure-button pure-success">
+          <button type='button' id="edit-profile" className="pure-button pure-success profile-btn">
             <i className="fa fa-plus"></i>
             <span  onClick={this.onEditProfile}>Edit profile</span>
           </button>
@@ -168,7 +168,7 @@ module.exports = function (treeData) {
                       <h3>Your delivery addresses</h3>
                     </div>
                     <div className="pure-u-1-4">
-                      <button id="new-address" style={{"padding": "2px 5px;"}} className="pure-button pure-success"><i className="fa fa-plus"></i><span>Add new</span></button>
+                      <button id="new-address" style={{"padding": "2px 5px;"}} className="pure-button pure-success profile-btn"><i className="fa fa-plus"></i><span>Add new</span></button>
                     </div>
                   </div>
                   <ol>
